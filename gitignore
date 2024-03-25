@@ -1,1 +1,5 @@
-/venv
+# any Python environment data is not committed
+/venv/
+
+# any dataset modification and filtering result aren't committed
+/dataset/filtered*
