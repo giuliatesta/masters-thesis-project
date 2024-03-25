@@ -1,5 +1,10 @@
 # any Python environment data is not committed
 /venv/
 
+# other default ignored files
+/shelf/
+/workspace.xml
+.idea/
+
 # any dataset modification and filtering result aren't committed
 /dataset/filtered*
