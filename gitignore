@@ -4,7 +4,7 @@
 # other default ignored files
 /shelf/
 /workspace.xml
-.idea/
+/.idea/
 
 # any dataset modification and filtering result aren't committed
 /dataset/filtered*
