@@ -8,3 +8,4 @@
 
 # any dataset modification and filtering result aren't committed
 /dataset/filtered*
+/plots/*ss
