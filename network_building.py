@@ -1,4 +1,6 @@
 import itertools
+import os
+
 import matplotlib.pyplot as plt
 from datetime import date
 
@@ -35,17 +37,24 @@ def create_network(df: DataFrame, name="Network"):
     return graph
 
 
-def plot_network(graph: Graph, file_name =""):
+def plot_network(graph: Graph, file_path=""):
     print("Plotting the network...")
     plt.figure(figsize=(20, 15))
     pos = spring_layout(graph)
-    # draw_networkx(graph, pos=pos, edgelist=get_edge_attributes(graph, 'weight'))
     draw(graph, pos, node_size=50, node_color="#f4c2c2", alpha=0.75)
     draw_networkx_edge_labels(graph, pos, edge_labels=get_edge_attributes(graph, 'weight'), label_pos=0.5, font_size=5)
     plt.title(graph.name)
-    if file_name == "" :
-        file_name = f"{graph.name}-{DISTANCE_THRESHOLD}-{date.today().strftime('%Y%m%d')}.png"
-    plt.show()
-    print(f"Saving in ./plots/{file_name}")
-    plt.savefig(f"./plots/{file_name}")
+    if file_path == "":
+        file_path = get_file_path(graph_name=graph.name)
+    print(f"Saving in {file_path}")
+    plt.savefig(file_path)
     print("Done.")
+
+
+def get_file_path(graph_name):
+    dir_name = f"./plots/{date.today().strftime('%Y%m%d')}"
+    if not os.path.exists(dir_name):
+        print(f"Creating directory {dir_name}")
+        os.makedirs(dir_name)
+
+    return f"{dir_name}/{graph_name}-{DISTANCE_THRESHOLD}.png"

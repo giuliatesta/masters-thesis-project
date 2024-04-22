@@ -9,5 +9,5 @@ data = filter_by(data, "Country", "Italy")
 # saved the filtered data in the filtered.csv file
 data.to_csv(path_or_buf="./dataset/filtered.csv")
 graph = create_network(data, "Travel Survey Gower's similarity network")
-# plot_network(graph)
+plot_network(graph)
 #simulate(graph)
