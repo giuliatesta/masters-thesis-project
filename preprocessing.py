@@ -17,6 +17,10 @@ def load_dataset_csv(path: str):
 
 
 # filters the dataframe df by the columnName column
-def filter_by(df: DataFrame, column_name: str, column_value: str):
+def filter_by(df: DataFrame, column_name: str, column_value: str, number_of_rows= -1):
     print(f"Filtering by {column_name}={column_value}")
-    return df.loc[df[column_name] == column_value]
+    filtered = df.loc[df[column_name] == column_value]
+    # if I want to get the first n values
+    if number_of_rows != -1:
+        filtered = df.iloc[:number_of_rows]
+    return filtered
