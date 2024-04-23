@@ -8,9 +8,12 @@ from networkx import Graph, draw, get_edge_attributes, draw_networkx_edge_labels
 from pandas import DataFrame
 from gower import gower_matrix
 
+from statistics import gower_matrix_distribution
+
 # a threshold is required to evaluate whether create the edge
 # based on the gower's distance of two nodes
 SIMILARITY_THRESHOLD = 0.75
+
 
 
 def create_network(df: DataFrame, name="Network"):
@@ -24,6 +27,7 @@ def create_network(df: DataFrame, name="Network"):
     # computes the Gower's distance for creating the edges in the network
     # a smaller distance value indicates higher similarities between data points
     similarities = 1 - gower_matrix(df)
+    gower_matrix_distribution(similarities)
     counter = 0
     for edge in itertools.combinations(range(len(df)), 2):  # creates all combinations of possible edges
         i = edge[0]
