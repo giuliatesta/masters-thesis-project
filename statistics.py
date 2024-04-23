@@ -1,4 +1,7 @@
+import numpy as np
 from matplotlib import pyplot as plt
+from networkx import number_connected_components
+from pandas import DataFrame
 
 
 def gower_matrix_distribution(matrix):
@@ -10,4 +13,23 @@ def gower_matrix_distribution(matrix):
     plt.title("Distribution of Gower's Matrix Values")
     plt.grid(True)
     plt.savefig("./plots/statistics/gower_matrix_distribution.png")
+    print("Done.")
+
+
+def components_over_threshold(df: DataFrame):
+    from network_building import create_network
+    print("Plotting number of components over the threshold values...")
+    components = []
+    thresholds= np.arange(0, 1.0, 0.05)
+    for threshold in thresholds:
+        graph = create_network(df, similarity_threshold=threshold, no_logs=True)
+        components.append(number_connected_components(graph))
+
+    plt.figure()
+    plt.plot(thresholds, components, marker='o')
+    plt.xlabel('Threshold')
+    plt.ylabel('Number of components')
+    plt.title('Number of connected components vs. Threshold')
+    plt.grid(True)
+    plt.savefig("./plots/statistics/components_over_threshold.png")
     print("Done.")

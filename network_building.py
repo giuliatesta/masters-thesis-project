@@ -10,20 +10,17 @@ from gower import gower_matrix
 
 from statistics import gower_matrix_distribution
 
-# a threshold is required to evaluate whether create the edge
-# based on the gower's distance of two nodes
-SIMILARITY_THRESHOLD = 0.75
 
-
-
-def create_network(df: DataFrame, name="Network"):
-    print("Creating the network...")
+def create_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
+    if not no_logs:
+        print("Creating the network...")
     # creates the graph
     graph = Graph(name=name)
     # add all the nodes
     for index, row in df.iterrows():
         graph.add_node(index, attr_dict=row.to_dict())
-    print(f"Added {len(df)} nodes")
+    if not no_logs:
+        print(f"Added {len(df)} nodes")
     # computes the Gower's distance for creating the edges in the network
     # a smaller distance value indicates higher similarities between data points
     similarities = 1 - gower_matrix(df)
@@ -33,21 +30,19 @@ def create_network(df: DataFrame, name="Network"):
         i = edge[0]
         j = edge[1]
         similarity = similarities[i, j]
-        if similarity >= SIMILARITY_THRESHOLD:
+        if similarity >= similarity_threshold:
             graph.add_edge(i, j, weight=similarity)
             counter = counter + 1
-    print(f"Added {counter} edges")
-    print("Done.")
+    if not no_logs:
+        print(f"Added {counter} edges")
+        print("Done.")
     return graph
 
 
 def plot_network(graph: Graph, file_path=""):
     print("Plotting the network...")
     plt.figure(figsize=(20, 15))
-    pos = spring_layout(graph)
-    # draw(graph, pos, node_size=50, node_color="#f4c2c2", alpha=0.75)
-    # draw_networkx_labels(graph, pos, labels=graph.nodes, font_size=5)
-    draw(graph, with_labels=True)
+    draw(graph, with_labels=True, alpha=0.75)
     plt.title(graph.name)
     if file_path == "":
         file_path = get_file_path(graph_name=graph.name)
