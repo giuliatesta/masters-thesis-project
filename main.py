@@ -1,6 +1,6 @@
 from network_building import create_network, plot_network
 from network_simulation import simulate
-from preprocessing import load_dataset_csv, filter_by, remove_column
+from preprocessing import load_dataset_csv, filter_by, remove_column, remove_all_except_for
 from statistics import components_over_threshold
 
 # a threshold is required to evaluate whether create the edge
@@ -14,11 +14,12 @@ data = filter_by(data, "Country", "Italy", number_of_rows=1000)
 # saved the filtered data in the filtered.csv file
 data.to_csv(path_or_buf="./dataset/filtered.csv")
 print(data.columns)
-
+complete_data = data
 for column in data.columns:
-    data = remove_column(data, column)
-    graph = create_network(data, similarity_threshold=SIMILARITY_THRESHOLD, name=f"Network without {column}")
+    removed_data = remove_all_except_for(data,[column])
+    graph = create_network(removed_data, similarity_threshold=SIMILARITY_THRESHOLD, name=f"Network with only {column}")
     plot_network(graph)
+    data = complete_data
 
 
 #components_over_threshold(data)

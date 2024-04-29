@@ -21,7 +21,7 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
         print(f"Added {len(df)} nodes")
     # computes the Gower's distance for creating the edges in the network
     # a smaller distance value indicates higher similarities between data points
-    similarities = 1 - gower_matrix(df)
+    similarities = 1.0 - gower_matrix(df)
     # gower_matrix_distribution(similarities)
     counter = 0
     for edge in itertools.combinations(range(len(df)), 2):  # creates all combinations of possible edges

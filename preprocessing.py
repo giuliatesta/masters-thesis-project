@@ -9,7 +9,7 @@ from pandas import DataFrame
 # encoding= cp1252 since some values cannot be read by default utf8
 def load_dataset_csv(path: str):
     print(f"Loading the dataset from {path}")
-    dataset = pd.read_csv(path, sep=',', index_col=0, header=0, encoding="cp1252")
+    dataset = pd.read_csv(path, sep=',', index_col=0, header=0, encoding="cp1252", dtype=str)
     dataset.replace("", np.nan, inplace=True)  # Replace empty strings with NaN
     dataset.dropna(inplace=True)
     print(f"Loaded {len(dataset)} records")
@@ -28,3 +28,7 @@ def filter_by(df: DataFrame, column_name: str, column_value: str, number_of_rows
 
 def remove_column(df: DataFrame, column_name: str):
     return df.drop(column_name, axis="columns")
+
+
+def remove_all_except_for(df: DataFrame, column_names: []):
+    return df[column_names]
