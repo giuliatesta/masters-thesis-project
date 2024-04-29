@@ -4,11 +4,9 @@ import os
 import matplotlib.pyplot as plt
 from datetime import date
 
-from networkx import Graph, draw, get_edge_attributes, draw_networkx_edge_labels, spring_layout
+from networkx import Graph, draw
 from pandas import DataFrame
 from gower import gower_matrix
-
-from statistics import gower_matrix_distribution
 
 
 def create_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
@@ -24,7 +22,7 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
     # computes the Gower's distance for creating the edges in the network
     # a smaller distance value indicates higher similarities between data points
     similarities = 1 - gower_matrix(df)
-    gower_matrix_distribution(similarities)
+    # gower_matrix_distribution(similarities)
     counter = 0
     for edge in itertools.combinations(range(len(df)), 2):  # creates all combinations of possible edges
         i = edge[0]
@@ -40,14 +38,15 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
 
 
 def plot_network(graph: Graph, file_path=""):
-    print("Plotting the network...")
+    print(f"Plotting the network {graph.name}")
     plt.figure(figsize=(20, 15))
+    plt.title(label=graph.name)
     draw(graph, with_labels=True, alpha=0.75)
-    plt.title(graph.name)
     if file_path == "":
         file_path = get_file_path(graph_name=graph.name)
     print(f"Saving in {file_path}")
     plt.savefig(file_path)
+    plt.close()
     print("Done.")
 
 
@@ -57,4 +56,4 @@ def get_file_path(graph_name):
         print(f"Creating directory {dir_name}")
         os.makedirs(dir_name)
 
-    return f"{dir_name}/{graph_name}-{SIMILARITY_THRESHOLD}.png"
+    return f"{dir_name}/{graph_name}.png"
