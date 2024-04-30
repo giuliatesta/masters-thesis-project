@@ -8,6 +8,8 @@ from networkx import Graph, draw
 from pandas import DataFrame
 from gower import gower_matrix
 
+from statistics import gower_matrix_distribution
+
 
 def create_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
     if not no_logs:
@@ -15,6 +17,7 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
     # creates the graph
     graph = Graph(name=name)
     # add all the nodes
+    print(f"data: {len(df)}")
     for index, row in df.iterrows():
         graph.add_node(index, attr_dict=row.to_dict())
     if not no_logs:

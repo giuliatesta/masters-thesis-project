@@ -4,15 +4,15 @@ from networkx import number_connected_components
 from pandas import DataFrame
 
 
-def gower_matrix_distribution(matrix, title="Distribution of Gower's Matrix Values"):
+def gower_matrix_distribution(matrix, title="Distribution of Gower's Matrix Values", bins=20):
     print("Plotting the gower's matrix distribution...")
     plt.figure()
-    plt.hist(matrix, bins=20)
+    plt.hist(matrix, bins=bins)
     plt.xlabel("Gower's matrix values")
     plt.ylabel('Number of nodes')
     plt.title(title)
     plt.grid(True)
-    plt.savefig(f"./plots/statistics/{title}.png")
+    plt.savefig(f"./plots/statistics/{title}-{bins}bins.png")
     plt.close()
     print("Done.")
 
