@@ -34,5 +34,5 @@ def components_over_threshold(df: DataFrame):
     plt.ylabel('Number of components')
     plt.title('Number of connected components vs. Threshold')
     plt.grid(True)
-    plt.savefig("./plots/statistics/components_over_threshold.png")
+    plt.savefig("./plots/statistics/components_over_threshold-1000.png")
     print("Done.")

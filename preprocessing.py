@@ -22,7 +22,7 @@ def filter_by(df: DataFrame, column_name: str, column_value: str, number_of_rows
     filtered = df.loc[df[column_name] == column_value]
     # if I want to get the first n values
     if number_of_rows != -1:
-        filtered = df.iloc[:number_of_rows]
+        filtered = filtered.iloc[:number_of_rows]
     print(f"Filtered {len(filtered)} data out of {len(df)} rows")
     return filtered
 
