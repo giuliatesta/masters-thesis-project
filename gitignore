@@ -4,6 +4,6 @@
 # other default ignored files
 /shelf/
 /workspace.xml
-.idea/
+/.idea/
 
 
