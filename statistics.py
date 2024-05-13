@@ -4,20 +4,21 @@ from networkx import number_connected_components
 from pandas import DataFrame
 
 
-def gower_matrix_distribution(matrix, title="Distribution of Gower's Matrix Values", bins=20):
-    print("Plotting the gower's matrix distribution...")
+def distribution_over_nodes_count(matrix, title="", x_label="", bins=20):
+    print(f"Plotting the distribution {title}")
     plt.figure()
     plt.hist(matrix, bins=bins)
-    plt.xlabel("Gower's matrix values")
+    plt.xlabel(x_label)
     plt.ylabel("Number of nodes")
-    plt.title(title)
+    new_title = f"Distribution {title}"
+    plt.title(new_title)
     plt.grid(True)
-    plt.savefig(f"./plots/statistics/{title}-{bins}bins.png")
+    plt.savefig(f"./plots/statistics/{new_title}-{bins}bins.png")
     plt.close()
     print("Done.")
 
 
-def components_over_threshold(df: DataFrame):
+def components_over_threshold(df: DataFrame, title=""):
     from network_building import create_network
     print("Plotting number of components over the threshold values...")
     components = []
@@ -34,5 +35,5 @@ def components_over_threshold(df: DataFrame):
     plt.ylabel("Number of components")
     plt.title("Number of connected components vs. Threshold")
     plt.grid(True)
-    plt.savefig("./plots/statistics/components_over_threshold.png")
+    plt.savefig(f"./plots/statistics/{title}.png")
     print("Done.")
