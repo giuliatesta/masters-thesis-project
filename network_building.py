@@ -7,7 +7,8 @@ from datetime import date
 
 import numpy as np
 import pandas as pd
-from networkx import Graph, draw
+from networkx import Graph, draw, number_connected_components, draw_networkx_nodes, draw_networkx_edges, \
+    draw_networkx_labels, spring_layout
 from pandas import DataFrame
 from gower import gower_matrix
 
@@ -15,7 +16,6 @@ from preprocessing import remove_all_except_for, remove_column
 from sklearn.metrics.pairwise import cosine_similarity
 
 from statistics import distribution_over_nodes_count
-
 
 def create_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
     if not no_logs:
@@ -27,25 +27,25 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
     # sort the dataframe by index to ensure consistent iteration order
     nodes_counter = 0
     for index, row in df.iterrows():
-        graph.add_node(index, attr_dict=row.to_dict())
-        nodes_counter = nodes_counter + 1
+        graph.add_node(index, **row.to_dict())
+        nodes_counter += 1
     if not no_logs:
         print(f"Added {nodes_counter} nodes")
 
-    similarities = get_similarities(df, "scikit-learn-cosine")
+    similarities = get_similarities(df, "gower")
     # distribution_over_nodes_count(similarities, title=name, x_label="cosine's similarity values")
     counter = 0
-    for edge in sorted(itertools.combinations(range(len(df)), 2)):  # creates all combinations of possible edges
-        i = edge[0]
-        j = edge[1]
+    for i, j in itertools.combinations(df.index, 2):  # creates all combinations of possible edges
         similarity = similarities[i, j]
         if similarity >= similarity_threshold:
             graph.add_edge(i, j, weight=similarity)
-            counter = counter + 1
+            counter += 1
     if not no_logs:
         print(f"Added {counter} edges")
         print("Done.")
     return graph
+
+
 
 
 def get_similarities(df: DataFrame, similarity_metric: string):
@@ -90,14 +90,19 @@ def one_hot_encoding(df: DataFrame):
 
 
 def plot_network(graph: Graph, file_path=""):
-    print(f"Plotting the network {graph.name}")
     plt.figure(figsize=(20, 15))
     plt.title(label=graph.name)
+    pos = spring_layout(graph)
+    labels = {node: value['ID'] for node, value in graph.nodes(data=True)}
+    draw_networkx_nodes(graph, pos=pos, node_size=80)
+    draw_networkx_edges(graph, pos=pos,  width=0.5)
+    draw_networkx_labels(graph, pos=pos, font_size=8, labels=labels)
     draw(graph, with_labels=True, alpha=0.75)
     if file_path == "":
         file_path = get_file_path(graph_name=graph.name)
     print(f"Saving in {file_path}")
-    plt.legend([f'Nodes: {len(graph.nodes)}', f'Edges: {len(graph.edges)}'], loc='upper right')
+    n = number_connected_components(graph)
+    plt.legend([f'Connected components: {n}', f'Nodes: {graph.number_of_nodes()}, Edges: {graph.number_of_edges()}'], loc='upper right')
     plt.savefig(file_path)
     plt.close()
     print("Done.")
