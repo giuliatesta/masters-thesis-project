@@ -15,8 +15,6 @@ from gower import gower_matrix
 from preprocessing import remove_all_except_for, remove_column
 from sklearn.metrics.pairwise import cosine_similarity
 
-from statistics import distribution_over_nodes_count
-
 def create_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
     if not no_logs:
         print("Creating the network...")
@@ -32,8 +30,8 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
     if not no_logs:
         print(f"Added {nodes_counter} nodes")
 
-    similarities = get_similarities(df, "gower")
-    # distribution_over_nodes_count(similarities, title=name, x_label="cosine's similarity values")
+    similarities = get_similarities(df, "numpy-cosine")
+    # distribution_over_nodes_count(similarities, title=name, x_label="scikit-learn-cosine's similarity values")
     counter = 0
     for i, j in itertools.combinations(df.index, 2):  # creates all combinations of possible edges
         similarity = similarities[i, j]
@@ -44,8 +42,6 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
         print(f"Added {counter} edges")
         print("Done.")
     return graph
-
-
 
 
 def get_similarities(df: DataFrame, similarity_metric: string):
@@ -95,14 +91,15 @@ def plot_network(graph: Graph, file_path=""):
     pos = spring_layout(graph)
     labels = {node: value['ID'] for node, value in graph.nodes(data=True)}
     draw_networkx_nodes(graph, pos=pos, node_size=80)
-    draw_networkx_edges(graph, pos=pos,  width=0.5)
+    draw_networkx_edges(graph, pos=pos, width=0.5)
     draw_networkx_labels(graph, pos=pos, font_size=8, labels=labels)
     draw(graph, with_labels=True, alpha=0.75)
     if file_path == "":
         file_path = get_file_path(graph_name=graph.name)
     print(f"Saving in {file_path}")
     n = number_connected_components(graph)
-    plt.legend([f'Connected components: {n}', f'Nodes: {graph.number_of_nodes()}, Edges: {graph.number_of_edges()}'], loc='upper right')
+    plt.legend([f'Connected components: {n}', f'Nodes: {graph.number_of_nodes()}, Edges: {graph.number_of_edges()}'],
+               loc='upper right')
     plt.savefig(file_path)
     plt.close()
     print("Done.")
