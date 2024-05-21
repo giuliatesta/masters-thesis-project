@@ -15,6 +15,9 @@ from gower import gower_matrix
 from preprocessing import remove_all_except_for, remove_column
 from sklearn.metrics.pairwise import cosine_similarity
 
+from statistics import distribution_over_nodes_count
+
+
 def create_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
     if not no_logs:
         print("Creating the network...")
@@ -30,8 +33,8 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
     if not no_logs:
         print(f"Added {nodes_counter} nodes")
 
-    similarities = get_similarities(df, "numpy-cosine")
-    # distribution_over_nodes_count(similarities, title=name, x_label="scikit-learn-cosine's similarity values")
+    similarities = get_similarities(df, "gower")
+    #distribution_over_nodes_count(similarities, title=name, x_label="gower's similarity values")
     counter = 0
     for i, j in itertools.combinations(df.index, 2):  # creates all combinations of possible edges
         similarity = similarities[i, j]
