@@ -14,7 +14,7 @@ data = filter_by(data, "Country", "Italy",  number_of_rows=1000)
 data.to_csv(path_or_buf="./dataset/filtered.csv")
 
 # for creating the plot regarding the number of connected components with respect to the threshold
-components_over_threshold(data, title="gower_components_over_threshold")
+#components_over_threshold(data, title="gower_components_over_threshold")
 
-#graph = create_network(data, similarity_threshold=SIMILARITY_THRESHOLD, name="Travel Survey gower similarity network")
-#plot_network(graph)
+graph = create_network(data, similarity_threshold=SIMILARITY_THRESHOLD, name="Travel Survey gower similarity network")
+plot_network(graph)
