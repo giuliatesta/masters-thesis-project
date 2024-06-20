@@ -1,5 +1,5 @@
 # any Python environment data is not committed
-/venv/
+/.venv/
 
 # other default ignored files
 /shelf/
