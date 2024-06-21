@@ -8,16 +8,15 @@ class LPAgent:
     # Variables shared between all instances of this class
     TIMESTEP_DEFAULT = 1.0
 
-    def __init__(self, env, initializer, name='network_process'):
+    def __init__(self, env, id, LPNet):
         self.env = env
-        # TODO
-        # self.process = sim.Process(env, name)
-        self.initialize(*initializer)
 
-    def initialize(self, id, LPNet):
+        #self.initialize(*initializer)
+
+        #def initialize(self, id, LPNet):
         self.id = id
         self.LPNet = LPNet
-        self.VL = {l: LPNet.nodes[id][l] for l in LABELS}
+        self.VL = {label: LPNet.nodes[id][label] for label in LABELS}
 
     """
     Start the agent execution
@@ -27,9 +26,9 @@ class LPAgent:
     def Run(self):
         while True:
             self.updateStep()
-            yield self.env.timeout(), self, LPAgent.TIMESTEP_DEFAULT / 2
+            yield self.env.timeout, self, LPAgent.TIMESTEP_DEFAULT / 2
             self.state_changing()
-            yield self.env.timeout(), self, LPAgent.TIMESTEP_DEFAULT / 2
+            yield self.env.timeout, self, LPAgent.TIMESTEP_DEFAULT / 2
 
     """
     Updates all the belonging coefficients

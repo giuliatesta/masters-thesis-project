@@ -37,7 +37,7 @@ class NetworkSimulation:
 
         # Initialize agents
         for i in self.LPNet.nodes():
-            agent = self.LPAgent.LPAgent((i, self.env, self.LPNet))
+            agent = self.LPAgent.LPAgent(self.env, i, self.LPNet)
             self.LPNet.nodes[i]['agent'] = agent
             self.env.process(agent.Run())
 
