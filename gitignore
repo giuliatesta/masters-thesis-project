@@ -1,9 +1,0 @@
-# any Python environment data is not committed
-/.venv/
-
-# other default ignored files
-/shelf/
-/workspace.xml
-.idea/
-
-

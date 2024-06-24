@@ -5,7 +5,7 @@ from preprocessing import load_dataset_csv, filter_by
 
 # to create the INITIAL_VLS file
 data = load_dataset_csv("../../dataset/EU_travel_survey_demand_innovative_transport_systems.csv")
-data = filter_by(data, "Country", "Italy",  number_of_rows=100)
+data = filter_by(data, "Country", "Italy",  number_of_rows=1000)
 labels = pd.DataFrame(["Age"])
 labels.to_csv(path_or_buf="./LABELS", index=False, header=False, sep=";")
 data["Age"].to_csv(path_or_buf="./INITIAL_VLS", index=False, header=False, sep=";")
