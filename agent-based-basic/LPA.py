@@ -65,7 +65,6 @@ class LPAgent(Sim.Process):
     """
 
     def updateStep(self):
-        print(f"ID: {self.id}")
         for j in LABELS:
             # print(f"LPNET.nodes: {self.LPNet.nodes[self.id][j]}, VL: {self.VL[j]}")
             self.LPNet.nodes[self.id][j] = self.VL[j]
