@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
 import networkx as nx, csv, sys, LPA, NETWORKSIMULATION
-from conf import ITERATION_NUM, LABELS_INIT_VALUES_FILE, EDGES_FILE, GRAPH_TYPE, LABELS
+from pandas import read_csv
+
+from conf import ITERATION_NUM, LABELS_INIT_VALUES_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE
 from create_input import create_input
 from preprocessing import load_dataset_csv
 
@@ -15,6 +17,12 @@ def main():
     else:
         print("The type of the graph must be U(undirected) or D(directed)")
         return
+
+    # ATTRIBUTE_FILE
+    # add the attributes from the file to the nodes
+    attributes = read_csv(ATTRIBUTES_FILE, header=None)
+    for i, val in enumerate(LABELS):
+        nx.set_node_attributes(LPNet, attributes[i], val)
 
     # Get VLs' values from file
     with open(LABELS_INIT_VALUES_FILE, 'r') as read_obj:
@@ -37,7 +45,5 @@ def main():
 
 if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-    for column in data.columns:
-        if "_DNA" in column:
-            create_input(data, [column])
-            main()
+    create_input(data, ["sha_ind_norm"])
+    main()

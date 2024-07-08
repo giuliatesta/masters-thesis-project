@@ -14,12 +14,20 @@ label_name_1; label_name_2; label_name_3; ...
 -INITIAL_VLS_FILE-
 VL1[0]; VL1[1]; VL2[2]; ...
 VL2[0]; VL2[1]; VL2[2]; ...
+0; 1    # adapter
+0; 0    # non adapter
 one VL per row
+#
 
 -EDGES_FILE-
 node node {}
 node node {}
 node node {}
+
+-ATTRIBUTES_FILE-
+value_1
+value_2
+value_3
 
 ---Requirements---
 Nodes: integers
@@ -29,7 +37,7 @@ The nodes must be integers.
 
 If the network created from the edge list file does not contain all the nodes in the range [0, max_node_id] or [1, max_node_id] and the INITIAL_VLS_FILE contains also the VLs of the nodes missing in the range:
 execute the script providing an additional command line argument 'X':
-python Main_LPA.py PATH_TO_LABELS_NAMES_FILE PATH_TO_INITIAL_VLS_FILE PATH_TO_EDGES_FILE GRAPH_TYPE PATH_TO_RESULTS_DIRECTORY X
+python Main_LPA.py PATH_TO_LABELS_NAMES_FILE PATH_TO_INITIAL_VLS_FILE PATH_TO_EDGES_FILE PATH_TO_ATTRIBUTES_FILE GRAPH_TYPE PATH_TO_RESULTS_DIRECTORY X
 
 
 

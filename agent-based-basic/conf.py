@@ -14,8 +14,9 @@ try:
     LABELS_NAMES_FILE = sys.argv[1]
     LABELS_INIT_VALUES_FILE = sys.argv[2]
     EDGES_FILE = sys.argv[3]
-    GRAPH_TYPE = sys.argv[4]   
-    RESULTS_DIR = sys.argv[5]
+    ATTRIBUTES_FILE = sys.argv[4]
+    GRAPH_TYPE = sys.argv[5]
+    RESULTS_DIR = sys.argv[6]
 except IndexError:
     print("Command line arguments not provided correctly")
     sys.exit(1)
