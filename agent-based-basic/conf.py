@@ -5,7 +5,7 @@ import sys
 
 # Simulation parameters
 # Max simulation time(number of iteration of the algorithm)
-ITERATION_NUM = 30
+ITERATION_NUM = 5
 # The number of simulations
 TRIALS = 1
 
@@ -17,6 +17,7 @@ try:
     ATTRIBUTES_FILE = sys.argv[4]
     GRAPH_TYPE = sys.argv[5]
     RESULTS_DIR = sys.argv[6]
+    STATE_CHANGING_METHOD = int(sys.argv[7])
 except IndexError:
     print("Command line arguments not provided correctly")
     sys.exit(1)

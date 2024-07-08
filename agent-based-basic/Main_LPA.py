@@ -21,8 +21,8 @@ def main():
     # ATTRIBUTE_FILE
     # add the attributes from the file to the nodes
     attributes = read_csv(ATTRIBUTES_FILE, header=None)
-    for i, val in enumerate(LABELS):
-        nx.set_node_attributes(LPNet, attributes[i], val)
+    for i, _ in enumerate(LABELS):
+        nx.set_node_attributes(LPNet, attributes[i], f"attribute-{i}")
 
     # Get VLs' values from file
     with open(LABELS_INIT_VALUES_FILE, 'r') as read_obj:
@@ -30,10 +30,11 @@ def main():
         initial_VLs = list(csv_reader)
 
     network_nodes = sorted(LPNet.nodes())
+    print(LPNet.nodes())
     # Initialize nodes' VLs
     for i, node in enumerate(network_nodes):
         for j, label in enumerate(LABELS):
-            if (len(sys.argv) == 6):
+            if len(sys.argv) == 6:
                 LPNet.nodes[node][label] = initial_VLs[i][j]
             else:
                 LPNet.nodes[node][label] = initial_VLs[node - network_nodes[0]][j]
@@ -41,6 +42,7 @@ def main():
     # Run simulation
     simulation = NETWORKSIMULATION.NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.runSimulation()
+
 
 
 if __name__ == '__main__':

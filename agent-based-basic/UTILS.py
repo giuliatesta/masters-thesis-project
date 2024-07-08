@@ -27,9 +27,8 @@ def makeFileNameLPState(dir, id):
 
 
 def labels_chain():
-    labels = load_dataset_csv("./work/LABELS", index=False)
     chain = ""
-    for label in labels:
+    for label in LABELS:
         chain += "_" + label
     return chain
 
@@ -39,7 +38,6 @@ Store LPStateTuples in a file identified by trial_id
 
 
 def storeAllToFile(LPStatesTuples, directory, trial_id):
-    print(LPStatesTuples)
     file_path = makeFileNameLPState(directory, str(trial_id))
     storeToFile(LPStatesTuples, file_path)
     read_pickled_file(file_path)

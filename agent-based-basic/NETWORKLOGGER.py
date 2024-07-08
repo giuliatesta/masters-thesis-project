@@ -31,11 +31,11 @@ class NetworkLogger(Sim.Process):
 
         # Actual VL belonging coefficients
         VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
-
+        print("!!!")
+        print(VLs)
         # Add actual VL value to logs
         if self.sim.now() in tt:
             self.LPStatesTuples.append([self.sim.now(), VLs])
-
 
     def logTrialToFiles(self, id):
         UTILS.storeAllToFile(self.LPStatesTuples, RESULTS_DIR, id)

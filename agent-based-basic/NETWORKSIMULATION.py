@@ -45,6 +45,7 @@ class NetworkSimulation(Sim.Simulation):
             self.activate(agent, agent.Run())
 
         print("Set up logging...")
+        LABELS.append("raw")
 
         # Set up logging
         logging_interval = 1
