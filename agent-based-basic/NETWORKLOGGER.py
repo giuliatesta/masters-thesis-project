@@ -16,6 +16,7 @@ class NetworkLogger(Sim.Process):
         self.interval = logging_interval
         self.LPNet = nx.Graph()
         self.LPStatesTuples = []
+        self.LPRaws = []
 
     def Run(self):
         i = 0
@@ -31,11 +32,14 @@ class NetworkLogger(Sim.Process):
 
         # Actual VL belonging coefficients
         VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
-        print("!!!")
-        print(VLs)
+        raws = [[float(node[1]["agent"].raw[str(i)]) for i in LABELS] for node in LPNodes]
+        print("--> RAWS")
+        print(raws)
+
         # Add actual VL value to logs
         if self.sim.now() in tt:
             self.LPStatesTuples.append([self.sim.now(), VLs])
+            self.LPRaws.append([self.sim.now(), raws])
 
     def log_trial_to_files(self, id):
-        UTILS.store_all_to_file(self.LPStatesTuples, RESULTS_DIR, id)
+        UTILS.store_all_to_file(self.LPStatesTuples, self.LPRaws, RESULTS_DIR, id)

@@ -26,21 +26,32 @@ def make_file_name_lp_state(dir, id):
     return dir + BASE + str(id) + STATE + labels_chain() + ".pickled"
 
 
+def make_file_name_raws(dir, id):
+    return dir + BASE + str(id) + STATE + "_RAWS.pickled"
+
+
 def labels_chain():
     chain = ""
     for label in LABELS:
         chain += "_" + label
     return chain
 
+
 """
 Store LPStateTuples in a file identified by trial_id
 """
 
 
-def store_all_to_file(LPStatesTuples, directory, trial_id):
-    file_path = make_file_name_lp_state(directory, str(trial_id))
+def store_all_to_file(LPStatesTuples, LPRaws, directory, trial_id):
+    trial_id = str(trial_id)
+
+    file_path = make_file_name_lp_state(directory, trial_id)
     store_to_file(LPStatesTuples, file_path)
     read_pickled_file(file_path)
+
+    raw_file_path = make_file_name_raws(directory, trial_id)
+    store_to_file(LPRaws, raw_file_path)
+    read_pickled_file(raw_file_path)
 
 
 """
