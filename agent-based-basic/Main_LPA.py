@@ -11,9 +11,9 @@ from preprocessing import load_dataset_csv
 def main():
     # Create the network from edges defined in EDGES_FILE file
     if GRAPH_TYPE == "D":
-        LPNet = nx.read_edgelist(EDGES_FILE, nodetype=int, create_using=nx.DiGraph)
+        LPNet = nx.read_edgelist(EDGES_FILE, nodetype=int, create_using=nx.DiGraph, data=[('weight', float)])
     elif GRAPH_TYPE == "U":
-        LPNet = nx.read_edgelist(EDGES_FILE, nodetype=int, create_using=nx.Graph)
+        LPNet = nx.read_edgelist(EDGES_FILE, nodetype=int, create_using=nx.Graph, data=[('weight', float)])
     else:
         print("The type of the graph must be U(undirected) or D(directed)")
         return
@@ -46,5 +46,5 @@ def main():
 
 if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-    create_input(data, ["sha_ind_norm"])
+    create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
     main()

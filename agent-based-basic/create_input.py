@@ -20,11 +20,14 @@ def create_input(data, LABELS):
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
 
     # attributes file
+    # needs the comma as separator since some values contain the semicolon
     attributes = pd.DataFrame(data[LABELS])
-    attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, header=False, sep=";")
+    attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, header=False, sep=",")
 
+    # create the network to extract the edges between nodes
     graph = create_network(data, similarity_threshold=0.7, name="Travel Survey gower similarity network")
     edges = pd.DataFrame(graph.edges)
+    edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
 
 

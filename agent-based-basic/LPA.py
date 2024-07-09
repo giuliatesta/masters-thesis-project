@@ -9,20 +9,16 @@ class LPAgent(Sim.Process):
     # Variables shared between all instances of this class
     TIMESTEP_DEFAULT = 1.0
 
-    def __init__(self, initialiser, name='network_process'):
+    def __init__(self, initializer, name='network_process'):
         Sim.Process.__init__(self, name)
-        self.initialize(*initialiser)
+        self.initialize(*initializer)
 
-    # id = node's number
-    # VL = {"attribute-name":"attribute-value", ...}
-    # LPNet = Graph with 698 nodes and 2396 edges
-    # sim
     def initialize(self, id, sim, LPNet):
         print(id)
         self.id = id
         self.sim = sim
         self.LPNet = LPNet
-        self.VL = {l: LPNet.nodes[id][l] for l in LABELS}
+        self.VL = {label: LPNet.nodes[id][label] for label in LABELS}
         self.raw = {label: 0.0 for label in LABELS}
         print(self.VL)
 
@@ -47,7 +43,6 @@ class LPAgent(Sim.Process):
             neighbours = list(self.LPNet.neighbors(self.id))
         else:
             neighbours = list(self.LPNet.predecessors(self.id))
-        neighbours_size = len(list(neighbours))
 
         for label in LABELS:
             DNA_THRESHOLD = 0.5
@@ -57,10 +52,25 @@ class LPAgent(Sim.Process):
             if STATE_CHANGING_METHOD == 2:
                 # if the average of the index_DNA of the neighbours is higher than a threshold
                 # then the agent becomes adapter; otherwise it's non adapter
-                sum = 0
+                avg_DNA = self.compute_average_index_DNA(neighbours)
+                self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
+                self.raw[label] = avg_DNA
+                print(f"state changing: {self.VL}, {self.raw}")
+            if STATE_CHANGING_METHOD == 3:
+                # finds the neighbour with the highest weight and check if its adapter or not
+                highest_weight_neighbours = []
+                max_weight = 0
+
                 for neighbour in list(neighbours):
-                    sum += float(self.LPNet.nodes[neighbour]["attribute-0"])
-                avg_DNA = float(sum / neighbours_size)
+                    data = self.LPNet.get_edge_data(self.id, neighbour)
+                    weight = data['weight']
+                    if weight > max_weight:
+                        max_weight = weight
+                        highest_weight_neighbours = [neighbour]
+                    elif weight == max_weight:
+                        highest_weight_neighbours.append(neighbour)
+
+                avg_DNA = self.compute_average_index_DNA(neighbours)
                 self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
                 self.raw[label] = avg_DNA
                 print(f"state changing: {self.VL}, {self.raw}")
@@ -71,5 +81,12 @@ class LPAgent(Sim.Process):
 
     def update_step(self):
         for label in LABELS:
-            #print(f"LPNET.nodes: {self.LPNet.nodes[self.id]}, VL: {self.VL[label]}")
+            # print(f"LPNET.nodes: {self.LPNet.nodes[self.id]}, VL: {self.VL[label]}")
             self.LPNet.nodes[self.id][label] = self.VL[label]
+
+    def compute_average_index_DNA(self, neighbours):
+        neighbours_size = len(list(neighbours))
+        sum_for_average = 0
+        for neighbour in list(neighbours):
+            sum_for_average += float(self.LPNet.nodes[neighbour]["attribute-0"])
+        return float(sum_for_average / neighbours_size)

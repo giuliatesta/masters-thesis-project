@@ -1,7 +1,7 @@
 import networkx as nx
 from SimPy import Simulation as Sim
 import UTILS
-from conf import TRIALS, RESULTS_DIR, LABELS
+from conf import RESULTS_DIR, LABELS
 import time
 
 # The iterations whose VLs have to be stored
@@ -33,8 +33,6 @@ class NetworkLogger(Sim.Process):
         # Actual VL belonging coefficients
         VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
         raws = [[float(node[1]["agent"].raw[str(i)]) for i in LABELS] for node in LPNodes]
-        print("--> RAWS")
-        print(raws)
 
         # Add actual VL value to logs
         if self.sim.now() in tt:
