@@ -1,39 +1,38 @@
-import os
 from SimPy import Simulation as Sim
 import NETWORKLOGGER
-import csv
-from conf import TRIALS, RESULTS_DIR, LABELS_INIT_VALUES_FILE, LABELS
+from conf import TRIALS
 
 
 class NetworkSimulation(Sim.Simulation):
+
     """
     Simulation support for agents in a complex network.
     Can run multiple fresh trials with the same input parameters. Writes system
     state evolution to file (states & network topologies)
     """
 
-    def __init__(self, LPNet, LPAgent, maxTime):
+    def __init__(self, LPNet, LPAgent, max_time):
         Sim.Simulation.__init__(self)
         self.LPNet = LPNet
         self.LPAgent = LPAgent
-        self.until = maxTime
+        self.until = max_time
 
     """
     Run a simulation for TRIALS trials
     """
 
-    def runSimulation(self):
+    def run_simulation(self):
         print("Starting simulation...")
         for i in range(TRIALS):
             print("--- Trial %i ---" % i)
-            self.runTrial(i)
+            self.run_trial(i)
         print("Simulation completed.")
 
     """
     Run a single trial
     """
 
-    def runTrial(self, id):
+    def run_trial(self, id):
         self.initialize()
 
         print("Set up LP agents...")
@@ -45,7 +44,6 @@ class NetworkSimulation(Sim.Simulation):
             self.activate(agent, agent.Run())
 
         print("Set up logging...")
-        LABELS.append("raw")
 
         # Set up logging
         logging_interval = 1
@@ -58,4 +56,4 @@ class NetworkSimulation(Sim.Simulation):
         # Write log files
         # saves in *.pickled the resulting nodes at each run until maxTime
         # only for specific iteration --> modify tt variable to add and/or remove trials if uncesseray or useless.
-        logger.logTrialToFiles(id)
+        logger.log_trial_to_files(id)

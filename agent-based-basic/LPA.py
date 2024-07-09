@@ -23,7 +23,7 @@ class LPAgent(Sim.Process):
         self.sim = sim
         self.LPNet = LPNet
         self.VL = {l: LPNet.nodes[id][l] for l in LABELS}
-        self.VL["raw"] = 0
+        self.raw = {label: 0.0 for label in LABELS}
         print(self.VL)
 
     """
@@ -33,7 +33,7 @@ class LPAgent(Sim.Process):
 
     def Run(self):
         while True:
-            self.updateStep()
+            self.update_step()
             yield Sim.hold, self, LPAgent.TIMESTEP_DEFAULT / 2
             self.state_changing()
             yield Sim.hold, self, LPAgent.TIMESTEP_DEFAULT / 2
@@ -52,8 +52,8 @@ class LPAgent(Sim.Process):
         for label in LABELS:
             DNA_THRESHOLD = 0.5
             # if STATE_CHANGING_METHOD == 1:
-                # if the index_DNA is bigger than a threshold then the agent becomes adapter
-                # otherwise it becomes non adapter
+            # if the index_DNA is bigger than a threshold then the agent becomes adapter
+            # otherwise it becomes non adapter
             if STATE_CHANGING_METHOD == 2:
                 # if the average of the index_DNA of the neighbours is higher than a threshold
                 # then the agent becomes adapter; otherwise it's non adapter
@@ -61,27 +61,15 @@ class LPAgent(Sim.Process):
                 for neighbour in list(neighbours):
                     sum += float(self.LPNet.nodes[neighbour]["attribute-0"])
                 avg_DNA = float(sum / neighbours_size)
-                if avg_DNA >= DNA_THRESHOLD:
-                    self.VL[label] = 1
-                else:
-                    self.VL[label] = 0
-                self.VL["raw"] = avg_DNA
-                print(f"state changing: {self.VL}")
-
-            # ssum = 0
-            # # Calculate the second term of the update rule
-            # for neighbour in list(neighbours):
-            #     ssum += float(self.LPNet.nodes[neighbour][label]) / float(neighbours_size + 1)
-            #     # ssum += float((self.LPNet.nodes[i][j])*(list(list(self.LPNet.edges(data=True))[(self.id+1)*(j-1)][2].values())[0])) / float(neighboursSize + 1)
-            #
-            # # Update str(j)'s belonging coefficient
-            # self.VL[label] = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1) + ssum
+                self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
+                self.raw[label] = avg_DNA
+                print(f"state changing: {self.VL}, {self.raw}")
 
     """
     Update the VL used by other agents to update themselves
     """
 
-    def updateStep(self):
+    def update_step(self):
         for label in LABELS:
             #print(f"LPNET.nodes: {self.LPNet.nodes[self.id]}, VL: {self.VL[label]}")
             self.LPNet.nodes[self.id][label] = self.VL[label]

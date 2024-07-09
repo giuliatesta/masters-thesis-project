@@ -12,7 +12,7 @@ Creates a directory if not exists
 """
 
 
-def createIfNotExist(directory):
+def create_if_not_exist(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -22,7 +22,7 @@ Create a file named dir/_log_trial/{id}_LPStates.pickled
 """
 
 
-def makeFileNameLPState(dir, id):
+def make_file_name_lp_state(dir, id):
     return dir + BASE + str(id) + STATE + labels_chain() + ".pickled"
 
 
@@ -37,9 +37,9 @@ Store LPStateTuples in a file identified by trial_id
 """
 
 
-def storeAllToFile(LPStatesTuples, directory, trial_id):
-    file_path = makeFileNameLPState(directory, str(trial_id))
-    storeToFile(LPStatesTuples, file_path)
+def store_all_to_file(LPStatesTuples, directory, trial_id):
+    file_path = make_file_name_lp_state(directory, str(trial_id))
+    store_to_file(LPStatesTuples, file_path)
     read_pickled_file(file_path)
 
 
@@ -48,10 +48,10 @@ Store one item (e.g. state list or networkx graph) in a specific pickle file.
 """
 
 
-def storeToFile(stuff, filename, verbose=True):
+def store_to_file(stuff, filename, verbose=True):
     filename = os.path.normcase(filename)
     directory = os.path.dirname(filename)
-    createIfNotExist(directory)
+    create_if_not_exist(directory)
 
     f = open(filename, 'wb')
     pickle.dump(stuff, f)

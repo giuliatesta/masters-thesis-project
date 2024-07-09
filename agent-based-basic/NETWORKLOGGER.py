@@ -21,12 +21,12 @@ class NetworkLogger(Sim.Process):
         i = 0
         start_time = time.time()
         while True:
-            self.logCurrentState()
+            self.log_current_state()
             print("--- %i iterations completed in %fs ---" % (i, (time.time() - start_time)))
             i += 1
             yield Sim.hold, self, self.interval
 
-    def logCurrentState(self):
+    def log_current_state(self):
         LPNodes = sorted(self.sim.LPNet.nodes(data=True), key=lambda x: x[0])
 
         # Actual VL belonging coefficients
@@ -37,5 +37,5 @@ class NetworkLogger(Sim.Process):
         if self.sim.now() in tt:
             self.LPStatesTuples.append([self.sim.now(), VLs])
 
-    def logTrialToFiles(self, id):
-        UTILS.storeAllToFile(self.LPStatesTuples, RESULTS_DIR, id)
+    def log_trial_to_files(self, id):
+        UTILS.store_all_to_file(self.LPStatesTuples, RESULTS_DIR, id)

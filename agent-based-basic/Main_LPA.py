@@ -41,8 +41,7 @@ def main():
 
     # Run simulation
     simulation = NETWORKSIMULATION.NetworkSimulation(LPNet, LPA, ITERATION_NUM)
-    simulation.runSimulation()
-
+    simulation.run_simulation()
 
 
 if __name__ == '__main__':
