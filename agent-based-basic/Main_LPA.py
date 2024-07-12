@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import networkx as nx, csv, sys, LPA, NETWORKSIMULATION
+import numpy as np
 from pandas import read_csv
 
 from conf import ITERATION_NUM, LABELS_INIT_VALUES_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE
@@ -48,6 +49,12 @@ def main():
 if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
-    main()
-    plotter = RESULTPLOTTER.ResultPlotter("./work/results/trial_0_LPStates_L0.pickled")
-    # plotter.draw_adapter_by_time_plot()
+    files = []
+    thresholds = np.arange(0, 1.1, 0.1)
+    for threshold in thresholds:
+        print(f"THRESHOLD: {threshold}")
+        DNA_THRESHOLD = threshold
+        main()
+        files.append(f"./work/results/trial_0_LPStates_L0_{threshold}.pickled")
+    plotter = RESULTPLOTTER.ResultPlotter(files)
+    plotter.draw_adapter_by_time_different_thresholds_plot(thresholds)

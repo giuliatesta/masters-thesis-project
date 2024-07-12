@@ -20,8 +20,6 @@ def create_if_not_exist(directory):
 """
 Create a file named dir/_log_trial/{id}_LPStates.pickled
 """
-
-
 def make_file_name_lp_state(dir, id):
     return dir + BASE + str(id) + STATE + labels_chain() + ".pickled"
 
