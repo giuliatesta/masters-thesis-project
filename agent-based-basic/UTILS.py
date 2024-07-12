@@ -47,11 +47,11 @@ def store_all_to_file(LPStatesTuples, LPRaws, directory, trial_id):
 
     file_path = make_file_name_lp_state(directory, trial_id)
     store_to_file(LPStatesTuples, file_path)
-    read_pickled_file(file_path)
+    print_pickled_file(file_path)
 
     raw_file_path = make_file_name_raws(directory, trial_id)
     store_to_file(LPRaws, raw_file_path)
-    read_pickled_file(raw_file_path)
+    print_pickled_file(raw_file_path)
 
 
 """
@@ -74,12 +74,16 @@ def store_to_file(stuff, filename, verbose=True):
     return filename
 
 
+def print_pickled_file(file_path):
+    data = read_pickled_file(file_path)
+    # Now you can use the data
+    for d in data:
+        print(d)
+
+
 def read_pickled_file(file_path):
     # Open the file in binary read mode
     with open(file_path, 'rb') as file:
         # Load the data from the file
         data = pickle.load(file)
-
-    # Now you can use the data
-    for d in data:
-        print(d)
+    return data

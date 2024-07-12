@@ -44,36 +44,47 @@ class LPAgent(Sim.Process):
         else:
             neighbours = list(self.LPNet.predecessors(self.id))
 
-        for label in LABELS:
-            DNA_THRESHOLD = 0.5
-            # if STATE_CHANGING_METHOD == 1:
-            # if the index_DNA is bigger than a threshold then the agent becomes adapter
-            # otherwise it becomes non adapter
-            if STATE_CHANGING_METHOD == 2:
-                # if the average of the index_DNA of the neighbours is higher than a threshold
-                # then the agent becomes adapter; otherwise it's non adapter
-                avg_DNA = self.compute_average_index_DNA(neighbours)
-                self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
-                self.raw[label] = avg_DNA
-                print(f"state changing: {self.VL}, {self.raw}")
-            if STATE_CHANGING_METHOD == 3:
-                # finds the neighbour with the highest weight and check if its adapter or not
-                highest_weight_neighbours = []
-                max_weight = 0
+        # for label in LABELS:
+        #     DNA_THRESHOLD = 0.5
+        #     if STATE_CHANGING_METHOD == 1:
+        #         if
+        #     # if the index_DNA is bigger than a threshold then the agent becomes adapter
+        #     # otherwise it becomes non adapter
+        #     if STATE_CHANGING_METHOD == 2:
+        #         # if the average of the index_DNA of the neighbours is higher than a threshold
+        #         # then the agent becomes adapter; otherwise it's non adapter
+        #         avg_DNA = self.compute_average_index_DNA(neighbours)
+        #         self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
+        #         self.raw[label] = avg_DNA
+        #         print(f"state changing: {self.VL}, {self.raw}")
+        #     if STATE_CHANGING_METHOD == 3:
+        #         # finds the neighbour with the highest weight and check if its adapter or not
+        #         highest_weight_neighbours = []
+        #         max_weight = 0
+        #
+        #         for neighbour in list(neighbours):
+        #             data = self.LPNet.get_edge_data(self.id, neighbour)
+        #             weight = data['weight']
+        #             if weight > max_weight:
+        #                 max_weight = weight
+        #                 highest_weight_neighbours = [neighbour]
+        #             elif weight == max_weight:
+        #                 highest_weight_neighbours.append(neighbour)
+        #
+        #         avg_DNA = self.compute_average_index_DNA(neighbours)
+        #         self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
+        #         self.raw[label] = avg_DNA
+        #         print(f"state changing: {self.VL}, {self.raw}")
+        neighbours_size = len(list(neighbours))
+        for j in LABELS:
+            ssum = 0
+            # Calculate the second term of the update rule
+            for i in list(neighbours):
+                ssum += float(self.LPNet.nodes[i][j]) / float(neighbours_size + 1)
+                # ssum += float((self.LPNet.nodes[i][j])*(list(list(self.LPNet.edges(data=True))[(self.id+1)*(j-1)][2].values())[0])) / float(neighboursSize + 1)
 
-                for neighbour in list(neighbours):
-                    data = self.LPNet.get_edge_data(self.id, neighbour)
-                    weight = data['weight']
-                    if weight > max_weight:
-                        max_weight = weight
-                        highest_weight_neighbours = [neighbour]
-                    elif weight == max_weight:
-                        highest_weight_neighbours.append(neighbour)
-
-                avg_DNA = self.compute_average_index_DNA(neighbours)
-                self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
-                self.raw[label] = avg_DNA
-                print(f"state changing: {self.VL}, {self.raw}")
+            # Update str(j)'s belonging coefficient
+            self.VL[j] = self.LPNet.nodes[self.id][j] / float(neighbours_size + 1) + ssum
 
     """
     Update the VL used by other agents to update themselves

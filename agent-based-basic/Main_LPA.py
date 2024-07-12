@@ -6,6 +6,7 @@ from pandas import read_csv
 from conf import ITERATION_NUM, LABELS_INIT_VALUES_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE
 from create_input import create_input
 from preprocessing import load_dataset_csv
+import RESULTPLOTTER
 
 
 def main():
@@ -48,3 +49,5 @@ if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
     main()
+    plotter = RESULTPLOTTER.ResultPlotter("./work/results/trial_0_LPStates_L0.pickled")
+    # plotter.draw_adapter_by_time_plot()
