@@ -1,13 +1,15 @@
 {
-    "Gender": {},
     "Education": {
-        "Tertiary and higher (University degree, PhD or similar degrees).": 1,
-        "Lower secondary (upper elementary school or similar);": 2,
-        "Upper secondary (high school or similar);": 3,
-        "Primary (elementary school or similar);": 4
+        "1": "Tertiary and higher (University degree, PhD or similar degrees).",
+        "2": "Lower secondary (upper elementary school or similar);",
+        "3": "Upper secondary (high school or similar);",
+        "4": "Primary (elementary school or similar);"
     },
     "Income_level": {
-        "higher middle": 1,
-        "lower middle": 2
+        "1": "middle",
+        "2": "high",
+        "3": "higher middle",
+        "4": "lower middle",
+        "5": "low"
     }
 }

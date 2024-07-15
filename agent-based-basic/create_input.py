@@ -5,7 +5,7 @@ import pandas as pd
 
 from network_building import create_network
 
-NUMBER_OF_RECORDS = 1000
+NUMBER_OF_RECORDS = 500
 INITIAL_ADAPTERS_PERC = 10
 
 
@@ -53,7 +53,7 @@ def generate_labels(size):
 
 def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     if percentage_of_adapters > 1:
-        percentage_of_adapters = percentage_of_adapters/100
+        percentage_of_adapters = percentage_of_adapters / 100
 
     indexes_length = len(indexes)
     # compute the average index DNA value
@@ -89,28 +89,28 @@ def transform_categorical_values(df):
         try:
             df[column] = pd.to_numeric(df[column])
         except ValueError:
-            transformed_column, legend = transform_long_strings(df[column])
-            legend_json.update({column: legend})
-            df[column] = transformed_column
+            if df[column].apply(lambda x: isinstance(x, str) and len(x) > 10).any():
+                transformed_column, legend = transform_long_strings(df[column])
+                legend_json.update({column: legend})
+                df[column] = transformed_column
     print(legend_json)
     with open("./work/ATTRIBUTE_LEGEND", 'w') as json_file:
         json.dump(legend_json, json_file, indent=4)
     return df
 
 
-
 # TODO:
 # assign the number for all values in a column (if one is > 10, all are changed - now only the ones > 10 are changed)
-# try to do 1 : "value" and not vice versa 
+# try to do 1 : "value" and not vice versa
 def transform_long_strings(column):
     df = pd.DataFrame(column)
     mapping = {}
     for value in column:
-        if isinstance(value, str) and len(value) > 10:
-            # Assign a unique integer to the long string
+        if value not in mapping.values():
+            # add to the mapping the new association
             key = len(mapping) + 1
-            if value not in mapping:
-                mapping[value] = key # Simple integer mapping
-            # Replace the string with its corresponding integer
+            mapping[key] = value
+            # replace the string with its corresponding integer
             df[column == value] = key
     return df, mapping
+

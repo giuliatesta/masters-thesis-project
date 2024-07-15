@@ -49,12 +49,15 @@ def main():
 if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
-    files = []
-    thresholds = np.arange(0, 1.1, 0.1)
-    for threshold in thresholds:
-        print(f"THRESHOLD: {threshold}")
-        DNA_THRESHOLD = threshold
-        main()
-        files.append(f"./work/results/trial_0_LPStates_L0_{threshold}.pickled")
-    plotter = RESULTPLOTTER.ResultPlotter(files)
-    plotter.draw_adapter_by_time_different_thresholds_plot(thresholds)
+    main()
+    # files = []
+    # thresholds = np.arange(0, 1.1, 0.1)
+    # for threshold in thresholds:
+    #     print(f"THRESHOLD: {threshold}")
+    #     DNA_THRESHOLD = threshold
+    #     main()
+    #     files.append(f"./work/results/trial_0_LPStates_L0_{threshold}.pickled")
+    # plotter = RESULTPLOTTER.ResultPlotter(files)
+    # plotter.draw_adapter_by_time_different_thresholds_plot(thresholds)
+    plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_L0.pickled"])
+    plotter.draw_adapter_by_time_plot()
