@@ -99,7 +99,7 @@ class LPAgent(Sim.Process):
                 neighbours_size = len(list(neighbours))
                 for neighbour in list(neighbours):
                     data = self.LPNet.get_edge_data(self.id, neighbour)
-                    weight = data.get('weight', 0)      # default value = 0 if it doesn't exist
+                    weight = data.get('weight', 0)  # default value = 0 if it doesn't exist
                     sum_for_avg += weight * (1 if self.LPNet.nodes[neighbour][label] == 1 else -1)
                 avg = float(sum_for_avg / neighbours_size)
 
@@ -110,9 +110,20 @@ class LPAgent(Sim.Process):
                 self.raw[label] = avg
                 if (avg > 0 and self.VL[label] == 0) or (avg < 0 and self.VL[label] == 0):
                     self.VL[label] = not self.VL[label]
+            if STATE_CHANGING_METHOD == 5:
+                # sort the neighbours by weight, consider only n of them
+                # if 50% adapter 50% non adapter -> the agent keeps its opinion
+                # otherwise, the agent changes its opinion (MAJORITY RULE)
+                weights = []
+                for i, neighbour in enumerate(neighbours):
+                    data = self.LPNet.get_edge_data(self.id, neighbour)
+                    weights.append(data.get('weight', 0))  # default value = 0 if it doesn't exist
 
+                sorted_neighbours = [value for value, _ in
+                                     sorted(zip(neighbours, weights), key=lambda x: x[1], reverse=True)]
+                neighbours_vls = [self.LPNet.nodes[neighbour][label] for neighbour in sorted_neighbours]
+                self.VL[label] = apply_majority(neighbours_vls, self.VL[label])
             print(f"state changing: {self.VL}, {self.raw}")
-
 
     """
     Update the VL used by other agents to update themselves
@@ -129,3 +140,11 @@ class LPAgent(Sim.Process):
         for neighbour in list(neighbours):
             sum_for_average += float(self.LPNet.nodes[neighbour]["attribute-0"])
         return float(sum_for_average / neighbours_size)
+
+
+def apply_majority(values, previous_value):
+    total = len(values)
+    adapters = values.count(1) / total
+    non_adapters = values.count(0) / total
+    return 1 if adapters > non_adapters else \
+        (0 if non_adapters > adapters else previous_value)

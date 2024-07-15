@@ -92,7 +92,6 @@ def transform_categorical_values(df):
                 transformed_column, legend = transform_long_strings(df[column])
                 legend_json.update({column: legend})
                 df[column] = transformed_column
-    print(legend_json)
     with open("./work/ATTRIBUTE_LEGEND", 'w') as json_file:
         json.dump(legend_json, json_file, indent=4)
     return df
