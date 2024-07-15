@@ -1,7 +1,6 @@
 import pickle
 import os
-from conf import LABELS
-from preprocessing import load_dataset_csv
+from conf import LABELS, STATE_CHANGING_METHOD
 
 STATE = "_LPStates"
 # / + "log_trial_"
@@ -20,12 +19,14 @@ def create_if_not_exist(directory):
 """
 Create a file named dir/_log_trial/{id}_LPStates.pickled
 """
+
+
 def make_file_name_lp_state(dir, id):
-    return dir + BASE + str(id) + STATE + labels_chain() + ".pickled"
+    return dir + BASE + str(id) + STATE + labels_chain() + "_" + str(STATE_CHANGING_METHOD) + ".pickled"
 
 
 def make_file_name_raws(dir, id):
-    return dir + BASE + str(id) + STATE + "_RAWS.pickled"
+    return dir + BASE + str(id) + STATE + "_" + str(STATE_CHANGING_METHOD) + "_RAWS.pickled"
 
 
 def labels_chain():

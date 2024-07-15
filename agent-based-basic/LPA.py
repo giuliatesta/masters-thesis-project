@@ -61,7 +61,6 @@ class LPAgent(Sim.Process):
                     self.raw[label] = avg
 
             # if STATE_CHANGING_METHOD == 1:
-            #     if
             # if the index_DNA is bigger than a threshold then the agent becomes adapter
             # otherwise it becomes non adapter
 
@@ -89,6 +88,28 @@ class LPAgent(Sim.Process):
                 avg_DNA = self.compute_average_index_DNA(neighbours)
                 self.VL[label] = 1 if avg_DNA >= DNA_THRESHOLD else 0
                 self.raw[label] = avg_DNA
+
+            if STATE_CHANGING_METHOD == 4:
+                # compute the average using the weight and whether they are adapter (+1) or non adapter(-1).
+                # if avg > 0 and the agent is non adopter changes its state to adopter;
+                # if avg < 0 and the agent is adopter changes its state to non adopter;
+                # and then if avg =0 the agent keeps its opinion.
+                # then compute the aggregation function:  w1 * my opinion + w2 * neighbours’ opinion.
+                sum_for_avg = 0
+                neighbours_size = len(list(neighbours))
+                for neighbour in list(neighbours):
+                    data = self.LPNet.get_edge_data(self.id, neighbour)
+                    weight = data.get('weight', 0)      # default value = 0 if it doesn't exist
+                    sum_for_avg += weight * (1 if self.LPNet.nodes[neighbour][label] == 1 else -1)
+                avg = float(sum_for_avg / neighbours_size)
+
+                # AGGREGATION FUNCTION:
+                # agent_weight = float(1 / (neighbours_size + 1))
+                # neighbours_weight = agent_weight
+                # self.raw[label] = agent_weight * self.VL[label] + neighbours_weight * avg
+                self.raw[label] = avg
+                if (avg > 0 and self.VL[label] == 0) or (avg < 0 and self.VL[label] == 0):
+                    self.VL[label] = not self.VL[label]
 
             print(f"state changing: {self.VL}, {self.raw}")
 

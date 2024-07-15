@@ -5,7 +5,7 @@ import pandas as pd
 
 from network_building import create_network
 
-NUMBER_OF_RECORDS = 500
+NUMBER_OF_RECORDS = 1000
 INITIAL_ADAPTERS_PERC = 10
 
 
@@ -22,7 +22,6 @@ def create_input(data, LABELS):
     attributes = transform_categorical_values(pd.DataFrame(data[LABELS]))
     attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, header=False, sep=",")
     indexes_DNA = attributes.iloc[:, 0]
-    exit(1)
 
     # initial vector labels
     initial_vls = pd.DataFrame(generate_initial_vls_with_index(indexes_DNA, INITIAL_ADAPTERS_PERC), )
@@ -99,9 +98,6 @@ def transform_categorical_values(df):
     return df
 
 
-# TODO:
-# assign the number for all values in a column (if one is > 10, all are changed - now only the ones > 10 are changed)
-# try to do 1 : "value" and not vice versa
 def transform_long_strings(column):
     df = pd.DataFrame(column)
     mapping = {}
