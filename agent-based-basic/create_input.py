@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 import pandas as pd
 
@@ -17,14 +19,14 @@ def create_input(data, LABELS):
 
     # attributes file
     # needs the comma as separator since some values contain the semicolon
-    attributes = pd.DataFrame(data[LABELS])
+    attributes = transform_categorical_values(pd.DataFrame(data[LABELS]))
     attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, header=False, sep=",")
     indexes_DNA = attributes.iloc[:, 0]
+    exit(1)
 
     # initial vector labels
     initial_vls = pd.DataFrame(generate_initial_vls_with_index(indexes_DNA, INITIAL_ADAPTERS_PERC), )
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
-
 
     # create the network to extract the edges between nodes
     graph = create_network(data, similarity_threshold=0.7, name="Travel Survey gower similarity network")
@@ -74,3 +76,41 @@ def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     # set the chosen indices to 1
     vls[indices] = 1
     return vls
+
+
+def transform_categorical_values(df):
+    df.convert_dtypes()
+    mask = df.apply(lambda x: x.str.len() > 10)
+
+    # the numerical attributes are cast into numbers
+    # the string attributes are transformed if too long
+    legend_json = {}
+    for column in df.columns:
+        try:
+            df[column] = pd.to_numeric(df[column])
+        except ValueError:
+            transformed_column, legend = transform_long_strings(df[column])
+            legend_json.update({column: legend})
+            df[column] = transformed_column
+    print(legend_json)
+    with open("./work/ATTRIBUTE_LEGEND", 'w') as json_file:
+        json.dump(legend_json, json_file, indent=4)
+    return df
+
+
+
+# TODO:
+# assign the number for all values in a column (if one is > 10, all are changed - now only the ones > 10 are changed)
+# try to do 1 : "value" and not vice versa 
+def transform_long_strings(column):
+    df = pd.DataFrame(column)
+    mapping = {}
+    for value in column:
+        if isinstance(value, str) and len(value) > 10:
+            # Assign a unique integer to the long string
+            key = len(mapping) + 1
+            if value not in mapping:
+                mapping[value] = key # Simple integer mapping
+            # Replace the string with its corresponding integer
+            df[column == value] = key
+    return df, mapping
