@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-import networkx as nx, csv, sys, LPA, NETWORKSIMULATION
+import networkx as nx, sys, LPA, NETWORKSIMULATION
 import numpy as np
 from pandas import read_csv
 
-from conf import ITERATION_NUM, LABELS_INIT_VALUES_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE
+from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE
 from create_input import create_input
 from preprocessing import load_dataset_csv
 import RESULTPLOTTER
@@ -27,16 +27,19 @@ def main():
         nx.set_node_attributes(LPNet, attributes[i], f"attribute-{i}")
 
     # Get VLs' values from file
-    with open(LABELS_INIT_VALUES_FILE, 'r') as read_obj:
-        csv_reader = csv.reader(read_obj, delimiter=';', quoting=csv.QUOTE_NONNUMERIC)
-        initial_VLs = list(csv_reader)
+    initial_VLs = []
+    with open(INITIAL_VECTOR_LABELS_FILE, 'r') as read_obj:
+        for line in read_obj:
+            array = [float(x) for x in line.strip().split(sep=';')]
+            initial_VLs.append(array)
+    initial_VLs = np.array(initial_VLs)
 
     network_nodes = sorted(LPNet.nodes())
-    print(LPNet.nodes())
     # Initialize nodes' VLs
     for i, node in enumerate(network_nodes):
         for j, label in enumerate(LABELS):
-            if len(sys.argv) == 6:
+            print(label)
+            if len(sys.argv) == 7:
                 LPNet.nodes[node][label] = initial_VLs[i][j]
             else:
                 LPNet.nodes[node][label] = initial_VLs[node - network_nodes[0]][j]
@@ -50,14 +53,5 @@ if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
     main()
-    # files = []
-    # thresholds = np.arange(0, 1.1, 0.1)
-    # for threshold in thresholds:
-    #     print(f"THRESHOLD: {threshold}")
-    #     DNA_THRESHOLD = threshold
-    #     main()
-    #     files.append(f"./work/results/trial_0_LPStates_L0_{threshold}.pickled")
-    # plotter = RESULTPLOTTER.ResultPlotter(files)
-    # plotter.draw_adapter_by_time_different_thresholds_plot(thresholds)
-    plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_L0.pickled"])
+    plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_L0_4.pickled"])
     plotter.draw_adapter_by_time_plot()

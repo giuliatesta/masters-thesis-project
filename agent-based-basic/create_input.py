@@ -5,17 +5,13 @@ import pandas as pd
 
 from network_building import create_network
 
-NUMBER_OF_RECORDS = 1000
+NUMBER_OF_RECORDS = 500
 INITIAL_ADAPTERS_PERC = 10
 
 
 def create_input(data, LABELS):
     data.reset_index(drop=True, inplace=True)
     data = data.head(NUMBER_OF_RECORDS)
-
-    # labels file only has L0, L1, L2
-    labels = pd.DataFrame(generate_labels(len(LABELS)))
-    labels.to_csv(path_or_buf="work/LABELS", index=False, header=False, sep=";")
 
     # attributes file
     # needs the comma as separator since some values contain the semicolon
@@ -27,8 +23,12 @@ def create_input(data, LABELS):
     initial_vls = pd.DataFrame(generate_initial_vls_with_index(indexes_DNA, INITIAL_ADAPTERS_PERC), )
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
 
+    # labels file only has L0, L1, L2
+    with open("work/LABELS", 'w') as f:
+        f.write("L0;L1")
+
     # create the network to extract the edges between nodes
-    graph = create_network(data, similarity_threshold=0.7, name="Travel Survey gower similarity network")
+    graph = create_network(data, similarity_threshold=0.6, name="Travel Survey gower similarity network")
     edges = pd.DataFrame(graph.edges)
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
@@ -46,10 +46,6 @@ def generate_binary_pairs(size, percentage_of_ones):
     return binary_array
 
 
-def generate_labels(size):
-    return [f'L{i}' for i in range(size)]
-
-
 def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     if percentage_of_adapters > 1:
         percentage_of_adapters = percentage_of_adapters / 100
@@ -57,7 +53,7 @@ def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     indexes_length = len(indexes)
     # compute the average index DNA value
     avg_DNA = sum([float(i) for i in indexes]) / indexes_length
-    vls = np.zeros(indexes_length, dtype=int)
+    vls = np.array([[0.0, 0.0] for _ in range(indexes_length)])
     possible_adapters_index = []
 
     # find the indexes that are greater than the average
@@ -73,7 +69,8 @@ def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     indices = np.random.choice(possible_adapters_length, number_of_initial_adapters)
 
     # set the chosen indices to 1
-    vls[indices] = 1
+    for index in indices:
+        vls[index] = [0.0, 1.0]
     return vls
 
 

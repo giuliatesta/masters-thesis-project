@@ -7,12 +7,12 @@ from UTILS import read_pickled_file
 
 class ResultPlotter(object):
 
-    def __init__(self,  file_paths):
+    def __init__(self, file_paths):
         self.raw_data = []
         for file_path in file_paths:
             self.raw_data.append(read_pickled_file(file_path))
 
-    def draw_adapter_by_time_plot(self, file_to_use_index = 0):
+    def draw_adapter_by_time_plot(self, file_to_use_index=0):
         adapters = prepare_adapters_by_time(self.raw_data[file_to_use_index])
         # Plot the data
         plt.figure(figsize=(10, 6))

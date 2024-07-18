@@ -12,7 +12,7 @@ TRIALS = 1
 try:
     # Set files path and graph type
     LABELS_NAMES_FILE = sys.argv[1]
-    LABELS_INIT_VALUES_FILE = sys.argv[2]
+    INITIAL_VECTOR_LABELS_FILE = sys.argv[2]
     EDGES_FILE = sys.argv[3]
     ATTRIBUTES_FILE = sys.argv[4]
     GRAPH_TYPE = sys.argv[5]

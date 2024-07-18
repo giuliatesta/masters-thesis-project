@@ -21,12 +21,12 @@ Create a file named dir/_log_trial/{id}_LPStates.pickled
 """
 
 
-def make_file_name_lp_state(dir, id):
+def make_file_name_vector_labels(dir, id):
     return dir + BASE + str(id) + STATE + labels_chain() + "_" + str(STATE_CHANGING_METHOD) + ".pickled"
 
 
-def make_file_name_raws(dir, id):
-    return dir + BASE + str(id) + STATE + "_" + str(STATE_CHANGING_METHOD) + "_RAWS.pickled"
+def make_file_name_states(dir, id):
+    return dir + BASE + str(id) + STATE + "_" + str(STATE_CHANGING_METHOD) + "_STATES.pickled"
 
 
 def labels_chain():
@@ -44,11 +44,11 @@ Store LPStateTuples in a file identified by trial_id
 def store_all_to_file(LPStatesTuples, LPRaws, directory, trial_id):
     trial_id = str(trial_id)
 
-    file_path = make_file_name_lp_state(directory, trial_id)
+    file_path = make_file_name_vector_labels(directory, trial_id)
     store_to_file(LPStatesTuples, file_path)
     print_pickled_file(file_path)
 
-    raw_file_path = make_file_name_raws(directory, trial_id)
+    raw_file_path = make_file_name_states(directory, trial_id)
     store_to_file(LPRaws, raw_file_path)
     print_pickled_file(raw_file_path)
 
