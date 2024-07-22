@@ -53,7 +53,7 @@ def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     indexes_length = len(indexes)
     # compute the average index DNA value
     avg_DNA = sum([float(i) for i in indexes]) / indexes_length
-    vls = np.array([[0.0, 0.0] for _ in range(indexes_length)])
+    vls = np.array([[1.0, 0.0] for _ in range(indexes_length)])
     possible_adapters_index = []
 
     # find the indexes that are greater than the average
