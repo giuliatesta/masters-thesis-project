@@ -1,5 +1,6 @@
 import sys
 
+import numpy as np
 from matplotlib import pyplot as plt
 
 from UTILS import read_pickled_file
@@ -16,7 +17,7 @@ class ResultPlotter(object):
         adapters = prepare_adapters_by_time(self.raw_data[file_to_use_index])
         # Plot the data
         plt.figure(figsize=(10, 6))
-        plt.plot(list(adapters.keys()), list(adapters.values()),  marker='x')
+        plt.plot(list(adapters.keys()), list(adapters.values()), marker='x')
 
         plt.xlabel('Time Step')
         plt.ylabel('Number of adapters')
@@ -39,6 +40,18 @@ class ResultPlotter(object):
         plt.ylabel('Number of adapters')
         plt.title('Number of adapters by time')
         plt.grid(True)
+        plt.show()
+
+    def heatmap(self):
+        iterations = len(self.raw_data)
+        state_vectors = np.vstack([np.array(step[1]) for step in self.raw_data])
+        heatmap_data = np.vstack(state_vectors)
+        plt.figure()
+        plt.imshow(heatmap_data, aspect='auto', cmap='hot', interpolation='nearest')
+        plt.colorbar(label='State Value')
+        plt.xlabel('State Index')
+        plt.ylabel('Iteration')
+        plt.title('Heatmap of Simulation States Over Time')
         plt.show()
 
 
