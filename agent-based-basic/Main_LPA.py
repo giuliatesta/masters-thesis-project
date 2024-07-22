@@ -38,12 +38,12 @@ def main():
     # Initialize nodes' VLs
     for i, node in enumerate(network_nodes):
         for j, label in enumerate(LABELS):
-            print(label)
             if len(sys.argv) == 7:
                 LPNet.nodes[node][label] = initial_VLs[i][j]
             else:
                 LPNet.nodes[node][label] = initial_VLs[node - network_nodes[0]][j]
 
+        LPNet.nodes[node]["state"] = 1 if initial_VLs[i][0] < initial_VLs[i][1] else -1
     # Run simulation
     simulation = NETWORKSIMULATION.NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.run_simulation()
@@ -53,5 +53,5 @@ if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
     main()
-    plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_L0_4.pickled"])
-    plotter.draw_adapter_by_time_plot()
+    # plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_L0_L1_3.pickled"])
+    # plotter.heatmap()
