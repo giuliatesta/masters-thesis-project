@@ -10,10 +10,12 @@ class ResultPlotter(object):
 
     def __init__(self, file_paths):
         self.raw_data = []
+        self.file_paths = file_paths
         for file_path in file_paths:
             self.raw_data.append(read_pickled_file(file_path))
 
     def draw_adapter_by_time_plot(self, file_to_use_index=0):
+        plot_file_name = self.file_paths[file_to_use_index].split('/')[-1] + "_PLOT.png"
         adapters = prepare_adapters_by_time(self.raw_data[file_to_use_index])
         print(adapters)
         # Plot the data
@@ -24,7 +26,7 @@ class ResultPlotter(object):
         plt.ylabel('Number of adapters')
         plt.title('Number of adapters by time')
         plt.grid(True)
-        plt.show()
+        plt.savefig(f"./plots/adapters_by_time/{plot_file_name}")
 
     def draw_adapter_by_time_different_thresholds_plot(self, thresholds):
         if len(thresholds) != len(self.raw_data):
