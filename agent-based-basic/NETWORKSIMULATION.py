@@ -21,18 +21,18 @@ class NetworkSimulation(Sim.Simulation):
     Run a simulation for TRIALS trials
     """
 
-    def run_simulation(self):
+    def run_simulation(self, run_index):
         print("Starting simulation...")
         for i in range(TRIALS):
             print("--- Trial %i ---" % i)
-            self.run_trial(i)
+            self.run_trial(i, run_index)
         print("Simulation completed.")
 
     """
     Run a single trial
     """
 
-    def run_trial(self, id):
+    def run_trial(self, id, run_index):
         self.initialize()
 
         print("Set up LP agents...")
@@ -56,4 +56,4 @@ class NetworkSimulation(Sim.Simulation):
         # Write log files
         # saves in *.pickled the resulting nodes at each run until maxTime
         # only for specific iteration --> modify tt variable to add and/or remove trials if uncesseray or useless.
-        logger.log_trial_to_files(id)
+        logger.log_trial_to_files(id, run_index)

@@ -1,16 +1,16 @@
 #!/usr/bin/python
-
+import UTILS
 import networkx as nx, sys, LPA, NETWORKSIMULATION
 import numpy as np
 from pandas import read_csv
 
-from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE
+from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE, RESULTS_DIR
 from create_input import create_input
 from preprocessing import load_dataset_csv
 import RESULTPLOTTER
 
 
-def main():
+def main(run_index):
     # Create the network from edges defined in EDGES_FILE file
     if GRAPH_TYPE == "D":
         LPNet = nx.read_edgelist(EDGES_FILE, nodetype=int, create_using=nx.DiGraph, data=[('weight', float)])
@@ -46,12 +46,16 @@ def main():
         LPNet.nodes[node]["state"] = 1 if initial_VLs[i][0] < initial_VLs[i][1] else -1
     # Run simulation
     simulation = NETWORKSIMULATION.NetworkSimulation(LPNet, LPA, ITERATION_NUM)
-    simulation.run_simulation()
+    simulation.run_simulation(run_index)
 
 
 if __name__ == '__main__':
-    data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-    create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
-    main()
-    plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_0_STATES.pickled"])
-    plotter.draw_adapter_by_time_plot()
+    for run in range(1, 10):
+        print(f"---- Run {run} ----")
+        data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
+        create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
+        main(run)
+    UTILS.average_results(RESULTS_DIR)
+    # TODO average the state results
+    # plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results.pickled"])
+    # plotter.draw_adapter_by_time_plot()

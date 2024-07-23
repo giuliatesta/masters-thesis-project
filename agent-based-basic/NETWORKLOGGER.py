@@ -39,5 +39,5 @@ class NetworkLogger(Sim.Process):
             self.LPVLTuples.append([self.sim.now(), VLs])
             self.LPStates.append([self.sim.now(), states])
 
-    def log_trial_to_files(self, id):
-        UTILS.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, id)
+    def log_trial_to_files(self, id, run_index):
+        UTILS.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, id, run_index)
