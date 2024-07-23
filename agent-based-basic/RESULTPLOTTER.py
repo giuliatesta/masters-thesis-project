@@ -15,6 +15,7 @@ class ResultPlotter(object):
 
     def draw_adapter_by_time_plot(self, file_to_use_index=0):
         adapters = prepare_adapters_by_time(self.raw_data[file_to_use_index])
+        print(adapters)
         # Plot the data
         plt.figure(figsize=(10, 6))
         plt.plot(list(adapters.keys()), list(adapters.values()), marker='x')
@@ -57,13 +58,5 @@ class ResultPlotter(object):
 
 def prepare_adapters_by_time(raw_data):
     # [time_step, [values for each node]]
-
-    # [0, [[1.0], [1.0], [0.0], [0.0], [0.0], [1.0], [0.0], [1.0], [1.0], [1.0], [0.0], [1.0], [0.0], [0.0], [0.0], [0.0], [1.0], [1.0], [0.0], [0.0]]]
-    # [1, [[1.0], [1.0], [1.0], [1.0], [1.0], [1.0], [0.0], [0.0], [1.0], [1.0], [1.0], [1.0], [1.0], [1.0], [1.0], [1.0], [0.0], [1.0], [1.0], [1.0]]]
-    time_steps = len(raw_data)
-    adapters = {i: 0 for i in range(len(raw_data))}
-    for i in range(time_steps):
-        results = raw_data[i][1]
-        adapter_count_for_time_step = (int(sum(arr[0] == 1.0 for arr in results)))
-        adapters[i] = adapter_count_for_time_step
-    return adapters
+    # [0, [-1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, -1, -1, -1, -1 ]]
+    return {raw[0] : raw[1].count(1) for raw in raw_data}

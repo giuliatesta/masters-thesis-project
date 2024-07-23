@@ -53,5 +53,5 @@ if __name__ == '__main__':
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
     main()
-    # plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_L0_L1_3.pickled"])
-    # plotter.heatmap()
+    plotter = RESULTPLOTTER.ResultPlotter(["./work/results/trial_0_LPStates_0_STATES.pickled"])
+    plotter.draw_adapter_by_time_plot()
