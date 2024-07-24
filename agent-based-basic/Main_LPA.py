@@ -55,7 +55,7 @@ if __name__ == '__main__':
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
         create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
         main(run)
-    UTILS.average_results(RESULTS_DIR)
-    # TODO average the state results
-    # plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results.pickled"])
-    # plotter.draw_adapter_by_time_plot()
+    UTILS.average_results(RESULTS_DIR, UTILS.average_vector_labels, "avg_results_vls.pickled")
+    UTILS.average_results(RESULTS_DIR, UTILS.average_states, "avg_results_states.pickled")
+    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results_states.pickled"])
+    plotter.draw_adapter_by_time_plot()

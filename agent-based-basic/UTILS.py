@@ -92,12 +92,12 @@ def read_pickled_file(file_path):
     return data
 
 
-def average_results(results_directory):
+def average_results(results_directory, file_picker, results_file_name):
     results = []
     avg_results = []
     # reads the results file in the directory and stored them in the results array
     for filename in os.listdir(results_directory):
-        if filename.startswith("trial_") and not filename.endswith("STATES.pickled"):
+        if file_picker(filename):
             file_name = os.path.join(results_directory, filename)
             data = read_pickled_file(file_name)
             results.append(data)
@@ -119,8 +119,16 @@ def average_results(results_directory):
         avg_results.append([time_step, average_vectors.tolist()])
 
     # stores the averaged results in a pickled file called avg_results
-    avg_file_path = results_directory + "/avg_results.pickled"
+    avg_file_path = results_directory + "/" + results_file_name
     store_to_file(list(avg_results), avg_file_path)
-    print("---- AVERAGED RESULTS ----")
+    print(f"---- AVERAGED RESULTS: {results_file_name}----")
     print_pickled_file(avg_file_path)
     return avg_results
+
+
+def average_vector_labels(filename):
+    return filename.startswith("trial_") and not filename.endswith("STATES.pickled")
+
+
+def average_states(filename):
+    return filename.endswith("STATES.pickled")
