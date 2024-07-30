@@ -154,10 +154,10 @@ def determine_state(vl, labels, original_value):
     second = vl[labels[1]]
     if first > second:
         # if the non adapter is greater than adapter -> it becomes non adapter
-        return 1
+        return -1
     elif first < second:
         # if the adapter is greater than non adapter -> it becomes adapter
-        return -1
+        return 1
     else:
         # if they are equal ([0.5, 0.5]) -> then it stays the same
         return original_value

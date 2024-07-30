@@ -6,7 +6,7 @@ import pandas as pd
 from network_building import create_network
 
 NUMBER_OF_RECORDS = 1000
-INITIAL_ADAPTERS_PERC = 10
+INITIAL_ADAPTERS_PERC = 50
 
 def create_input(data, LABELS):
     data.reset_index(drop=True, inplace=True)

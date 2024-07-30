@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from average_results import average_vls_results, get_final_state_from_vls
+from average_results import average_vls_results, average_state_results
 import networkx as nx, sys, LPA, NETWORKSIMULATION
 import numpy as np
 from pandas import read_csv
@@ -10,6 +10,8 @@ from preprocessing import load_dataset_csv
 import RESULTPLOTTER
 
 RUNS = 10
+
+
 def main(run_index):
     # Create the network from edges defined in EDGES_FILE file
     if GRAPH_TYPE == "D":
@@ -49,8 +51,6 @@ def main(run_index):
     simulation.run_simulation(run_index)
 
 
-
-
 if __name__ == '__main__':
     # UTILS.print_pickled_file("./work/results/sim_01/avg_results_states.pickled")
     # exit(1)
@@ -59,8 +59,8 @@ if __name__ == '__main__':
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
         create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
         main(run)
-    avg_results = average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
-    get_final_state_from_vls(averaged_vls=avg_results, results_file_name="avg_results_states.pickled")
+    average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
+    average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
     plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results_states.pickled"])
     plotter.draw_adapter_by_time_plot()
