@@ -47,7 +47,7 @@ class ResultPlotter(object):
 
     def heatmap(self):
         iterations = len(self.raw_data)
-        state_vectors = np.vstack([np.array(step[1]) for step in self.raw_data])
+        state_vectors = [np.array(step[1]) for step in self.raw_data]
         heatmap_data = np.vstack(state_vectors)
         plt.figure()
         plt.imshow(heatmap_data, aspect='auto', cmap='hot', interpolation='nearest')
@@ -61,4 +61,4 @@ class ResultPlotter(object):
 def prepare_adapters_by_time(raw_data):
     # [time_step, [values for each node]]
     # [0, [-1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, -1, -1, -1, -1 ]]
-    return {raw[0] : raw[1].count(1) for raw in raw_data}
+    return {raw[0]: raw[1].count(1) for raw in raw_data}

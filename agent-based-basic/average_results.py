@@ -72,7 +72,7 @@ def get_final_state_from_vls(averaged_vls, results_file_name):
     #
     # # stores the averaged results in a pickled file called avg_results
     # avg_file_path = results_directory + "/" + results_file_name
-    # UTILS.store_to_file(list(avg_results), avg_file_path)
+    UTILS.store_to_file(list(states), results_file_name)
     print(f"---- AVERAGED RESULTS: {results_file_name}----")
     print(states)
     # # print_pickled_file(avg_file_path)
