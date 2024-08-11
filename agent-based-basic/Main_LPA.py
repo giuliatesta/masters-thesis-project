@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import os
 
 from average_results import average_vls_results, average_state_results, get_final_state_from_vls
 import networkx as nx, sys, LPA, NETWORKSIMULATION
