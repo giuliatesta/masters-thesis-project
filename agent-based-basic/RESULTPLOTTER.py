@@ -61,4 +61,13 @@ class ResultPlotter(object):
 def prepare_adapters_by_time(raw_data):
     # [time_step, [values for each node]]
     # [0, [-1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, -1, -1, -1, -1 ]]
-    return {raw[0]: raw[1].count(1) for raw in raw_data}
+    adapters = {}
+    for raw in raw_data:
+        # print(f"ind: {raw[0]} --> {raw[1]}")
+        acc = 0
+        for val in raw[1]:
+            # print(val)
+            if val == 1:
+                acc += 1
+        adapters[raw[0]] = acc
+    return adapters
