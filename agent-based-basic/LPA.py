@@ -150,13 +150,14 @@ class LPAgent(Sim.Process):
 
 
 def determine_state(vl, labels, original_value):
+    # 0; 1    # adapter     1; 0    # non adapter
     first = vl[labels[0]]
     second = vl[labels[1]]
     if first > second:
-        # if the non adapter is greater than adapter -> it becomes non adapter
+        # if the non-adapter's value is greater than adapter's value -> it becomes non adapter
         return -1
     elif first < second:
-        # if the adapter is greater than non adapter -> it becomes adapter
+        # if the adapter's value is greater than non-adapter's value -> it becomes adapter
         return 1
     else:
         # if they are equal ([0.5, 0.5]) -> then it stays the same

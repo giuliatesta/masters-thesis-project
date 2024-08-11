@@ -6,7 +6,7 @@ import pandas as pd
 from network_building import create_network
 
 NUMBER_OF_RECORDS = 1000
-INITIAL_ADAPTERS_PERC = 50
+INITIAL_ADAPTERS_PERC = 10
 
 def create_input(data, LABELS):
     data.reset_index(drop=True, inplace=True)
@@ -19,7 +19,7 @@ def create_input(data, LABELS):
     indexes_DNA = attributes.iloc[:, 0]
 
     # initial vector labels
-    initial_vls = pd.DataFrame(generate_initial_vls_with_index(indexes_DNA, INITIAL_ADAPTERS_PERC), )
+    initial_vls = pd.DataFrame(generate_initial_vls_with_index(indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
 
     # labels file only has L0, L1, L2
@@ -53,7 +53,7 @@ def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     # compute the average index DNA value
     avg_DNA = sum([float(i) for i in indexes]) / indexes_length
     vls = np.array([[1.0, 0.0] for _ in range(indexes_length)])
-    print(avg_DNA)
+    print(f"Average index DNA: {avg_DNA}")
     possible_adapters_index = []
 
     # find the indexes that are greater than the average
@@ -67,11 +67,11 @@ def generate_initial_vls_with_index(indexes, percentage_of_adapters):
     number_of_initial_adapters = int(possible_adapters_length * percentage_of_adapters)
 
     # randomly choose indices to set to 1
-    indices = np.random.choice(possible_adapters_length, number_of_initial_adapters)
-
+    indices = np.random.choice(possible_adapters_length, number_of_initial_adapters, replace=False)
     # set the chosen indices to 1
     for index in indices:
         vls[index] = [0.0, 1.0]
+    print(f"Initial adapter/non-adapter ratio: {len(indices)}/{indexes_length}")
     return vls
 
 
