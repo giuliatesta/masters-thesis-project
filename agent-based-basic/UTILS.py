@@ -45,15 +45,15 @@ Store LPStateTuples in a file identified by trial_id
 """
 
 
-def store_all_to_file(LPStatesTuples, LPRaws, directory, trial_id, run_index):
+def store_all_to_file(LPVLs, LPStates, directory, trial_id, run_index):
     trial_id = str(trial_id)
 
     file_path = make_file_name_vector_labels(directory, trial_id, run_index)
-    store_to_file(LPStatesTuples, file_path)
+    store_to_file(LPVLs, file_path)
     print_pickled_file(file_path)
 
     raw_file_path = make_file_name_states(directory, trial_id, run_index)
-    store_to_file(LPRaws, raw_file_path)
+    store_to_file(LPStates, raw_file_path)
     print_pickled_file(raw_file_path)
 
 
@@ -79,15 +79,14 @@ def store_to_file(content, filename, verbose=True):
 
 def print_pickled_file(file_path):
     data = read_pickled_file(file_path)
-    # Now you can use the data
     for d in data:
         print(d)
 
 
 def read_pickled_file(file_path):
-    # Open the file in binary read mode
+    # open the file in binary read mode
     with open(file_path, 'rb') as file:
-        # Load the data from the file
+        # load the data from the file
         data = pickle.load(file)
     return data
 
