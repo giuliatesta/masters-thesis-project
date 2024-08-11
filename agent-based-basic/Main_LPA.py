@@ -1,5 +1,7 @@
 #!/usr/bin/python
-from average_results import average_vls_results, average_state_results
+import os
+
+from average_results import average_vls_results, average_state_results, get_final_state_from_vls
 import networkx as nx, sys, LPA, NETWORKSIMULATION
 import numpy as np
 from pandas import read_csv
@@ -35,6 +37,8 @@ def main(run_index):
             array = [float(x) for x in line.strip().split(sep=';')]
             initial_VLs.append(array)
     initial_VLs = np.array(initial_VLs)
+    initial_states = [1 if vls[0] == 0. and vls[1] == 1 else -1 for vls in initial_VLs]
+    print(initial_states)
 
     network_nodes = sorted(LPNet.nodes())
     # Initialize nodes' VLs
@@ -45,7 +49,9 @@ def main(run_index):
             else:
                 LPNet.nodes[node][label] = initial_VLs[node - network_nodes[0]][j]
 
-        LPNet.nodes[node]["state"] = 1 if initial_VLs[i][0] < initial_VLs[i][1] else -1
+        LPNet.nodes[node]["state"] = initial_states[i]
+    # adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
+    # print(f"Initial adapters: {len(adapters)}")
     # Run simulation
     simulation = NETWORKSIMULATION.NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.run_simulation(run_index)
