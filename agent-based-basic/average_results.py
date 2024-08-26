@@ -67,7 +67,7 @@ def average_state_results(results_directory, results_file_name, ):
         # signs = np.sign(summed_vectors)
         avgs = summed_vectors / len(results)
 
-        # Step 5: Determine final states: +1 if the average is >= 0, else -1
+        # determine final states: +1 if the average is >= 0, else -1
         signs = np.where(avgs >= 0, 1, -1)
         print(f"{summed_vectors} ->\n {avgs},\n{signs}")
         avg_results.append([time_step, signs.tolist()])

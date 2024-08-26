@@ -12,6 +12,7 @@ import RESULTPLOTTER
 
 RUNS = 10
 
+INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
 
 def main(run_index):
     # Create the network from edges defined in EDGES_FILE file
@@ -62,9 +63,8 @@ if __name__ == '__main__':
     for run in range(1, RUNS):
         print(f"---- Run {run} ----")
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-        create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
+        create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
         main(run)
-        exit(1)
     average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
     average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 

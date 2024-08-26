@@ -4,7 +4,7 @@ Module for the LPAgent class that can be subclassed by agents.
 import numpy as np
 from SimPy import Simulation as Sim
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
-
+from Main_LPA import INDEX_DNA_COLUMN_NAME
 
 # An agent has its vector label with raw values and a state which depends on the vector label
 # if L0 > L1; then the state is adapter
@@ -23,7 +23,7 @@ class LPAgent(Sim.Process):
         self.sim = sim
         self.LPNet = LPNet
         self.VL = {label: LPNet.nodes[id][label] for label in LABELS}  # [0.0, 1.0] for example
-        self.state = determine_state(self.VL, LABELS, 1)  # +1
+        self.state = determine_state(self.VL, get_index(LPNet.nodes[id]), LABELS, original_value=1)  # +1       //TODO index
 
     """
     Start the agent execution
@@ -120,7 +120,7 @@ class LPAgent(Sim.Process):
         #     self.VL[label] = apply_majority(neighbours_vls, self.VL[label])
 
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
-        self.state = determine_state(self.VL, LABELS, self.state)
+        self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
         # self.normalise(self.VL)
 
     """
@@ -149,14 +149,16 @@ class LPAgent(Sim.Process):
         self.VL = {k: normalized_values[i] for i, k in enumerate(vls.keys())}
 
 
-def determine_state(vl, labels, original_value):
+def determine_state(vl, index, labels, original_value):
     # 0; 1    # adapter     1; 0    # non adapter
     first = vl[labels[0]]
     second = vl[labels[1]]
+    # if non adapter
     if first > second:
-        # if the non-adapter's value is greater than adapter's value -> it becomes non adapter
-        return -1
-    elif first < second:
+        # if the sum(index+adapter label) > non_adapter label it will become adapter
+        if (index + second) > first:
+            return + 1
+    if first < second:
         # if the adapter's value is greater than non-adapter's value -> it becomes adapter
         return 1
     else:
@@ -170,3 +172,6 @@ def apply_majority(values, previous_value):
     non_adapters = values.count(0) / total
     return 1 if adapters > non_adapters else \
         (0 if non_adapters > adapters else previous_value)
+
+def get_index(node):
+    return node[INDEX_DNA_COLUMN_NAME]
