@@ -15,7 +15,8 @@ def create_input(data, LABELS):
     # attributes file
     # needs the comma as separator since some values contain the semicolon
     attributes = transform_categorical_values(pd.DataFrame(data[LABELS]))
-    attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, header=False, sep=",")
+    # with headers othrwise we lose the name of the attributes
+    attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, sep=",")
     indexes_DNA = attributes.iloc[:, 0]
 
     # initial vector labels

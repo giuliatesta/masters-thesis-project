@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from average_results import average_vls_results, average_state_results, get_final_state_from_vls
+from average_results import average_vls_results, average_state_results
 import networkx as nx, sys, LPA, NETWORKSIMULATION
 import numpy as np
 from pandas import read_csv
@@ -25,9 +25,9 @@ def main(run_index):
 
     # ATTRIBUTE_FILE
     # add the attributes from the file to the nodes
-    attributes = read_csv(ATTRIBUTES_FILE, header=None)
-    for i, _ in enumerate(LABELS):
-        nx.set_node_attributes(LPNet, attributes[i], f"attribute-{i}")
+    attributes = read_csv(ATTRIBUTES_FILE)
+    for _, name in enumerate(attributes.columns):
+        nx.set_node_attributes(LPNet, attributes[name], name)
 
     # Get VLs' values from file
     initial_VLs = []
@@ -64,6 +64,7 @@ if __name__ == '__main__':
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
         create_input(data, ["sha_ind_norm", "Gender", "Education", "Income_level"])
         main(run)
+        exit(1)
     average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
     average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
