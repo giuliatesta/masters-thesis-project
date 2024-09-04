@@ -19,10 +19,6 @@ def create_input(data, LABELS):
     attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, sep=",")
     indexes_DNA = attributes.iloc[:, 0]
 
-    # initial vector labels
-    initial_vls = pd.DataFrame(generate_initial_vls_with_index(indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
-    initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
-
     # labels file only has L0, L1, L2
     with open("work/LABELS", 'w') as f:
         f.write("L0;L1")
@@ -32,6 +28,12 @@ def create_input(data, LABELS):
     edges = pd.DataFrame(graph.edges)
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
+
+    nodes = pd.concat([edges[0], edges[1]]).unique()
+
+    # initial vector labels
+    initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
+    initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
 
 
 def generate_binary_pairs(size, percentage_of_ones):
@@ -46,34 +48,43 @@ def generate_binary_pairs(size, percentage_of_ones):
     return binary_array
 
 
-def generate_initial_vls_with_index(indexes, percentage_of_adapters):
+# the initial adapters are chosen from the list of nodes that will be actually present in the network
+# if considering all (from 0 to 1000), there is the risk of making adpters nodes that will not be present in the LPNet
+# which is built given the edges (meaning that nodes without edges are not considered in LPNet)
+# the choice is made between 654 nodes with non-consecutive indices (that's why the DNAs needs to be filtered)
+#
+
+def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     if percentage_of_adapters > 1:
         percentage_of_adapters = percentage_of_adapters / 100
 
-    indexes_length = len(indexes)
+    filtered_values = {i: values[i] for i in nodes}   # contains the values the nodes with their original index
+
     # compute the average index DNA value
-    avg_DNA = sum([float(i) for i in indexes]) / indexes_length
-    vls = np.array([[1.0, 0.0] for _ in range(indexes_length)])
+    avg_DNA = sum([float(i) for i in filtered_values.values()]) / len(filtered_values)
+    vls = np.array([[1.0, 0.0] for _ in range(len(values))])
+    # the initial vls are len of values (1000) - assignment of adapters easier
+    # no problems related to indexes out of bounds
+
     print(f"Average index DNA: {avg_DNA}")
-    possible_adapters_index = []
+    possible_adapters = []
 
     # find the indexes that are greater than the average
-    for i, value in indexes.items():
-
+    for i, value in filtered_values.items():
         if float(value) >= avg_DNA:
-            possible_adapters_index.append(i)
+            possible_adapters.append(i)
 
     # out of the possible adapters, extract the percentage_of_adapters % to be adapters
-    possible_adapters_length = len(possible_adapters_index)
+    possible_adapters_length = len(possible_adapters)
     number_of_initial_adapters = int(possible_adapters_length * percentage_of_adapters)
 
     # randomly choose indices to set to 1
-    indices = np.random.choice(possible_adapters_length, number_of_initial_adapters, replace=False)
+    indices = np.random.choice(possible_adapters, number_of_initial_adapters, replace=False)
     print(f"Initial adapters indices: {indices}")
     # set the chosen indices to 1
     for index in indices:
         vls[index] = [0.0, 1.0]
-    print(f"Initial adapter/non-adapter ratio: {len(indices)}/{indexes_length}")
+    print(f"Initial adapter/non-adapter ratio: {len(indices)}/{len(filtered_values)}")
     return vls
 
 

@@ -167,6 +167,7 @@ def determine_state(vl, index, labels, original_value):
         return original_value
 
 
+
 def apply_majority(values, previous_value):
     total = len(values)
     adapters = values.count(1) / total

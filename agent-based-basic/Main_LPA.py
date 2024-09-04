@@ -26,8 +26,6 @@ def main(run_index):
         print("The type of the graph must be U(undirected) or D(directed)")
         return
 
-    print(f"{len(LPNet.nodes)} nodes: {[node for node in LPNet.nodes]}")
-
     # ATTRIBUTE_FILE
     # add the attributes from the file to the nodes
     attributes = read_csv(ATTRIBUTES_FILE)
@@ -64,13 +62,16 @@ def main(run_index):
 if __name__ == '__main__':
     # UTILS.print_pickled_file("./work/results/sim_01/avg_results_states.pickled")
     # exit(1)
-    for run in range(1, RUNS):
-        print(f"---- Run {run} ----")
-        data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-        create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
-        main(run)
-    average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
-    average_state_results(RESULTS_DIR, "avg_results_states.pickled")
+    # for run in range(1, RUNS):
+    #     print(f"---- Run {run} ----")
+    #     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
+    #     create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
+    #     main(run)
+    data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
+    create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
+    main(0)
+    # average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
+    #average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
-    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results_states.pickled"])
+    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_0_RUN_0_STATES.pickled"])
     plotter.draw_adapter_by_time_plot()
