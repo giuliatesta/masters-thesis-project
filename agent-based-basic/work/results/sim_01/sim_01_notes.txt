@@ -1,4 +1,0 @@
-# number of adapter by time step
-# at the 5th time step the number of adapter seems to stop increasing -> 616
-
-{0: 343, 1: 491, 2: 585, 3: 596, 4: 608, 5: 613, 6: 615, 7: 616, 8: 616, 9: 616, 10: 616, 12: 616, 14: 616, 16: 616, 18: 616, 20: 616, 22: 616, 24: 616, 26: 616, 28: 616, 30: 616}
