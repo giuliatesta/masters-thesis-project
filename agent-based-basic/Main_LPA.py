@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import UTILS
 
 from average_results import average_vls_results, average_state_results
 import networkx as nx, sys, LPA, NETWORKSIMULATION
@@ -14,6 +15,7 @@ RUNS = 10
 
 INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
 
+
 def main(run_index):
     # Create the network from edges defined in EDGES_FILE file
     if GRAPH_TYPE == "D":
@@ -23,6 +25,8 @@ def main(run_index):
     else:
         print("The type of the graph must be U(undirected) or D(directed)")
         return
+
+    print(f"{len(LPNet.nodes)} nodes: {[node for node in LPNet.nodes]}")
 
     # ATTRIBUTE_FILE
     # add the attributes from the file to the nodes

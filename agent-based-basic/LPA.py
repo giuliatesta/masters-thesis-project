@@ -6,6 +6,7 @@ from SimPy import Simulation as Sim
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
 from Main_LPA import INDEX_DNA_COLUMN_NAME
 
+
 # An agent has its vector label with raw values and a state which depends on the vector label
 # if L0 > L1; then the state is adapter
 # if L0 <= L1; then the state is non adapter
@@ -23,7 +24,7 @@ class LPAgent(Sim.Process):
         self.sim = sim
         self.LPNet = LPNet
         self.VL = {label: LPNet.nodes[id][label] for label in LABELS}  # [0.0, 1.0] for example
-        self.state = determine_state(self.VL, get_index(LPNet.nodes[id]), LABELS, original_value=1)  # +1       //TODO index
+        self.state = determine_state(self.VL, get_index(LPNet.nodes[id]), LABELS, original_value=1)  # +1
 
     """
     Start the agent execution
@@ -151,14 +152,14 @@ class LPAgent(Sim.Process):
 
 def determine_state(vl, index, labels, original_value):
     # 0; 1    # adapter     1; 0    # non adapter
-    first = vl[labels[0]]
-    second = vl[labels[1]]
+    non_adapter_label = vl[labels[0]]
+    adapter_label = vl[labels[1]]
     # if non adapter
-    if first > second:
+    if non_adapter_label > adapter_label:
         # if the sum(index+adapter label) > non_adapter label it will become adapter
-        if (index + second) > first:
+        if (index + adapter_label) > non_adapter_label:
             return + 1
-    if first < second:
+    if non_adapter_label < adapter_label:
         # if the adapter's value is greater than non-adapter's value -> it becomes adapter
         return 1
     else:
@@ -172,6 +173,7 @@ def apply_majority(values, previous_value):
     non_adapters = values.count(0) / total
     return 1 if adapters > non_adapters else \
         (0 if non_adapters > adapters else previous_value)
+
 
 def get_index(node):
     return node[INDEX_DNA_COLUMN_NAME]

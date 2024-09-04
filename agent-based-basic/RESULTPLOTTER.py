@@ -15,7 +15,7 @@ class ResultPlotter(object):
             self.raw_data.append(read_pickled_file(file_path))
 
     def draw_adapter_by_time_plot(self, file_to_use_index=0):
-        plot_file_name = self.file_paths[file_to_use_index].split('/')[-1] + "_PLOT.png"
+        plot_file_name = self.file_paths[file_to_use_index].split('/')[-1] + "_AbT_PLOT.png"
         adapters = prepare_adapters_by_time(self.raw_data[file_to_use_index])
         print(adapters)
         # Plot the data

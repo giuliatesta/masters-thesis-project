@@ -69,7 +69,7 @@ def average_state_results(results_directory, results_file_name, ):
 
         # determine final states: +1 if the average is >= 0, else -1
         signs = np.where(avgs >= 0, 1, -1)
-        print(f"{summed_vectors} ->\n {avgs},\n{signs}")
+        # print(f"{summed_vectors} ->\n {avgs},\n{signs}")
         avg_results.append([time_step, signs.tolist()])
 
     # stores the averaged results in a pickled file called avg_results

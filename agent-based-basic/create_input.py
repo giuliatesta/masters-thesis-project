@@ -69,6 +69,7 @@ def generate_initial_vls_with_index(indexes, percentage_of_adapters):
 
     # randomly choose indices to set to 1
     indices = np.random.choice(possible_adapters_length, number_of_initial_adapters, replace=False)
+    print(f"Initial adapters indices: {indices}")
     # set the chosen indices to 1
     for index in indices:
         vls[index] = [0.0, 1.0]
