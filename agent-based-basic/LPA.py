@@ -154,18 +154,33 @@ def determine_state(vl, index, labels, original_value):
     # 0; 1    # adapter     1; 0    # non adapter
     non_adapter_label = vl[labels[0]]
     adapter_label = vl[labels[1]]
-    # if non adapter
-    if non_adapter_label > adapter_label:
-        # if the sum(index+adapter label) > non_adapter label it will become adapter
-        if (index + adapter_label) > non_adapter_label:
-            return + 1
-    if non_adapter_label < adapter_label:
-        # if the adapter's value is greater than non-adapter's value -> it becomes adapter
-        return 1
-    else:
-        # if they are equal ([0.5, 0.5]) -> then it stays the same
-        return original_value
+    # # if non adapter
+    # if non_adapter_label > adapter_label:
+    #     # if the sum(index+adapter label) > non_adapter label it will become adapter
+    #     if (index + adapter_label) > non_adapter_label:
+    #         return + 1
+    # if non_adapter_label < adapter_label:
+    #     # if the adapter's value is greater than non-adapter's value -> it becomes adapter
+    #     return 1
+    # else:
+    #     # if they are equal ([0.5, 0.5]) -> then it stays the same
+    #     return original_value
 
+    #  If it was a non adapter and now if index plus the adapter_label is greater than the non_adapter_label,
+    #  it should become adapter; otherwise it should stay non adapter.
+    #  If it was adapter and the non_adapter_label is greater that the adapter_label,
+    #  it should become non_adapter; otherwise it should stay the same.
+    print(
+        f"index {index} + adapter_label {adapter_label} = {index + adapter_label} > non_adapter_label {non_adapter_label}")
+    is_non_adapter = original_value == -1
+    is_adapter = original_value == +1
+
+    if is_non_adapter and (index + adapter_label) > non_adapter_label:
+        return +1
+    elif is_adapter and non_adapter_label > (index + adapter_label):
+        return -1
+    else:
+        return original_value
 
 
 def apply_majority(values, previous_value):

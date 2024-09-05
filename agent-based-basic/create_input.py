@@ -8,6 +8,7 @@ from network_building import create_network
 NUMBER_OF_RECORDS = 1000
 INITIAL_ADAPTERS_PERC = 10
 
+
 def create_input(data, LABELS):
     data.reset_index(drop=True, inplace=True)
     data = data.head(NUMBER_OF_RECORDS)
@@ -52,13 +53,12 @@ def generate_binary_pairs(size, percentage_of_ones):
 # if considering all (from 0 to 1000), there is the risk of making adpters nodes that will not be present in the LPNet
 # which is built given the edges (meaning that nodes without edges are not considered in LPNet)
 # the choice is made between 654 nodes with non-consecutive indices (that's why the DNAs needs to be filtered)
-#
 
 def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     if percentage_of_adapters > 1:
         percentage_of_adapters = percentage_of_adapters / 100
 
-    filtered_values = {i: values[i] for i in nodes}   # contains the values the nodes with their original index
+    filtered_values = {i: values[i] for i in nodes}  # contains the values the nodes with their original index
 
     # compute the average index DNA value
     avg_DNA = sum([float(i) for i in filtered_values.values()]) / len(filtered_values)
@@ -119,4 +119,3 @@ def transform_long_strings(column):
             # replace the string with its corresponding integer
             df[column == value] = key
     return df, mapping
-
