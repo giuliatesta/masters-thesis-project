@@ -7,7 +7,7 @@ from statistics import components_over_threshold
 SIMILARITY_THRESHOLD = 0.7
 
 # loads the dataset and removes empty values
-data = load_dataset_csv("./dataset/EU_travel_survey_demand_innovative_transport_systems.csv")
+data = load_dataset_csv("./dataset/EU_travel_survey_demand_innovative_transport_systems.csv", index=False)
 # filters by the column Country = Italy
 data = filter_by(data, "Country", "Italy",  number_of_rows=1000)
 # saved the filtered data in the filtered.csv file

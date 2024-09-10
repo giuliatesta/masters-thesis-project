@@ -1,6 +1,8 @@
 """
 Module for the LPAgent class that can be subclassed by agents.
 """
+import random
+
 import numpy as np
 from SimPy import Simulation as Sim
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
@@ -24,7 +26,7 @@ class LPAgent(Sim.Process):
         self.sim = sim
         self.LPNet = LPNet
         self.VL = {label: LPNet.nodes[id][label] for label in LABELS}  # [0.0, 1.0] for example
-        self.state = determine_state(self.VL, get_index(LPNet.nodes[id]), LABELS, original_value=1)  # +1
+        self.state = 1 if self.VL[LABELS[0]] == 0. and self.VL[LABELS[1]] == 1 else -1
 
     """
     Start the agent execution
@@ -50,6 +52,7 @@ class LPAgent(Sim.Process):
 
         # L0 non adopter, L1 adopter -> raw values
         if STATE_CHANGING_METHOD == 0:
+
             neighbours_size = len(list(neighbours))
             for label in LABELS:
                 neighbours_avg = 0
@@ -155,32 +158,33 @@ def determine_state(vl, index, labels, original_value):
     non_adapter_label = vl[labels[0]]
     adapter_label = vl[labels[1]]
     # # if non adapter
-    # if non_adapter_label > adapter_label:
-    #     # if the sum(index+adapter label) > non_adapter label it will become adapter
-    #     if (index + adapter_label) > non_adapter_label:
-    #         return + 1
-    # if non_adapter_label < adapter_label:
-    #     # if the adapter's value is greater than non-adapter's value -> it becomes adapter
-    #     return 1
-    # else:
-    #     # if they are equal ([0.5, 0.5]) -> then it stays the same
-    #     return original_value
+    if non_adapter_label > adapter_label:
+        # if the sum(index+adapter label) > non_adapter label it will become adapter
+        # if adapter_label > non_adapter_label
+
+        if index < np.random.rand():
+            return + 1
+    if non_adapter_label < adapter_label:
+        # if the adapter's value is greater than non-adapter's value -> it becomes adapter
+        return 1
+    else:
+        # if they are equal ([0.5, 0.5]) -> then it stays the same
+        return original_value
 
     #  If it was a non adapter and now if index plus the adapter_label is greater than the non_adapter_label,
     #  it should become adapter; otherwise it should stay non adapter.
     #  If it was adapter and the non_adapter_label is greater that the adapter_label,
     #  it should become non_adapter; otherwise it should stay the same.
-    print(
-        f"index {index} + adapter_label {adapter_label} = {index + adapter_label} > non_adapter_label {non_adapter_label}")
-    is_non_adapter = original_value == -1
-    is_adapter = original_value == +1
-
-    if is_non_adapter and (index + adapter_label) > non_adapter_label:
-        return +1
-    elif is_adapter and non_adapter_label > (index + adapter_label):
-        return -1
-    else:
-        return original_value
+    # print(f"index {index} + adapter_label {adapter_label} = {index + adapter_label} > non_adapter_label {non_adapter_label}")
+    # is_non_adapter = original_value == -1
+    # is_adapter = original_value == +1
+    #
+    # if is_non_adapter and (index + adapter_label) > non_adapter_label:
+    #     return +1
+    # elif is_adapter and non_adapter_label > (index + adapter_label):
+    #     return -1
+    # else:
+    #     return original_value
 
 
 def apply_majority(values, previous_value):

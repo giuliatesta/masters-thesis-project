@@ -67,11 +67,13 @@ if __name__ == '__main__':
     #     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     #     create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
     #     main(run)
+
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
     main(0)
-    # average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
-    #average_state_results(RESULTS_DIR, "avg_results_states.pickled")
+
+    average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
+    average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
     plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_0_RUN_0_STATES.pickled"])
     plotter.draw_adapter_by_time_plot()
