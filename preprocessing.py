@@ -25,7 +25,7 @@ def filter_by(df: DataFrame, column_name: str, column_value: str, number_of_rows
 
     # if I want to get the first n values
     if number_of_rows != -1:
-        filtered = filtered.head[number_of_rows]
+        filtered = filtered.head(number_of_rows)
     print(f"Filtered {len(filtered)} data out of {len(df)} rows")
     filtered.reset_index(drop=True, inplace=True)
     return filtered
