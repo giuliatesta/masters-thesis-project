@@ -5,7 +5,8 @@ from conf import RESULTS_DIR, LABELS
 import time
 
 # The iterations whose VLs have to be stored
-tt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+tt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+      32, 33, 34, 35, 36, 37, 38, 39, 40]
 
 
 class NetworkLogger(Sim.Process):
@@ -33,11 +34,22 @@ class NetworkLogger(Sim.Process):
         # Actual VL belonging coefficients
         VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
         states = [node[1]["agent"].state for node in LPNodes]
+        print(f"LOGGER LOG CURRENT STATE: {self.sim.now()}\n{states}")
 
         # Add actual VL value to logs
         if self.sim.now() in tt:
-            self.LPVLTuples.append([self.sim.now(), VLs])
-            self.LPStates.append([self.sim.now(), states])
+            self.LPVLTuples.append([self.sim.now() + 1, VLs])
+            self.LPStates.append([self.sim.now() + 1, states])
+
+    def log_initial_state(self):
+        LPNodes = sorted(self.sim.LPNet.nodes(data=True), key=lambda x: x[0])
+
+        # Actual VL belonging coefficients
+        VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
+        states = [node[1]["agent"].state for node in LPNodes]
+        print(f"LOGGER LOG CURRENT STATE: {self.sim.now()}\n{states}")
+        self.LPVLTuples.append([0, VLs])
+        self.LPStates.append([0, states])
 
     def log_trial_to_files(self, id, run_index):
         UTILS.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, id, run_index)

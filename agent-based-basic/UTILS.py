@@ -50,11 +50,11 @@ def store_all_to_file(LPVLs, LPStates, directory, trial_id, run_index):
 
     file_path = make_file_name_vector_labels(directory, trial_id, run_index)
     store_to_file(LPVLs, file_path)
-    print_pickled_file(file_path)
+    # print_pickled_file(file_path)
 
     raw_file_path = make_file_name_states(directory, trial_id, run_index)
     store_to_file(LPStates, raw_file_path)
-    print_pickled_file(raw_file_path)
+    # print_pickled_file(raw_file_path)
 
 
 """
@@ -77,10 +77,12 @@ def store_to_file(content, filename, verbose=True):
     return filename
 
 
-def print_pickled_file(file_path):
+def print_pickled_file(file_path, index=-1):
     data = read_pickled_file(file_path)
-    for d in data:
+    for i, d in enumerate(data):
         print(d)
+        if i == index:
+            break
 
 
 def read_pickled_file(file_path):
@@ -89,4 +91,3 @@ def read_pickled_file(file_path):
         # load the data from the file
         data = pickle.load(file)
     return data
-

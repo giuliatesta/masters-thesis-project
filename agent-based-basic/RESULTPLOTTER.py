@@ -1,3 +1,4 @@
+import os
 import sys
 
 import numpy as np
@@ -15,18 +16,20 @@ class ResultPlotter(object):
             self.raw_data.append(read_pickled_file(file_path))
 
     def draw_adapter_by_time_plot(self, file_to_use_index=0):
-        plot_file_name = self.file_paths[file_to_use_index].split('/')[-1] + "_AbT_PLOT.png"
         adapters = prepare_adapters_by_time(self.raw_data[file_to_use_index])
         print(adapters)
         # Plot the data
         plt.figure(figsize=(10, 6))
         plt.plot(list(adapters.keys()), list(adapters.values()), marker='x')
+        # for key, value in adapters.items():
+        #     print(f"({key}, {value}")
+        #     plt.text(key, value, f"({key:.2f}, {value})", fontsize=6, ha="center")
 
-        plt.xlabel('Time Step')
-        plt.ylabel('Number of adapters')
+        plt.xlabel('Time steps')
+        plt.ylabel('Adapters')
         plt.title('Number of adapters by time')
         plt.grid(True)
-        plt.savefig(f"./plots/adapters_by_time/{plot_file_name}")
+        plt.savefig(self.file_paths[file_to_use_index].rsplit('/', 1)[0] + "/adapters_by_time_plot.png")
 
     def draw_adapter_by_time_different_thresholds_plot(self, thresholds):
         if len(thresholds) != len(self.raw_data):
@@ -59,14 +62,11 @@ class ResultPlotter(object):
 
 
 def prepare_adapters_by_time(raw_data):
-    # [time_step, [values for each node]]
-    # [0, [-1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, -1, -1, -1, -1 ]]
+    # [time_step, [values for each node]] = [0, [-1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, -1, -1, -1, -1]]
     adapters = {}
     for raw in raw_data:
-        # print(f"ind: {raw[0]} --> {raw[1]}")
         acc = 0
         for val in raw[1]:
-            # print(val)
             if val == 1:
                 acc += 1
         adapters[raw[0]] = acc
