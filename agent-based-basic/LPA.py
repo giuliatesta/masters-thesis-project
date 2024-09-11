@@ -143,25 +143,14 @@ class LPAgent(Sim.Process):
             sum_for_average += float(self.LPNet.nodes[neighbour]["attribute-0"])
         return float(sum_for_average / neighbours_size)
 
-    def normalise(self, vls):
-        if sum(vls.values()) == 0.0:
-            return vls
-        values = np.array(list(vls.values()), dtype=float)
-        min_val = np.min(values)
-        max_val = np.max(values)
-        normalized_values = (values - min_val) / (max_val - min_val)
-        self.VL = {k: normalized_values[i] for i, k in enumerate(vls.keys())}
-
 
 def determine_state(vl, index, labels, original_value):
     # 0; 1    # adapter     1; 0    # non adapter
     non_adapter_label = vl[labels[0]]
     adapter_label = vl[labels[1]]
-    # # if non adapter
+    # if non adapter
     if non_adapter_label > adapter_label:
-        # if the sum(index+adapter label) > non_adapter label it will become adapter
-        # if adapter_label > non_adapter_label
-
+        # if the agent has 0.8 as index -> 80% of times becomes adapter
         if index < np.random.rand():
             return + 1
     if non_adapter_label < adapter_label:
@@ -170,21 +159,6 @@ def determine_state(vl, index, labels, original_value):
     else:
         # if they are equal ([0.5, 0.5]) -> then it stays the same
         return original_value
-
-    #  If it was a non adapter and now if index plus the adapter_label is greater than the non_adapter_label,
-    #  it should become adapter; otherwise it should stay non adapter.
-    #  If it was adapter and the non_adapter_label is greater that the adapter_label,
-    #  it should become non_adapter; otherwise it should stay the same.
-    # print(f"index {index} + adapter_label {adapter_label} = {index + adapter_label} > non_adapter_label {non_adapter_label}")
-    # is_non_adapter = original_value == -1
-    # is_adapter = original_value == +1
-    #
-    # if is_non_adapter and (index + adapter_label) > non_adapter_label:
-    #     return +1
-    # elif is_adapter and non_adapter_label > (index + adapter_label):
-    #     return -1
-    # else:
-    #     return original_value
 
 
 def apply_majority(values, previous_value):

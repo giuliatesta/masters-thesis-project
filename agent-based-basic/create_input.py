@@ -25,7 +25,7 @@ def create_input(data, LABELS):
         f.write("L0;L1")
 
     # create the network to extract the edges between nodes
-    graph = create_network(data, similarity_threshold=0.6, name="Travel Survey gower similarity network")
+    graph = create_network(data, similarity_threshold=0.5, name="Travel Survey gower similarity network")
     edges = pd.DataFrame(graph.edges)
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
