@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import UTILS
 
-from average_results import average_vls_results, calculate_states_from_averaged_vls
+from average_results import average_state_results, average_vector_labels
 import networkx as nx, sys, LPA, NETWORKSIMULATION
 import numpy as np
 from pandas import read_csv
@@ -71,8 +71,8 @@ if __name__ == '__main__':
     # create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
     # main(0)
 
-    vls = average_vls_results(RESULTS_DIR, "avg_results_vls.pickled")
-    calculate_states_from_averaged_vls(vls, RESULTS_DIR, "avg_results_states.pickled")
+    average_vector_labels(RESULTS_DIR, "avg_results_vls.pickled")
+    average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
-    # plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results_states.pickled"])
-    # plotter.draw_adapter_by_time_plot()
+    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results_states.pickled"])
+    plotter.draw_adapter_by_time_plot()

@@ -34,7 +34,6 @@ class NetworkLogger(Sim.Process):
         # Actual VL belonging coefficients
         VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
         states = [node[1]["agent"].state for node in LPNodes]
-        print(f"LOGGER LOG CURRENT STATE: {self.sim.now()}\n{states}")
 
         # Add actual VL value to logs
         if self.sim.now() in tt:
@@ -47,7 +46,6 @@ class NetworkLogger(Sim.Process):
         # Actual VL belonging coefficients
         VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
         states = [node[1]["agent"].state for node in LPNodes]
-        print(f"LOGGER LOG CURRENT STATE: {self.sim.now()}\n{states}")
         self.LPVLTuples.append([0, VLs])
         self.LPStates.append([0, states])
 
