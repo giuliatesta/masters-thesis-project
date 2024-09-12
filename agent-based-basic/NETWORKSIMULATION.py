@@ -49,7 +49,6 @@ class NetworkSimulation(Sim.Simulation):
         logging_interval = 1
         logger = NETWORKLOGGER.NetworkLogger(self, logging_interval)
         self.activate(logger, logger.Run(), prior=True)
-        logger.log_initial_state()
 
         # Run simulation
         self.simulate(self.until)

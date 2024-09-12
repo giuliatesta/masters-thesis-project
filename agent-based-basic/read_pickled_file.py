@@ -1,5 +1,5 @@
 import UTILS
 
-UTILS.print_pickled_file(f"./work/results/trial_simulations/avg_results_vls.pickled")
+UTILS.print_pickled_file(f"./work/results/trial_simulations/trial_0_LPStates_L0_L1_0_RUN_1.pickled", 10)
 
 

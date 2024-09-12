@@ -57,7 +57,7 @@ def main(run_index):
     simulation.run_simulation(run_index)
 
 
-RUNS = 0
+RUNS = 30
 if __name__ == '__main__':
     # UTILS.print_pickled_file("./work/results/sim_01/avg_results_states.pickled")
     # exit(1)
@@ -71,8 +71,8 @@ if __name__ == '__main__':
     # create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
     # main(0)
 
-    average_vector_labels(RESULTS_DIR, "avg_results_vls.pickled")
-    average_state_results(RESULTS_DIR, "avg_results_states.pickled")
+    #average_vector_labels(RESULTS_DIR, "avg_results_vls.pickled")
+    #average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
-    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/avg_results_states.pickled"])
+    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_0_RUN_0_STATES.pickled"])
     plotter.draw_adapter_by_time_plot()
