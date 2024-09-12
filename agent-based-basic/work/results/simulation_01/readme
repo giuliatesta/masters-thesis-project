@@ -1,0 +1,22 @@
+STATE CHANGING METHOD: 0 (aggregation function)
+INITIAL NUMBER OF ADAPTERS: 10% of agents with index DNA higher than AVERAGE
+SAME WEIGHT for SELF opinion and NEIGHBOURS opinion in the aggregation function
+SAME WEIGHT for NEIGHBOURS opinions
+NO GENDER, AGE, EDUCATION biases
+SIMILARITY THRESHOLD in the creation of edges in the network = 0.50 (UPPER LIMIT for one connected component)
+
+
+N. INITIAL NODES: 1000
+N. EDGES: 14294
+N. NODES: 993
+INITIAL ADAPTER/NON ADAPTER RATIO: 49/993
+
+N. RUNS: 30
+N. ITERATIONS: 30
+
+
+{1: 49, 2: 483, 3: 687, 4: 816, 5: 876, 6: 915, 7: 936, 8: 949, 9: 959, 10: 970, 11: 971, 13: 981, 14: 982, 15: 984, 16: 986, 17: 986, 18: 987, 19: 987, 20: 989, 21: 989, 22: 989, 23: 990, 24: 991, 25: 991, 26: 991, 27: 991, 28: 991, 29: 991, 30: 991, 31: 991}
+
+
+
+
