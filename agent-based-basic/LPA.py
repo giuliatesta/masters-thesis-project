@@ -50,7 +50,7 @@ class LPAgent(Sim.Process):
         else:
             neighbours = list(self.LPNet.predecessors(self.id))
 
-        # L0 non adopter, L1 adopter -> raw values
+        # aggregation function with same weights for neighbours and personal opinion
         if STATE_CHANGING_METHOD == 0:
 
             neighbours_size = len(list(neighbours))
@@ -63,69 +63,23 @@ class LPAgent(Sim.Process):
                 self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
                 self.VL[
                     label] = self_avg + neighbours_avg  # aggregation function with same weight for both self' and neighbours' opinion average
-
+        # aggregation function with same weights, BUT only using as neighbours agent with same gender as the current agent
         if STATE_CHANGING_METHOD == 1:
-            # if the average of the index_DNA of the neighbours is higher than a threshold
-            # then the agent becomes adapter; otherwise it's non adapter
+            gender = self.LPNet.nodes[self.id]["Gender"]
+            filtered_neighbours = list(filter(lambda node: gender == self.LPNet.nodes[node]["Gender"], neighbours))
+            neighbours_size = len(list(filtered_neighbours))
             for label in LABELS:
-                self.VL[label] = self.compute_average_index_DNA(neighbours)
+                neighbours_avg = 0
+                for i in list(filtered_neighbours):
+                    neighbours_avg += float(self.LPNet.nodes[i][label]) / float(neighbours_size + 1)
+                    # ssum += float((self.LPNet.nodes[i][j])*(list(list(self.LPNet.edges(data=True))[(self.id+1)*(j-1)][2].values())[0])) / float(neighboursSize + 1)
 
-        # if STATE_CHANGING_METHOD == 2:
-        #     # finds the neighbour with the highest weight and check if its adapter or not
-        #     highest_weight_neighbours = []
-        #     max_weight = 0
-        #
-        #     for neighbour in list(neighbours):
-        #         data = self.LPNet.get_edge_data(self.id, neighbour)
-        #         weight = data['weight']
-        #         if weight > max_weight:
-        #             max_weight = weight
-        #             highest_weight_neighbours = [neighbour]
-        #         elif weight == max_weight:
-        #             highest_weight_neighbours.append(neighbour)
-        #
-        #     avg_DNA = self.compute_average_index_DNA(neighbours)
-        #     self.VL[label] = [0, 1] if avg_DNA >= DNA_THRESHOLD else 0
-        #     self.state[label] = avg_DNA
-
-        if STATE_CHANGING_METHOD == 3:
-            # compute the average using the weight and whether they are adapter (+1) or non adapter(-1).
-            # if avg > 0 and the agent is non adopter changes its state to adopter;
-            # if avg < 0 and the agent is adopter changes its state to non adopter;
-            # and then if avg =0 the agent keeps its opinion.
-            # then compute the aggregation function:  w1 * my opinion + w2 * neighbours’ opinion.
-            for label in LABELS:
-                sum_for_avg = 0
-                neighbours_size = len(list(neighbours))
-                for neighbour in list(neighbours):
-                    data = self.LPNet.get_edge_data(self.id, neighbour)
-                    weight = data.get('weight', 0)  # default value = 0 if it doesn't exist
-                    node_state = self.LPNet.nodes[neighbour]["state"]
-                    sum_for_avg += (weight * node_state)
-                avg = float(sum_for_avg / neighbours_size)
-
-                # AGGREGATION FUNCTION:
-                agent_weight = float(1 / (neighbours_size + 1))
-                neighbours_weight = agent_weight
-                self.VL[label] = agent_weight * self.VL[label] + neighbours_weight * avg
-
-        # if STATE_CHANGING_METHOD == 4:
-        #     # sort the neighbours by weight, consider only n of them
-        #     # if 50% adapter 50% non adapter -> the agent keeps its opinion
-        #     # otherwise, the agent changes its opinion (MAJORITY RULE)
-        #     weights = []
-        #     for i, neighbour in enumerate(neighbours):
-        #         data = self.LPNet.get_edge_data(self.id, neighbour)
-        #         weights.append(data.get('weight', 0))  # default value = 0 if it doesn't exist
-        #
-        #     sorted_neighbours = [value for value, _ in
-        #                          sorted(zip(neighbours, weights), key=lambda x: x[1], reverse=True)]
-        #     neighbours_vls = [self.LPNet.nodes[neighbour][label] for neighbour in sorted_neighbours]
-        #     self.VL[label] = apply_majority(neighbours_vls, self.VL[label])
+                self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
+                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (neighbours +1)
+                self.VL[label] = self_avg + neighbours_avg
 
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
         self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
-        # self.normalise(self.VL)
 
     """
     Update the VL and the state used by other agents to update themselves
@@ -159,14 +113,6 @@ def determine_state(vl, index, labels, original_value):
     else:
         # if they are equal ([0.5, 0.5]) -> then it stays the same
         return original_value
-
-
-def apply_majority(values, previous_value):
-    total = len(values)
-    adapters = values.count(1) / total
-    non_adapters = values.count(0) / total
-    return 1 if adapters > non_adapters else \
-        (0 if non_adapters > adapters else previous_value)
 
 
 def get_index(node):
