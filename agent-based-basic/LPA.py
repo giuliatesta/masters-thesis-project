@@ -66,7 +66,7 @@ class LPAgent(Sim.Process):
 
         # aggregation function with same weights, BUT with GENDER bias (TRUST_PERC% of times I don't trust the opposite gender)
         if STATE_CHANGING_METHOD == 1:
-            TRUST_PERCENTAGE = 0  # percentage of how many to keep and trust with their opinions
+            TRUST_PERCENTAGE = 0.1  # percentage of how many to keep and trust with their opinions
             gender = self.LPNet.nodes[self.id]["Gender"]
             # extracts the neighbours with different gender
             different_gender_neighbours = list(
@@ -74,7 +74,7 @@ class LPAgent(Sim.Process):
             # computes how many of them needs to be removed based on the TRUST_PERCENTAGE
             to_be_removed_count = int(len(different_gender_neighbours) * (1 - TRUST_PERCENTAGE))
             nodes_to_be_removed = np.random.choice(different_gender_neighbours, to_be_removed_count, replace=False)
-            # print(f"Keeping only the {TRUST_PERCENTAGE * 100}% of opposite-gender neighbours ({len(nodes_to_be_removed)} has been removed)")
+            print(f"Keeping only the {TRUST_PERCENTAGE * 100}% of opposite-gender neighbours ({len(nodes_to_be_removed)} has been removed from {len(neighbours)} ({len(different_gender_neighbours)}))")
             print(nodes_to_be_removed)
             # remove the ones extracted with random choice
             for i in nodes_to_be_removed:
