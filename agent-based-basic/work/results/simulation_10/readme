@@ -1,4 +1,4 @@
-STATE CHANGING METHOD: 1 (aggregation function + 90% of gender bias)
+STATE CHANGING METHOD: 1 (aggregation function + 70% of gender bias)
 INITIAL NUMBER OF ADAPTERS: 20% of agents with index DNA higher than AVERAGE
 SAME WEIGHT for SELF opinion and NEIGHBOURS opinion in the aggregation function
 SAME WEIGHT for NEIGHBOURS opinions
@@ -11,9 +11,9 @@ N. INITIAL NODES: 1000
 N. EDGES: 14294
 N. NODES: 993
 INITIAL ADAPTER/NON ADAPTER RATIO: 99/993
-OPPOSITE GENDER TRUST PERCENTAGE = 0.1 (10% of different gender neighbours considered)
+OPPOSITE GENDER TRUST PERCENTAGE = 0.3 (30% of different gender neighbours considered)
 
 N. RUNS: 30
 N. ITERATIONS: 30
 
-{1: 99, 2: 487, 3: 711, 4: 824, 5: 881, 6: 915, 7: 937, 8: 949, 9: 958, 10: 965, 11: 974, 13: 983, 14: 988, 15: 989, 16: 990, 17: 991, 18: 991, 19: 991, 20: 991, 21: 991, 22: 991, 23: 992, 24: 992, 25: 992, 26: 992, 27: 992, 28: 992, 29: 992, 30: 992, 31: 992}
+{1: 99, 2: 517, 3: 708, 4: 838, 5: 904, 6: 936, 7: 957, 8: 967, 9: 974, 10: 976, 11: 983, 13: 989, 14: 990, 15: 992, 16: 992, 17: 992, 18: 992, 19: 992, 20: 992, 21: 993, 22: 993, 23: 993, 24: 993, 25: 993, 26: 993, 27: 993, 28: 993, 29: 993, 30: 993, 31: 993}
