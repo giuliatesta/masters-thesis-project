@@ -3,7 +3,6 @@ from matplotlib import pyplot as plt
 from networkx import number_connected_components
 from pandas import DataFrame
 
-
 def distribution_over_nodes_count(matrix, title="", x_label="", bins=20):
     print(f"Plotting the distribution {title}")
     plt.figure()
