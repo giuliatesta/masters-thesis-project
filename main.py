@@ -1,6 +1,6 @@
 from network_building import create_network, plot_network
 from preprocessing import load_dataset_csv, filter_by
-from statistics import components_over_threshold
+from plots import components_over_threshold
 
 # a threshold is required to evaluate whether create the edge
 # based on the gower's distance of two nodes

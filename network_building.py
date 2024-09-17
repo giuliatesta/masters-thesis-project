@@ -15,7 +15,7 @@ from gower import gower_matrix
 from preprocessing import remove_all_except_for, remove_column
 from sklearn.metrics.pairwise import cosine_similarity
 
-from statistics import distribution_over_nodes_count
+from plots import distribution_over_nodes_count
 
 
 def create_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
