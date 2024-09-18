@@ -77,21 +77,36 @@ class LPAgent(Sim.Process):
                 self.VL[label] = self_avg + neighbours_avg
 
         if STATE_CHANGING_METHOD == 2:
-                SAME_GENDER_WEIGHT = 0.7  # percentage of how many to keep and trust with their opinions
-                DIFFERENT_GENDER_WEIGHT = 1 - SAME_GENDER_WEIGHT
-                gender = self.LPNet.nodes[self.id]["Gender"]
-                neighbours_size = len(neighbours)
-                for label in LABELS:
-                    neighbours_avg = 0
-                    for i in list(neighbours):
-                        # same gender neighbours with have 0.9 weight and opposite gender neighbours only 0.1
-                        # the idea is to be pro same gender 90% of times
-                        weight = SAME_GENDER_WEIGHT if gender == self.LPNet.nodes[i]["Gender"] else DIFFERENT_GENDER_WEIGHT
-                        neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight)/ float(neighbours_size + 1)
+            SAME_GENDER_WEIGHT = 0.7  # percentage of how many to keep and trust with their opinions
+            DIFFERENT_GENDER_WEIGHT = 1 - SAME_GENDER_WEIGHT
+            gender = self.LPNet.nodes[self.id]["Gender"]
+            neighbours_size = len(neighbours)
+            for label in LABELS:
+                neighbours_avg = 0
+                for i in list(neighbours):
+                    # same gender neighbours with have 0.9 weight and opposite gender neighbours only 0.1
+                    # the idea is to be pro same gender 90% of times
+                    weight = SAME_GENDER_WEIGHT if gender == self.LPNet.nodes[i]["Gender"] else DIFFERENT_GENDER_WEIGHT
+                    neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight)/ float(neighbours_size + 1)
 
-                    self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
-                    # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
-                    self.VL[label] = self_avg + neighbours_avg
+                self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
+                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
+                self.VL[label] = self_avg + neighbours_avg
+        if STATE_CHANGING_METHOD == 3:
+            FEMALE_WEIGHT = 0.1     # female neghbours' opinion weight
+            MALE_WEIGHT = 0.9   # male neighbours' opinion weight
+            neighbours_size = len(neighbours)
+            for label in LABELS:
+                neighbours_avg = 0
+                for i in list(neighbours):
+                    # same gender neighbours with have 0.9 weight and opposite gender neighbours only 0.1
+                    # the idea is to be pro same gender 90% of times
+                    weight = FEMALE_WEIGHT if "Female" == self.LPNet.nodes[i]["Gender"] else MALE_WEIGHT
+                    neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight)/ float(neighbours_size + 1)
+
+                self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
+                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
+                self.VL[label] = self_avg + neighbours_avg
 
 
 

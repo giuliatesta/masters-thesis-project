@@ -74,5 +74,5 @@ if __name__ == '__main__':
     #average_vector_labels(RESULTS_DIR, "avg_results_vls.pickled")
     #average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
-    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_2_RUN_0_STATES.pickled"])
+    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_3_RUN_0_STATES.pickled"])
     plotter.draw_adapter_by_time_plot()
