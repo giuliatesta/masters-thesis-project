@@ -2,7 +2,7 @@ STATE CHANGING METHOD: 1 (aggregation function + 70% of gender bias)
 INITIAL NUMBER OF ADAPTERS: 20% of agents with index DNA higher than AVERAGE
 SAME WEIGHT for SELF opinion and NEIGHBOURS opinion in the aggregation function
 SAME WEIGHT for NEIGHBOURS opinions
-!!! GENDER BIAS: not using the opinions of the neighbours with different gender
+!!! GENDER BIAS: pro same gender 70%
 NO AGE, EDUCATION biases
 SIMILARITY THRESHOLD in the creation of edges in the network = 0.50 (UPPER LIMIT for one connected component)
 
@@ -11,9 +11,12 @@ N. INITIAL NODES: 1000
 N. EDGES: 14294
 N. NODES: 993
 INITIAL ADAPTER/NON ADAPTER RATIO: 99/993
-OPPOSITE GENDER TRUST PERCENTAGE = 0.3 (30% of different gender neighbours considered)
+
+# used in the aggregation function
+SAME_GENDER_WEIGHT = 0.7
+DIFFERENT_GENDER_WEIGHT = 0.3
+
 
 N. RUNS: 30
 N. ITERATIONS: 30
 
-{1: 99, 2: 517, 3: 708, 4: 838, 5: 904, 6: 936, 7: 957, 8: 967, 9: 974, 10: 976, 11: 983, 13: 989, 14: 990, 15: 992, 16: 992, 17: 992, 18: 992, 19: 992, 20: 992, 21: 993, 22: 993, 23: 993, 24: 993, 25: 993, 26: 993, 27: 993, 28: 993, 29: 993, 30: 993, 31: 993}

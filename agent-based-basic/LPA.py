@@ -52,7 +52,6 @@ class LPAgent(Sim.Process):
 
         # aggregation function with same weights for neighbours and personal opinion
         if STATE_CHANGING_METHOD == 0:
-
             neighbours_size = len(list(neighbours))
             for label in LABELS:
                 neighbours_avg = 0
@@ -64,56 +63,53 @@ class LPAgent(Sim.Process):
                 self.VL[
                     label] = self_avg + neighbours_avg  # aggregation function with same weight for both self' and neighbours' opinion average
 
-        # aggregation function with same weights, BUT with GENDER bias (OPPOSITE_GENDER_TRUST_PERC% of times I don't trust the opposite gender)
+        # aggregation function with same weights, BUT only using as neighbours agent with same gender as the current agent
         if STATE_CHANGING_METHOD == 1:
-            OPPOSITE_GENDER_TRUST_PERCENTAGE = 0.1  # percentage of how many to keep and trust with their opinions
-            gender = self.LPNet.nodes[self.id]["Gender"]
-            # extracts the neighbours with different gender
-            different_gender_neighbours = list(
-                filter(lambda node: gender != self.LPNet.nodes[node]["Gender"], neighbours))
-            # computes how many of them needs to be removed based on the OPPOSITE_GENDER_TRUST_PERCENTAGE
-            to_be_removed_count = int(len(different_gender_neighbours) * (1 - OPPOSITE_GENDER_TRUST_PERCENTAGE))
-            nodes_to_be_removed = np.random.choice(different_gender_neighbours, to_be_removed_count, replace=False)
-            print(f"Keeping only the {OPPOSITE_GENDER_TRUST_PERCENTAGE * 100}% of opposite-gender neighbours ({len(nodes_to_be_removed)} has been removed from {len(neighbours)} ({len(different_gender_neighbours)}))")
-            print(nodes_to_be_removed)
-            # remove the ones extracted with random choice
-            for i in nodes_to_be_removed:
-                neighbours.remove(i)
-            neighbours_size = len(neighbours)
+            filtered_neighbours = list(filter(lambda node: self.LPNet.nodes[self.id]["Gender"] == self.LPNet.nodes[node]["Gender"], neighbours))
+            neighbours_size = len(list(filtered_neighbours))
             for label in LABELS:
                 neighbours_avg = 0
-                for i in list(neighbours):
+                for i in list(filtered_neighbours):
                     neighbours_avg += float(self.LPNet.nodes[i][label]) / float(neighbours_size + 1)
-                    # ssum += float((self.LPNet.nodes[i][j])*(list(list(self.LPNet.edges(data=True))[(self.id+1)*(j-1)][2].values())[0])) / float(neighboursSize + 1)
 
                 self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
                 # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (neighbours +1)
                 self.VL[label] = self_avg + neighbours_avg
-        # aggregation function with same weights, BUT with GENDER bias (TRUST_PERC% of times I don't trust FEMALES)
+
         if STATE_CHANGING_METHOD == 2:
-            FEMALE_TRUST_PERCENTAGE = 0.1  # percentage of how many female to trust
-            # extracts the females
-            female_neighbours = list(
-                filter(lambda node: self.LPNet.nodes[node]["Gender"] == "Female", neighbours))
-            # computes how many of them needs to be removed based on the OPPOSITE_GENDER_TRUST_PERCENTAGE
-            to_be_removed_count = int(len(female_neighbours) * (1 - FEMALE_TRUST_PERCENTAGE))
-            nodes_to_be_removed = np.random.choice(female_neighbours, to_be_removed_count, replace=False)
-            print(
-                f"Keeping only the {FEMALE_TRUST_PERCENTAGE * 100}% of opposite-gender neighbours ({len(nodes_to_be_removed)} has been removed from {len(neighbours)} ({len(female_neighbours)}))")
-            print(nodes_to_be_removed)
-            # remove the ones extracted with random choice
-            for i in nodes_to_be_removed:
-                neighbours.remove(i)
+            SAME_GENDER_WEIGHT = 0.7  # percentage of how many to keep and trust with their opinions
+            DIFFERENT_GENDER_WEIGHT = 1 - SAME_GENDER_WEIGHT
+            gender = self.LPNet.nodes[self.id]["Gender"]
             neighbours_size = len(neighbours)
             for label in LABELS:
                 neighbours_avg = 0
                 for i in list(neighbours):
-                    neighbours_avg += float(self.LPNet.nodes[i][label]) / float(neighbours_size + 1)
-                    # ssum += float((self.LPNet.nodes[i][j])*(list(list(self.LPNet.edges(data=True))[(self.id+1)*(j-1)][2].values())[0])) / float(neighboursSize + 1)
+                    # same gender neighbours with have 0.9 weight and opposite gender neighbours only 0.1
+                    # the idea is to be pro same gender 90% of times
+                    weight = SAME_GENDER_WEIGHT if gender == self.LPNet.nodes[i]["Gender"] else DIFFERENT_GENDER_WEIGHT
+                    neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight)/ float(neighbours_size + 1)
 
                 self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
-                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (neighbours +1)
+                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
                 self.VL[label] = self_avg + neighbours_avg
+        if STATE_CHANGING_METHOD == 3:
+            FEMALE_WEIGHT = 0.3     # female neghbours' opinion weight
+            MALE_WEIGHT = 0.7   # male neighbours' opinion weight
+            neighbours_size = len(neighbours)
+            for label in LABELS:
+                neighbours_avg = 0
+                for i in list(neighbours):
+                    # same gender neighbours with have 0.9 weight and opposite gender neighbours only 0.1
+                    # the idea is to be pro same gender 90% of times
+                    weight = FEMALE_WEIGHT if "Female" == self.LPNet.nodes[i]["Gender"] else MALE_WEIGHT
+                    neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight)/ float(neighbours_size + 1)
+
+                self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
+                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
+                self.VL[label] = self_avg + neighbours_avg
+
+
+
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
         self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
 

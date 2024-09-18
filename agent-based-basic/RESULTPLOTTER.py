@@ -1,10 +1,12 @@
-import os
 import sys
 
 import numpy as np
 from matplotlib import pyplot as plt
 
 from UTILS import read_pickled_file
+
+# results coming from simulation_03 which has 20% of initial adapters and no biases.
+BASE_LINE = {1: 99, 2: 540, 3: 740, 4: 838, 5: 886, 6: 919, 7: 948, 8: 966, 9: 974, 10: 980, 11: 983, 13: 986, 14: 987, 15: 988, 16: 989, 17: 990, 18: 990, 19: 990, 20: 991, 21: 991, 22: 991, 23: 992, 24: 992, 25: 992, 26: 992, 27: 992, 28: 992, 29: 992, 30: 992, 31: 992}
 
 
 class ResultPlotter(object):
@@ -20,14 +22,15 @@ class ResultPlotter(object):
         print(adapters)
         # Plot the data
         plt.figure(figsize=(10, 6))
-        plt.plot(list(adapters.keys()), list(adapters.values()), marker='x')
+        plt.plot(list(adapters.keys()), list(adapters.values()), marker='x', label="Current simulation")
         # for key, value in adapters.items():
         #     print(f"({key}, {value}")
         #     plt.text(key, value, f"({key:.2f}, {value})", fontsize=6, ha="center")
-
+        plt.plot(list(BASE_LINE.keys()), list(BASE_LINE.values()), 'g--', linewidth=1, label='Base Line')
         plt.xlabel('Time steps')
         plt.ylabel('Adapters')
         plt.title('Number of adapters by time')
+        plt.legend(loc='lower right')
         plt.grid(True)
         plt.savefig(self.file_paths[file_to_use_index].rsplit('/', 1)[0] + "/adapters_by_time_plot.png")
 
