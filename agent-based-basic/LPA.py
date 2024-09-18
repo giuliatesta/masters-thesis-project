@@ -77,7 +77,7 @@ class LPAgent(Sim.Process):
                 self.VL[label] = self_avg + neighbours_avg
 
         if STATE_CHANGING_METHOD == 2:
-                SAME_GENDER_WEIGHT = 0.9  # percentage of how many to keep and trust with their opinions
+                SAME_GENDER_WEIGHT = 0.7  # percentage of how many to keep and trust with their opinions
                 DIFFERENT_GENDER_WEIGHT = 1 - SAME_GENDER_WEIGHT
                 gender = self.LPNet.nodes[self.id]["Gender"]
                 neighbours_size = len(neighbours)
