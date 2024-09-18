@@ -94,7 +94,7 @@ class LPAgent(Sim.Process):
                 self.VL[label] = self_avg + neighbours_avg
         if STATE_CHANGING_METHOD == 3:
             FEMALE_WEIGHT = 0.1     # female neghbours' opinion weight
-            MALE_WEIGHT = 0.9   # male neighbours' opinion weight
+            MALE_WEIGHT = 1   # male neighbours' opinion weight
             neighbours_size = len(neighbours)
             for label in LABELS:
                 neighbours_avg = 0
