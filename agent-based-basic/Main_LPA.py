@@ -64,6 +64,9 @@ if __name__ == '__main__':
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
+
+        # rename strange columns name
+        data.rename(columns={"Age_c": "Age_range", "New_frq_trip_dur": "Frequent_trip_duration_range"}, inplace=True)
         create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
         main(run)
 
