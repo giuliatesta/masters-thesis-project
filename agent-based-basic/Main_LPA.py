@@ -38,7 +38,6 @@ def main(run_index):
             initial_VLs.append(array)
     initial_VLs = np.array(initial_VLs)
     initial_states = [1 if vls[0] == 0. and vls[1] == 1 else -1 for vls in initial_VLs]
-    print(initial_states)
 
     network_nodes = sorted(LPNet.nodes())
     # Initialize nodes' VLs
@@ -67,7 +66,7 @@ if __name__ == '__main__':
 
         # rename strange columns name
         data.rename(columns={"Age_c": "Age_range", "New_frq_trip_dur": "Frequent_trip_duration_range"}, inplace=True)
-        create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
+        create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level", "Age_range"])
         main(run)
 
     # data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
@@ -77,5 +76,5 @@ if __name__ == '__main__':
     #average_vector_labels(RESULTS_DIR, "avg_results_vls.pickled")
     #average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
-    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_3_RUN_0_STATES.pickled"])
+    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_1_RUN_0_STATES.pickled"])
     plotter.draw_adapter_by_time_plot()

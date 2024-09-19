@@ -63,9 +63,13 @@ class LPAgent(Sim.Process):
                 self.VL[
                     label] = self_avg + neighbours_avg  # aggregation function with same weight for both self' and neighbours' opinion average
 
-        # aggregation function with same weights, BUT only using as neighbours agent with same gender as the current agent
+        # aggregation function with same weights, BUT only using as neighbours agent
+        # 1. with same gender as the current agent
+        # 2. in the same age range as the current agent
         if STATE_CHANGING_METHOD == 1:
-            filtered_neighbours = list(filter(lambda node: self.LPNet.nodes[self.id]["Gender"] == self.LPNet.nodes[node]["Gender"], neighbours))
+            GENDER_CONDITION = lambda node: self.LPNet.nodes[self.id]["Gender"] == self.LPNet.nodes[node]["Gender"]
+            AGE_CONDITION = lambda node: self.LPNet.nodes[self.id]["Age_range"] == self.LPNet.nodes[node]["Age_range"]
+            filtered_neighbours = list(filter(AGE_CONDITION, neighbours))
             neighbours_size = len(list(filtered_neighbours))
             for label in LABELS:
                 neighbours_avg = 0
