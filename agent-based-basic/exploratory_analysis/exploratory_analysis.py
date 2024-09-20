@@ -26,21 +26,36 @@ df = load_dataset_csv("../../dataset/df_DNA_sharingEU.csv",
                       index=False)
 df.rename(columns={"Age_c": "Age", "Location_of_resudence": "Location_of_residence"}, inplace=True)
 
-description = df.describe()
-description.to_csv("description_numerical.csv")
-# distribution("Education")
-# distribution("Gender")
-# distribution("Profession")
-# distribution("Age")
-# distribution("Income_level")
-# distribution("Location_of_residence")
+# DESCRIPTION for CATEGORICAL and NUMERICAL values
+# description = df.describe()
+# description.to_csv("description_numerical.csv")
 
-kdeplot("Education_DNA")
-kdeplot("Income_level_DNA")
-kdeplot("Profession_DNA")
-kdeplot("Age_DNA")
-kdeplot("Considering_electric_or_hybrid_vehicle_next_purchase_DNA")
-kdeplot("Concern_environmental_impacts_DNA")
-kdeplot("Country_DNA")
-kdeplot("sha_ind")
-kdeplot("sha_ind_norm")
+# COUNT PLOTS
+# countplot("Education")
+# countplot("Gender")
+# countplot("Profession")
+# countplot("Age")
+# countplot("Income_level")
+# countplot("Location_of_residence")
+
+# KDE PLOTS
+# kdeplot("Education_DNA")
+# kdeplot("Income_level_DNA")
+# kdeplot("Profession_DNA")
+# kdeplot("Age_DNA")
+# kdeplot("Considering_electric_or_hybrid_vehicle_next_purchase_DNA")
+# kdeplot("Concern_environmental_impacts_DNA")
+# kdeplot("Country_DNA")
+# kdeplot("sha_ind")
+# kdeplot("sha_ind_norm")
+
+
+# BOX PLOTS
+plt.figure(figsize=(12, 8))
+numerical_columns = ["Education_DNA", "Income_level_DNA", "Profession_DNA", "Age_DNA", "Considering_electric_or_hybrid_vehicle_next_purchase_DNA", "Concern_environmental_impacts_DNA", "Country_DNA"]
+sns.boxplot(data=df[numerical_columns], legend=True)
+plt.legend(loc='lower center')
+plt.xticks([])
+plt.grid()
+plt.title(f'Box Plot of sharing DNA')
+plt.savefig(f"./boxplot/sharing_dna_distribution.png")
