@@ -14,6 +14,18 @@ def load_dataset_csv(path: str, index: bool):
     if not index:
         dataset.reset_index(drop=True, inplace=True)
     dataset.dropna(inplace=True)
+    # casting the values of numerical columns into numbers
+    dataset = dataset.astype({
+        'Education_DNA': "float64",
+        'Income_level_DNA': "float64",
+        'Profession_DNA': "float64",
+        'Age_DNA': "float64",
+        'Considering_electric_or_hybrid_vehicle_next_purchase_DNA': "float64",
+        'Concern_environmental_impacts_DNA': "float64",
+        'Country_DNA': "float64",
+        'sha_ind': "float64",
+        'sha_ind_norm': "float64"
+    })
     print(f"Loaded {len(dataset)} records")
     return dataset
 
