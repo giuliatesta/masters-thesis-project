@@ -27,7 +27,7 @@ def crosstab(attribute_1, attribute_2):
     plt.ylabel(attribute_2.replace("_", " "))
     plt.legend()
     plt.subplots_adjust(bottom=0.75)
-    plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3),)
+    plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.4), ncol=6)
     plt.tight_layout()
     plt.xticks(rotation=0, fontsize=8)
     plt.savefig(f"./crosstab/{attribute_1.lower()}_and_{attribute_2.lower()}_crosstab.png")
@@ -116,4 +116,5 @@ df["Profession"] = df["Profession"].replace("storekeeper/tradesman/craftsman", "
 #crosstab("Education", "Would_subscribe_car_sharing_if_available")
 #crosstab("Income_level", "Considering_electric_or_hybrid_vehicle_next_purchase")
 #crosstab("Gender", "Concern_environmental_impacts")
+crosstab("Age", "Concern_environmental_impacts")
 
