@@ -37,7 +37,7 @@ def crosstab(attribute_1, attribute_2):
     plt.savefig(f"./crosstab/{attribute_1.lower()}_and_{attribute_2.lower()}_crosstab.png")
 
 
-df = load_dataset_csv("../../dataset/df_DNA_sharingEU.csv",
+df = load_dataset_csv("/Users/giuliatesta/PycharmProjects/masters-thesis-project/dataset/df_DNA_sharingEU.csv",
                       index=False)
 df.rename(columns={"Age_c": "Age", "Location_of_resudence": "Location_of_residence", "Would_subsribe_car_sharing_if_available": "Would_subscribe_car_sharing_if_available"}, inplace=True)
 print(df.columns)
@@ -84,36 +84,36 @@ df["Profession"] = df["Profession"].replace("storekeeper/tradesman/craftsman", "
 #countplot("Location_of_residence")
 
 # KDE PLOTS
-plt.figure(figsize=(16, 12))
-plt.subplot(4, 2, 1)
-kdeplot("Education_DNA")
-plt.subplot(4, 2, 2)
-kdeplot("Income_level_DNA")
-plt.subplot(4, 2, 3)
-kdeplot("Profession_DNA")
-plt.subplot(4, 2, 4)
-kdeplot("Age_DNA")
-plt.subplot(4, 2, 5)
-kdeplot("Considering_electric_or_hybrid_vehicle_next_purchase_DNA")
-plt.subplot(4, 2, 6)
-kdeplot("Concern_environmental_impacts_DNA")
-plt.subplot(4, 2, 7)
-kdeplot("Country_DNA")
-plt.subplot(4, 2, 8)
-kdeplot("sha_ind_norm")
-plt.tight_layout()
-plt.savefig(f"./kdeplot/kdeplots_DNA.png")
+# plt.figure(figsize=(16, 12))
+# plt.subplot(4, 2, 1)
+# kdeplot("Education_DNA")
+# plt.subplot(4, 2, 2)
+# kdeplot("Income_level_DNA")
+# plt.subplot(4, 2, 3)
+# kdeplot("Profession_DNA")
+# plt.subplot(4, 2, 4)
+# kdeplot("Age_DNA")
+# plt.subplot(4, 2, 5)
+# kdeplot("Considering_electric_or_hybrid_vehicle_next_purchase_DNA")
+# plt.subplot(4, 2, 6)
+# kdeplot("Concern_environmental_impacts_DNA")
+# plt.subplot(4, 2, 7)
+# kdeplot("Country_DNA")
+# plt.subplot(4, 2, 8)
+# kdeplot("sha_ind_norm")
+# plt.tight_layout()
+# plt.savefig(f"./kdeplot/kdeplots_DNA.png")
 
 # BOX PLOTS
-# plt.figure(figsize=(12, 8))
-# numerical_columns = ["Education_DNA", "Income_level_DNA", "Profession_DNA", "Age_DNA", "Considering_electric_or_hybrid_vehicle_next_purchase_DNA", "Concern_environmental_impacts_DNA", "Country_DNA"]
-# sns.boxplot(data=df[numerical_columns], legend=True)
-# plt.subplots_adjust(bottom=0.25)
-# plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.35))
-# plt.xticks([])
-# plt.grid()
-# plt.title(f'Box Plot of sharing DNA')
-# plt.savefig(f"./boxplot/sharing_dna_distribution.png")
+plt.figure(figsize=(12, 8))
+numerical_columns = ["Education_DNA", "Income_level_DNA", "Profession_DNA", "Age_DNA", "Considering_electric_or_hybrid_vehicle_next_purchase_DNA", "Concern_environmental_impacts_DNA", "Country_DNA"]
+sns.boxplot(data=df[numerical_columns], legend=True, palette='plasma')
+plt.subplots_adjust(bottom=0.25)
+plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.35))
+plt.xticks([])
+plt.grid()
+plt.title(f'Box Plot of sharing DNA')
+plt.savefig(f"./exploratory_analysis/boxplot/sharing_dna_distribution.png")
 
 
 # Stacked bar plot of Education vs Willingness to subscribe to car sharing
