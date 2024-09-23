@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from network_building import create_network
+from preprocessing import filter_by
 
 NUMBER_OF_RECORDS = 1000
 INITIAL_ADAPTERS_PERC = 20
@@ -29,7 +30,6 @@ def create_input(data, LABELS):
     edges = pd.DataFrame(graph.edges)
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
-
     nodes = pd.concat([edges[0], edges[1]]).unique()
 
     # initial vector labels
@@ -90,8 +90,6 @@ def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
 
 def transform_categorical_values(df):
     df.convert_dtypes()
-    mask = df.apply(lambda x: x.str.len() > 10)
-
     # the numerical attributes are cast into numbers
     # the string attributes are transformed if too long
     legend_json = {}

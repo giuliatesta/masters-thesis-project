@@ -9,12 +9,19 @@ from pandas import DataFrame
 # encoding= cp1252 since some values cannot be read by default utf8
 def load_dataset_csv(path: str, index: bool):
     print(f"Loading the dataset from {path}")
-    dataset = pd.read_csv(path, sep=',', header=0, encoding="cp1252", dtype=str)
+    dataset = pd.read_csv(path, sep=',', header=0, encoding="cp1252")
     dataset.replace("", np.nan, inplace=True)  # Replace empty strings with NaN
     if not index:
         dataset.reset_index(drop=True, inplace=True)
     dataset.dropna(inplace=True)
-    # casting the values of numerical columns into numbers
+    dataset.drop_duplicates(inplace=True)
+    dataset.rename(columns={
+        "Age_c": "Age",
+        "Location_of_resudence": "Location_of_residence",
+        "Would_subsribe_car_sharing_if_available": "Would_subscribe_car_sharing_if_available"},
+        inplace=True)
+
+    # casts the values of numerical columns into numbers
     dataset = dataset.astype({
         'Education_DNA': "float64",
         'Income_level_DNA': "float64",
@@ -26,6 +33,9 @@ def load_dataset_csv(path: str, index: bool):
         'sha_ind': "float64",
         'sha_ind_norm': "float64"
     })
+    # and the string values into strings
+    dataset = dataset.convert_dtypes()
+
     print(f"Loaded {len(dataset)} records")
     return dataset
 
