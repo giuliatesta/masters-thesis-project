@@ -34,14 +34,13 @@ def components_over_threshold(df: DataFrame, title=""):
         components.append(n)
 
     plt.figure()
-
-    plt.plot(thresholds, components, marker="o")
+    plt.plot(thresholds, components, marker="o", color="mediumorchid")
     for i, _ in enumerate(components):
         print(f"({thresholds[i]}, {components[i]}")
-        plt.text(thresholds[i], components[i], f"({thresholds[i]:.2f}, {components[i]})", fontsize=6, ha="center")
+        plt.text(thresholds[i], components[i], f"({thresholds[i]:.2f}, {components[i]})", fontsize=5, ha="center")
     plt.xlabel("Threshold")
     plt.ylabel("Number of components")
     plt.title("Number of connected components vs. Threshold")
     plt.grid(True)
-    plt.savefig(f"./plots/statistics/{title}.png")
+    plt.savefig(f"./plots/statistics/{title}.png", dpi=1200)
     print("Done.")

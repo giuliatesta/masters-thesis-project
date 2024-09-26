@@ -92,7 +92,7 @@ def plot_network(graph: Graph, file_path=""):
     plt.figure(figsize=(20, 15))
     plt.title(label=graph.name)
     pos = spring_layout(graph)
-    labels = {node: value['ID'] for node, value in graph.nodes(data=True)}
+    labels = {node: node for node in graph.nodes()}
     draw_networkx_nodes(graph, pos=pos, node_size=80)
     draw_networkx_edges(graph, pos=pos, width=0.5)
     draw_networkx_labels(graph, pos=pos, font_size=8, labels=labels)
@@ -103,7 +103,7 @@ def plot_network(graph: Graph, file_path=""):
     n = number_connected_components(graph)
     plt.legend([f'Connected components: {n}', f'Nodes: {graph.number_of_nodes()}, Edges: {graph.number_of_edges()}'],
                loc='upper right')
-    plt.savefig(file_path)
+    plt.savefig(file_path, dpi= 1000)
     plt.close()
     print("Done.")
 

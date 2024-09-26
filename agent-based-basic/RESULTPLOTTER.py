@@ -32,7 +32,7 @@ class ResultPlotter(object):
         plt.title('Number of adapters by time')
         plt.legend(loc='lower right')
         plt.grid(True)
-        plt.savefig(self.file_paths[file_to_use_index].rsplit('/', 1)[0] + "/adapters_by_time_plot.png")
+        plt.savefig(self.file_paths[file_to_use_index].rsplit('/', 1)[0] + "/adapters_by_time_plot.png", dpi=1200)
 
     def draw_adapter_by_time_different_thresholds_plot(self, thresholds):
         if len(thresholds) != len(self.raw_data):
