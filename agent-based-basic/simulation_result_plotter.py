@@ -3,14 +3,13 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 
-from UTILS import read_pickled_file
+from utils import read_pickled_file
 
 # results coming from simulation_03 which has 20% of initial adapters and no biases.
 BASE_LINE = {1: 99, 2: 540, 3: 740, 4: 838, 5: 886, 6: 919, 7: 948, 8: 966, 9: 974, 10: 980, 11: 983, 13: 986, 14: 987, 15: 988, 16: 989, 17: 990, 18: 990, 19: 990, 20: 991, 21: 991, 22: 991, 23: 992, 24: 992, 25: 992, 26: 992, 27: 992, 28: 992, 29: 992, 30: 992, 31: 992}
 
 
 class ResultPlotter(object):
-
     def __init__(self, file_paths):
         self.raw_data = []
         self.file_paths = file_paths

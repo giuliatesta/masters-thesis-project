@@ -1,16 +1,17 @@
 #!/usr/bin/python
-import UTILS
+import utils
 
 from average_results import average_state_results, average_vector_labels
-import networkx as nx, sys, LPA, NETWORKSIMULATION
+import networkx as nx, sys, LPA, network_simulation
 import numpy as np
 from pandas import read_csv
 
 from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE, RESULTS_DIR
 from create_input import create_input
 from preprocessing import load_dataset_csv
-import RESULTPLOTTER
-
+from simulation_result_plotter import ResultPlotter
+from network_simulation import NetworkSimulation
+from network_analysis import NetworkAnalysis
 INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
 
 
@@ -24,6 +25,7 @@ def main(run_index):
         print("The type of the graph must be U(undirected) or D(directed)")
         return
 
+    LPNet.name = "LPA Network"
     # ATTRIBUTE_FILE
     # add the attributes from the file to the nodes
     attributes = read_csv(ATTRIBUTES_FILE)
@@ -51,8 +53,10 @@ def main(run_index):
         LPNet.nodes[node]["state"] = initial_states[i]
     adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters: {len(adapters)}")
+    NetworkAnalysis(LPNet).analyse()
+    exit()
     # Run simulation
-    simulation = NETWORKSIMULATION.NetworkSimulation(LPNet, LPA, ITERATION_NUM)
+    simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.run_simulation(run_index)
 
 
@@ -75,5 +79,5 @@ if __name__ == '__main__':
     #average_vector_labels(RESULTS_DIR, "avg_results_vls.pickled")
     #average_state_results(RESULTS_DIR, "avg_results_states.pickled")
 
-    plotter = RESULTPLOTTER.ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_0_RUN_0_STATES.pickled"])
+    plotter = ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_0_RUN_0_STATES.pickled"])
     plotter.draw_adapter_by_time_plot()

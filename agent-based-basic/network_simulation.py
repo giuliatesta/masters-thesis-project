@@ -1,5 +1,5 @@
 from SimPy import Simulation as Sim
-import NETWORKLOGGER
+from network_logging import NetworkLogger
 from conf import TRIALS
 
 
@@ -47,7 +47,7 @@ class NetworkSimulation(Sim.Simulation):
 
         # Set up logging
         logging_interval = 1
-        logger = NETWORKLOGGER.NetworkLogger(self, logging_interval)
+        logger = NetworkLogger(self, logging_interval)
         self.activate(logger, logger.Run(), prior=True)
 
         # Run simulation

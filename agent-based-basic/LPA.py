@@ -6,7 +6,7 @@ import random
 import numpy as np
 from SimPy import Simulation as Sim
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
-from Main_LPA import INDEX_DNA_COLUMN_NAME
+from main_LPA import INDEX_DNA_COLUMN_NAME
 
 
 # An agent has its vector label with raw values and a state which depends on the vector label

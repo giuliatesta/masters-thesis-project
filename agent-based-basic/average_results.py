@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-import UTILS
+import utils
 
 
 def average_vector_labels(results_directory, results_file_name, ):

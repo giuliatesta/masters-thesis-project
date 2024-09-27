@@ -1,8 +1,8 @@
 import networkx as nx
 from SimPy import Simulation as Sim
-import UTILS
 from conf import RESULTS_DIR, LABELS
 import time
+import utils
 
 # The iterations whose VLs have to be stored
 tt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
@@ -50,4 +50,4 @@ class NetworkLogger(Sim.Process):
         self.LPStates.append([0, states])
 
     def log_trial_to_files(self, id, run_index):
-        UTILS.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, id, run_index)
+        utils.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, id, run_index)
