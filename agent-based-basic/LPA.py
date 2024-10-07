@@ -68,7 +68,7 @@ class LPAgent(Sim.Process):
         # 2. in the same age range as the current agent
         if STATE_CHANGING_METHOD == 1:
             GENDER_CONDITION = lambda node: self.LPNet.nodes[self.id]["Gender"] == self.LPNet.nodes[node]["Gender"]
-            AGE_CONDITION = lambda node: self.LPNet.nodes[self.id]["Age_range"] == self.LPNet.nodes[node]["Age_range"]
+            AGE_CONDITION = lambda node: self.LPNet.nodes[self.id]["Age"] == self.LPNet.nodes[node]["Age"]
             filtered_neighbours = list(filter(AGE_CONDITION, neighbours))
             neighbours_size = len(list(filtered_neighbours))
             for label in LABELS:
@@ -81,41 +81,40 @@ class LPAgent(Sim.Process):
                 self.VL[label] = self_avg + neighbours_avg
 
         if STATE_CHANGING_METHOD == 2:
-            SAME_GENDER_WEIGHT = 0.7  # percentage of how many to keep and trust with their opinions
-            DIFFERENT_GENDER_WEIGHT = 1 - SAME_GENDER_WEIGHT
-            gender = self.LPNet.nodes[self.id]["Gender"]
-            neighbours_size = len(neighbours)
-            for label in LABELS:
-                neighbours_avg = 0
-                for i in list(neighbours):
-                    # same gender neighbours with have 0.9 weight and opposite gender neighbours only 0.1
-                    # the idea is to be pro same gender 90% of times
-                    weight = SAME_GENDER_WEIGHT if gender == self.LPNet.nodes[i]["Gender"] else DIFFERENT_GENDER_WEIGHT
-                    neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight)/ float(neighbours_size + 1)
-
-                self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
-                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
-                self.VL[label] = self_avg + neighbours_avg
+            SAME_GROUP_WEIGHT = 0.9  # percentage of how many to keep and trust with their opinions
+            DIFFERENT_GROUP_WEIGHT = 1 - SAME_GROUP_WEIGHT
+            BIAS_ATTRIBUTE = "Age"
+            bias_attribute = self.LPNet.nodes[self.id][BIAS_ATTRIBUTE]
+            self.aggregation_function(
+                neighbours,
+                same_weight=SAME_GROUP_WEIGHT,
+                different_weight=DIFFERENT_GROUP_WEIGHT,
+                bias_attribute_label="Age",
+                bias_attribute=bias_attribute)
         if STATE_CHANGING_METHOD == 3:
-            FEMALE_WEIGHT = 0.3     # female neghbours' opinion weight
-            MALE_WEIGHT = 0.7   # male neighbours' opinion weight
-            neighbours_size = len(neighbours)
-            for label in LABELS:
-                neighbours_avg = 0
-                for i in list(neighbours):
-                    # same gender neighbours with have 0.9 weight and opposite gender neighbours only 0.1
-                    # the idea is to be pro same gender 90% of times
-                    weight = FEMALE_WEIGHT if "Female" == self.LPNet.nodes[i]["Gender"] else MALE_WEIGHT
-                    neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight)/ float(neighbours_size + 1)
+            FEMALE_WEIGHT = 0.1  # female neghbours' opinion weight
+            MALE_WEIGHT = 1  # male neighbours' opinion weight
 
-                self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
-                # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
-                self.VL[label] = self_avg + neighbours_avg
-
-
-
+            self.aggregation_function(
+                neighbours,
+                same_weight=FEMALE_WEIGHT,
+                different_weight=MALE_WEIGHT,
+                bias_attribute_label="Gender",
+                bias_attribute="Female")
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
         self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
+
+    def aggregation_function(self, neighbours, same_weight, different_weight, bias_attribute_label, bias_attribute):
+        neighbours_size = len(neighbours)
+        for label in LABELS:
+            neighbours_avg = 0
+            for i in list(neighbours):
+                weight = same_weight if bias_attribute == self.LPNet.nodes[i][bias_attribute_label] else different_weight
+                neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight) / float(neighbours_size + 1)
+
+            self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
+            # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
+            self.VL[label] = self_avg + neighbours_avg
 
     """
     Update the VL and the state used by other agents to update themselves

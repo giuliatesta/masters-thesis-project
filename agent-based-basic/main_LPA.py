@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import utils
 
-from average_results import average_state_results, average_vector_labels
+from average_results import state_averaging
 import networkx as nx, sys, LPA, network_simulation
 import numpy as np
 from pandas import read_csv
@@ -9,7 +9,7 @@ from pandas import read_csv
 from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE, RESULTS_DIR
 from create_input import create_input
 from preprocessing import load_dataset_csv
-from simulation_result_plotter import ResultPlotter
+from simulation_result_plotter import draw_adapter_by_time_plot, plot_multiple_adapters_by_time
 from network_simulation import NetworkSimulation
 from network_analysis import NetworkAnalysis
 INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
@@ -24,8 +24,8 @@ def main(run_index):
     else:
         print("The type of the graph must be U(undirected) or D(directed)")
         return
-
     LPNet.name = "LPA Network"
+
     # ATTRIBUTE_FILE
     # add the attributes from the file to the nodes
     attributes = read_csv(ATTRIBUTES_FILE)
@@ -52,9 +52,7 @@ def main(run_index):
 
         LPNet.nodes[node]["state"] = initial_states[i]
     adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
-    print(f"Initial adapters: {len(adapters)}")
-    NetworkAnalysis(LPNet).analyse()
-    exit()
+
     # Run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.run_simulation(run_index)
@@ -62,22 +60,12 @@ def main(run_index):
 
 RUNS = 30
 if __name__ == '__main__':
-    # UTILS.print_pickled_file("./work/results/sim_01/avg_results_states.pickled")
-    # exit(1)
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-
-        # rename strange columns name
         create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level", "Age"])
         main(run)
 
-    # data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-    # create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level"])
-    # main(0)
-
-    #average_vector_labels(RESULTS_DIR, "avg_results_vls.pickled")
-    #average_state_results(RESULTS_DIR, "avg_results_states.pickled")
-
-    plotter = ResultPlotter([f"{RESULTS_DIR}/trial_0_LPStates_0_RUN_0_STATES.pickled"])
-    plotter.draw_adapter_by_time_plot()
+    states = state_averaging(RESULTS_DIR)
+    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time (pro same age by 90% - SIM 15)")
+    # plot_multiple_adapters_by_time()

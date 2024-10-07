@@ -1,4 +1,4 @@
-sha_ind_norm,Gender,Education,Income_level,Age_range
+sha_ind_norm,Gender,Education,Income_level,Age
 0.3253783685170479,Male,1,1,1
 0.4870511477854069,Female,2,1,2
 0.6917551777673612,Male,3,2,3
