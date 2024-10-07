@@ -81,7 +81,7 @@ class LPAgent(Sim.Process):
                 self.VL[label] = self_avg + neighbours_avg
 
         if STATE_CHANGING_METHOD == 2:
-            SAME_GROUP_WEIGHT = 0.9  # percentage of how many to keep and trust with their opinions
+            SAME_GROUP_WEIGHT = 0.5  # percentage of how many to keep and trust with their opinions
             DIFFERENT_GROUP_WEIGHT = 1 - SAME_GROUP_WEIGHT
             BIAS_ATTRIBUTE = "Age"
             bias_attribute = self.LPNet.nodes[self.id][BIAS_ATTRIBUTE]

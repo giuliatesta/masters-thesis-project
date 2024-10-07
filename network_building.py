@@ -34,7 +34,7 @@ def create_network(df: DataFrame, similarity_threshold: float, name="Network", n
         print(f"Added {nodes_counter} nodes")
 
     similarities = get_similarities(df, "gower")
-    #distribution_over_nodes_count(similarities, title=name, x_label="gower's similarity values")
+    # distribution_over_nodes_count(similarities, title=name, x_label="gower's similarity values")
     counter = 0
     for i, j in itertools.combinations(df.index, 2):  # creates all combinations of possible edges
         similarity = similarities[i, j]
