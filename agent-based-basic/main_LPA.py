@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import os
+
 import utils
 
 from average_results import state_averaging
@@ -58,8 +60,9 @@ def main(run_index):
     simulation.run_simulation(run_index)
 
 
-RUNS = 30
+RUNS = 0
 if __name__ == '__main__':
+
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
@@ -67,5 +70,5 @@ if __name__ == '__main__':
         main(run)
 
     states = state_averaging(RESULTS_DIR)
-    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time (pro same age by 90% - SIM 15)")
+    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time (against >= 60 years old by 90% - SIM 17)")
     # plot_multiple_adapters_by_time()

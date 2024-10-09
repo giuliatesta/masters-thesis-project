@@ -93,14 +93,14 @@ class LPAgent(Sim.Process):
                 bias_attribute=bias_attribute)
         if STATE_CHANGING_METHOD == 3:
             FEMALE_WEIGHT = 0.1  # female neghbours' opinion weight
-            MALE_WEIGHT = 1  # male neighbours' opinion weight
+            MALE_WEIGHT = 0.9  # male neighbours' opinion weight
 
             self.aggregation_function(
                 neighbours,
                 same_weight=FEMALE_WEIGHT,
                 different_weight=MALE_WEIGHT,
-                bias_attribute_label="Gender",
-                bias_attribute="Female")
+                bias_attribute_label="Age",
+                bias_attribute="6")
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
         self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
 
