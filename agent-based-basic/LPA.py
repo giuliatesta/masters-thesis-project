@@ -92,8 +92,8 @@ class LPAgent(Sim.Process):
                 bias_attribute_label="Age",
                 bias_attribute=bias_attribute)
         if STATE_CHANGING_METHOD == 3:
-            FEMALE_WEIGHT = 0.3  # female neghbours' opinion weight
-            MALE_WEIGHT = 0.7  # male neighbours' opinion weight
+            FEMALE_WEIGHT = 0.5  # female neghbours' opinion weight
+            MALE_WEIGHT = 0.5  # male neighbours' opinion weight
 
             self.aggregation_function(
                 neighbours,
