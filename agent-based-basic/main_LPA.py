@@ -60,7 +60,7 @@ def main(run_index):
     simulation.run_simulation(run_index)
 
 
-RUNS = 0
+RUNS = 30
 if __name__ == '__main__':
 
     for run in range(0, RUNS):
@@ -70,5 +70,5 @@ if __name__ == '__main__':
         main(run)
 
     states = state_averaging(RESULTS_DIR)
-    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time (against >= 60 years old by 90% - SIM 17)")
+    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time (against >= 60 years old by 70% - SIM 18)")
     # plot_multiple_adapters_by_time()
