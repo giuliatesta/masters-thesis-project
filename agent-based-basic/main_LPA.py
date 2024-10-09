@@ -69,5 +69,5 @@ if __name__ == '__main__':
         main(run)
 
     states = state_averaging(RESULTS_DIR)
-    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time (against >= 60 years old by 50% - SIM 19)")
+    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time (against <= 30 years old by 90% - SIM 20)")
     # plot_multiple_adapters_by_time()
