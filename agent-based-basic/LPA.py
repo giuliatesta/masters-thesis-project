@@ -87,29 +87,29 @@ class LPAgent(Sim.Process):
             bias_attribute = self.LPNet.nodes[self.id][BIAS_ATTRIBUTE]
             self.aggregation_function(
                 neighbours,
-                same_weight=SAME_GROUP_WEIGHT,
-                different_weight=DIFFERENT_GROUP_WEIGHT,
+                privileged=SAME_GROUP_WEIGHT,
+                discriminated=DIFFERENT_GROUP_WEIGHT,
                 bias_attribute_label="Age",
                 bias_attribute=bias_attribute)
         if STATE_CHANGING_METHOD == 3:
-            FEMALE_WEIGHT = 0.1  # female neghbours' opinion weight
-            MALE_WEIGHT = 0.9  # male neighbours' opinion weight
+            DISCRIMINATED_WEIGHT = 0
+            PRIVILEGED_WEIGHT = 1
 
             self.aggregation_function(
                 neighbours,
-                same_weight=FEMALE_WEIGHT,
-                different_weight=MALE_WEIGHT,
+                privileged=PRIVILEGED_WEIGHT,
+                discriminated=DISCRIMINATED_WEIGHT,
                 bias_attribute_label="Age",
-                bias_attribute="ATTENZIONEEEE")
+                bias_attribute="6")
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
         self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
 
-    def aggregation_function(self, neighbours, same_weight, different_weight, bias_attribute_label, bias_attribute):
+    def aggregation_function(self, neighbours, privileged, discriminated, bias_attribute_label, bias_attribute):
         neighbours_size = len(neighbours)
         for label in LABELS:
             neighbours_avg = 0
             for i in list(neighbours):
-                weight = same_weight if "2" == self.LPNet.nodes[i][bias_attribute_label] or "4" == self.LPNet.nodes[i][bias_attribute_label] else different_weight
+                weight = privileged if bias_attribute == self.LPNet.nodes[i][bias_attribute_label] else discriminated
                 neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight) / float(neighbours_size + 1)
 
             self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
