@@ -1,7 +1,9 @@
 import sys
 
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
+import seaborn as sns
 
 from utils import read_pickled_file
 
@@ -63,3 +65,32 @@ def plot_multiple_adapters_by_time():
     plt.legend(loc='lower right')
     plt.grid(True)
     plt.savefig(f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/gender_bias_adapters_by_time_plot.png", dpi=1000)
+
+
+def states_changing_heat_map(states, vector_labels, step, title, path):
+    # on X you have VL(0), on Y you have VL(1), the color is the state
+    vector_data = vector_labels[step][1]
+    x_data = [vl[0] for vl in vector_data]
+    y_data = [vl[1] for vl in vector_data]
+    state_data = states[step][1]
+    data = pd.DataFrame({
+    'X': x_data,
+    'Y': y_data,
+    'color': state_data
+    })
+    print(data)
+    heatmap_data = data.pivot_table(index='Y', columns='X', values='color')
+
+    plt.figure()
+    sns.heatmap(heatmap_data, cmap='coolwarm', cbar_kws={'label': 'State'},
+                 linewidths=0.1, linecolor='gray', mask=heatmap_data.isnull(),
+                 cbar=True, square=True, annot=False, vmin=-1, vmax=1)
+
+    # Set axis labels and title
+    plt.xlabel('VL0')
+    plt.ylabel('VL1')
+    plt.title('Heatmap of Node States based on VL0 and VL1')
+
+    plt.title(title)
+    plt.savefig(f"{path}/state_changing_heat_map.png", dpi=1200)
+    print(f"Heat map saved in {path}")
