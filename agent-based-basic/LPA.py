@@ -1,6 +1,7 @@
 """
 Module for the LPAgent class that can be subclassed by agents.
 """
+import math
 import random
 
 import numpy as np
@@ -107,12 +108,22 @@ class LPAgent(Sim.Process):
     def aggregation_function(self, neighbours, privileged, discriminated, bias_attribute_label, bias_attribute):
         neighbours_size = len(neighbours)
         for label in LABELS:
+            vl = self.LPNet.nodes[self.id][label]
+
+            # the weight of the current agent opinion is the opinion perseverance, and it is
+            # computed using a beta distribution with alpha = 2 and bta = 2
+            opinion_perseverance = beta_distribution(vl)
+            self_avg = vl * opinion_perseverance
+
+            # the total weight of the neibghbours needs to obet the condition : w_i + \sum w_j = 1
+            # \sum w_j = 1 - w_i
+            total_opinion_plasticity = 1 - opinion_perseverance
             neighbours_avg = 0
             for i in list(neighbours):
                 weight = privileged if bias_attribute == self.LPNet.nodes[i][bias_attribute_label] else discriminated
-                neighbours_avg += (float(self.LPNet.nodes[i][label]) * weight) / float(neighbours_size + 1)
+                opinion_plasticity = normalise(weight, to=total_opinion_plasticity)
+                neighbours_avg += float(self.LPNet.nodes[i][label]) * opinion_plasticity
 
-            self_avg = self.LPNet.nodes[self.id][label] / float(neighbours_size + 1)
             # aggregation function with same weight for both self' and neighbours' opinion average -> 1 / (# neighbours +1)
             self.VL[label] = self_avg + neighbours_avg
 
@@ -131,6 +142,19 @@ class LPAgent(Sim.Process):
         for neighbour in list(neighbours):
             sum_for_average += float(self.LPNet.nodes[neighbour]["attribute-0"])
         return float(sum_for_average / neighbours_size)
+
+
+def beta_distribution(x):
+    alpha = 2
+    beta = 2
+    return math.pow(x, alpha - 1) * math.pow(1 - x, beta - 1)
+
+
+# the normalisation returns the weight value between 0 and "to".
+# zero is the min value so the normalisation is just the division of x over to.
+# otherwise, it would have been (x - min) / (to - min)
+def normalise(x, to):
+    return float(x / to)
 
 
 def determine_state(vl, index, labels, original_value):
