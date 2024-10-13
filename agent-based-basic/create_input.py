@@ -20,6 +20,7 @@ def create_input(data, LABELS):
     # with headers othrwise we lose the name of the attributes
     attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, sep=",")
     indexes_DNA = attributes.iloc[:, 0]
+    would_subscribe_car_sharing = attributes.iloc[:, -1]
 
     # labels file only has L0, L1, L2
     with open("work/LABELS", 'w') as f:
@@ -33,27 +34,30 @@ def create_input(data, LABELS):
     nodes = pd.concat([edges[0], edges[1]]).unique()
 
     # initial vector labels
-    initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
+    # initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
+    initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
+    adapters_count = sum(1 if i == [0.0, 1.0] else 0 for i in initial_vls)
+    print(f"Initial adapter/non-adapter ratio: {adapters_count}/{len(initial_vls)}")
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
 
 
-def generate_binary_pairs(size, percentage_of_ones):
-    num_ones = int(size * (percentage_of_ones / 100))
+# the initial adapters are chosen based on the value of the column "Would_subscribe_car_sharing_if_available" column
+# if 2: Yes, instead of purchasing a new car;
+#       Yes without any influence on my car ownership;
+#       Yes and I would give up one car I currently own
+# if 1: Maybe yes, maybe not. I would need to test the service before taking a decision
+# if 0: No, I would not be interested in this service
 
-    # Create an array with the specified number of ones and the remaining zeros
-    binary_array = np.array([1] * num_ones + [0] * (size - num_ones))
-
-    # Shuffle the array to randomize the order of 1s and 0s
-    np.random.shuffle(binary_array)
-
-    return binary_array
+def generate_vector_labels_based_on_attribute(attribute_values):
+    adapter = [0.0, 1.0]
+    non_adapter = [1.0, 0.0]
+    return [adapter if i == 2 else non_adapter for i in attribute_values]
 
 
 # the initial adapters are chosen from the list of nodes that will be actually present in the network
 # if considering all (from 0 to 1000), there is the risk of making adpters nodes that will not be present in the LPNet
 # which is built given the edges (meaning that nodes without edges are not considered in LPNet)
 # the choice is made between 654 nodes with non-consecutive indices (that's why the DNAs needs to be filtered)
-
 def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     if percentage_of_adapters > 1:
         percentage_of_adapters = percentage_of_adapters / 100
@@ -84,7 +88,6 @@ def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     # set the chosen indices to 1
     for index in indices:
         vls[index] = [0.0, 1.0]
-    print(f"Initial adapter/non-adapter ratio: {len(indices)}/{len(filtered_values)}")
     return vls
 
 

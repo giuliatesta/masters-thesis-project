@@ -65,10 +65,16 @@ if __name__ == '__main__':
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-        create_input(data, [INDEX_DNA_COLUMN_NAME, "Gender", "Education", "Income_level", "Age"])
+        create_input(data, [
+                            INDEX_DNA_COLUMN_NAME,
+                            "Gender",
+                            "Education",
+                            "Income_level",
+                            "Age",
+                            "Would_subscribe_car_sharing_if_available"])
         main(run)
 
     states = state_averaging(RESULTS_DIR)
     draw_adapter_by_time_plot(states, RESULTS_DIR,
-                    title="Number of adapters by time (only trust OLD - SIM 23)")
+                    title="Number of adapters by time (new initial adapters choosing method\nSIM 03 - BASE LINE)")
     # plot_multiple_adapters_by_time()

@@ -19,5 +19,13 @@
         "4": "21-30",
         "5": "51-60",
         "6": "more than 60"
+    },
+    "Would_subscribe_car_sharing_if_available": {
+        "1": "No, I would not be interested in this service",
+        "2": "Yes without any influence on my car ownership",
+        "3": "Yes, instead of purchasing a new car",
+        "4": "Maybe yes, maybe not. I would need to test the service before taking a decision",
+        "5": "Yes I'm already client of a car sharing service",
+        "6": "Yes and I would give up one car I currently own"
     }
 }
