@@ -36,8 +36,6 @@ def create_input(data, LABELS):
     # initial vector labels
     # initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
     initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
-    adapters_count = sum(1 if i == [0.0, 1.0] else 0 for i in initial_vls)
-    print(f"Initial adapter/non-adapter ratio: {adapters_count}/{len(initial_vls)}")
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
 
 
@@ -88,6 +86,7 @@ def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     # set the chosen indices to 1
     for index in indices:
         vls[index] = [0.0, 1.0]
+    print(f"Initial adapters: {len(indices)}")
     return vls
 
 

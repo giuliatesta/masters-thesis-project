@@ -1,13 +1,13 @@
 """
 Module for the LPAgent class that can be subclassed by agents.
 """
-import math
-import random
 
 import numpy as np
 from SimPy import Simulation as Sim
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
 from main_LPA import INDEX_DNA_COLUMN_NAME
+from scipy.stats import beta as beta_function
+
 
 
 # An agent has its vector label with raw values and a state which depends on the vector label
@@ -100,13 +100,12 @@ class LPAgent(Sim.Process):
                 neighbours,
                 privileged=PRIVILEGED_WEIGHT,
                 discriminated=DISCRIMINATED_WEIGHT,
-                bias_attribute_label="Age",
-                bias_attribute="6")
+                bias_attribute_label="Gender",
+                bias_attribute="Male")
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
         self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
 
     def aggregation_function(self, neighbours, privileged, discriminated, bias_attribute_label, bias_attribute):
-        neighbours_size = len(neighbours)
         for label in LABELS:
             vl = self.LPNet.nodes[self.id][label]
 
@@ -147,7 +146,7 @@ class LPAgent(Sim.Process):
 def beta_distribution(x):
     alpha = 2
     beta = 2
-    return math.pow(x, alpha - 1) * math.pow(1 - x, beta - 1)
+    return beta_function.pdf(x, alpha, beta)
 
 
 # the normalisation returns the weight value between 0 and "to".

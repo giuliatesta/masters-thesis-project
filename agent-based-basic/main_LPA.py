@@ -76,5 +76,5 @@ if __name__ == '__main__':
 
     states = state_averaging(RESULTS_DIR)
     draw_adapter_by_time_plot(states, RESULTS_DIR,
-                    title="Number of adapters by time (new initial adapters choosing method\nSIM 03 - BASE LINE)")
+                    title="Number of adapters by time\n(total gender bias - SIM 08)")
     # plot_multiple_adapters_by_time()
