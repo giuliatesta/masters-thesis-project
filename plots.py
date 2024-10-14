@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 from networkx import number_connected_components
@@ -52,3 +53,14 @@ def components_over_threshold(df: DataFrame, title=""):
     plt.savefig(f"./plots/statistics/{title}.png", dpi=1200)
     print("Done.")
 
+
+# the number of nodes that have a specific degree...
+def nodes_by_degree_distribution(graph):
+    degrees = [degree for _, degree in graph.degree()]
+    degree_count = pd.Series(degrees).value_counts().sort_index()
+    plt.figure()
+    sns.barplot(x=degree_count.index, y=degree_count.values, palette="plasma")
+    plt.xlabel('Degree')
+    plt.ylabel('Number of Nodes')
+    plt.title('Number of Nodes by Degree')
+    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/nodes_by_degree.png", dpi=1000)

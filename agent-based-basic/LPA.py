@@ -144,8 +144,7 @@ class LPAgent(Sim.Process):
 
 
 def beta_distribution(x):
-    alpha = 2
-    beta = 2
+    alpha = 2; beta = 2
     return beta_function.pdf(x, alpha, beta)
 
 

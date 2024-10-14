@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 
+import plots
 import utils
 
 from average_results import state_averaging
@@ -54,7 +55,8 @@ def main(run_index):
 
         LPNet.nodes[node]["state"] = initial_states[i]
     adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
-
+    plots.nodes_by_degree_distribution(LPNet)
+    exit(1)
     # Run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.run_simulation(run_index)
