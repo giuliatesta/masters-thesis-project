@@ -1,3 +1,5 @@
+from collections import Counter
+
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -56,11 +58,24 @@ def components_over_threshold(df: DataFrame, title=""):
 
 # the number of nodes that have a specific degree...
 def nodes_by_degree_distribution(graph):
-    degrees = [degree for _, degree in graph.degree()]
-    degree_count = pd.Series(degrees).value_counts().sort_index()
+    #node_degree_list = [(1, 3), (2, 2), (3, 3), (4, 1), (5, 2)]
+    degree_count = Counter(degree for _, degree in graph.degree())
+    sorted_degrees = sorted(degree_count.items())
+    degrees, counts = zip(*sorted_degrees)
     plt.figure()
-    sns.barplot(x=degree_count.index, y=degree_count.values, palette="plasma")
+    df = pd.DataFrame()
+
+    df["Degrees"] = degrees
+    df["Counts"] = counts
+    df.to_csv(path_or_buf="./degrees.cvs", index=False)
+
+    plt.bar(degrees, counts)
     plt.xlabel('Degree')
     plt.ylabel('Number of Nodes')
-    plt.title('Number of Nodes by Degree')
-    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/nodes_by_degree.png", dpi=1000)
+    plt.title('Degree Distribution of Nodes (similarity threshold = 0.35)')
+    # sns.barplot(x=degrees, y=counts, legend=True, palette="plasma")
+    # plt.xlabel('degree')
+    # plt.ylabel('Number of Nodes')
+    # plt.title('Number of Nodes by Degree')
+    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/nodes_by_degree_35.png", dpi=1000)
+
