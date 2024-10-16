@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from networkx.algorithms.components import connected_components, is_weakly_connected, weakly_connected_components, \
         is_strongly_connected, strongly_connected_components, is_connected
 from numpy.f2py.auxfuncs import replace
@@ -42,11 +43,13 @@ graph = create_input_files(data, [
         "Income_level",
         "Age",
         "Would_subscribe_car_sharing_if_available"],
-        similarity_threshold=0.70)
+        similarity_threshold=0.60)
 
+f = open("/Users/giuliatesta/PycharmProjects/masters-thesis-project/dataset/components.txt", "w")
 for c in connected_components(graph):
-        print(c)
+        f.write(f"{len(c)}\t{c}\n")
+f.close()
 print("-------------------")
 print(f"Is the network connected? {is_connected(graph)}")
 
-# plot_network(graph, "/home/giulia/giulia/masters-thesis-project/agent-based-basic/network_analysis/network/network_070.png")
+plot_network(graph, "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/network_analysis/network/network_060.png")

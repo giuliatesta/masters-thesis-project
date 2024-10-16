@@ -105,7 +105,7 @@ def plot_network(graph: Graph, file_path=""):
                 f'Nodes: {graph.number_of_nodes()}, '
                 f'Edges: {graph.number_of_edges()}'],
                loc='upper right')
-    plt.savefig(file_path, dpi= 1000)
+    plt.savefig(file_path, dpi= 800)
     plt.close()
     print("Done.")
 

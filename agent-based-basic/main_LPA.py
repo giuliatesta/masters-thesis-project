@@ -10,6 +10,8 @@ from network_simulation import NetworkSimulation
 from create_input import create_input_files
 from preprocessing import load_dataset_csv
 
+import network_analysis as na
+
 INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
 
 
@@ -51,16 +53,15 @@ def run_simulations(run_index):
         LPNet.nodes[node]["state"] = initial_states[i]
     adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters/non adapters ratio: {len(adapters)}/{len(LPNet.nodes)}")
+
     # Run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.run_simulation(run_index)
 
 
 RUNS = 30
-SIMILARITY_THRESHOLD=0.5
+SIMILARITY_THRESHOLD=0.60
 if __name__ == '__main__':
-    # plots.components_over_threshold( load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False))
-    # exit(1)
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
