@@ -1,11 +1,10 @@
 import math
 import os
 
-import numpy as np
-
 import utils
 
 
+# counts the number of adapters in the state results for each simulation index
 def count_adapters(states):
     # [time_step, [values for each node]] = [0, [-1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, -1, -1, -1, -1]]
     adapters = {}
@@ -18,6 +17,8 @@ def count_adapters(states):
     return adapters
 
 
+# averages the final state results given the multiple RUNS over the same simulation
+# multiple runs are necessary to reduce the impact of the random selection of initial adapters
 def state_averaging(state_files_path):
     state_files_content = []
     for filename in sorted(os.listdir(state_files_path)):

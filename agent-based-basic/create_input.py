@@ -3,14 +3,17 @@ import json
 import numpy as np
 import pandas as pd
 
-from network_building import create_network
-from preprocessing import filter_by
+from create_network import init_network
 
 NUMBER_OF_RECORDS = 1000
 INITIAL_ADAPTERS_PERC = 20
 
-
-def create_input(data, LABELS):
+# builds the initial files used as input for the simulations
+# - ATTRIBUTES: contains the attributes of each node (usually, gender, age, education level,
+# sharing DNA and whether they would subscribe to a car sharing service if available)
+# - EDGES: contains the pairs of nodes that have an edge in the network
+# - INITIAL_VLS: contains the initial values of the vector labels of the nodes in the network
+def create_input_files(data, LABELS, similarity_threshold= 0.5):
     data.reset_index(drop=True, inplace=True)
     data = data.head(NUMBER_OF_RECORDS)
 
@@ -27,16 +30,17 @@ def create_input(data, LABELS):
         f.write("L0;L1")
 
     # create the network to extract the edges between nodes
-    graph = create_network(data, similarity_threshold=0.5, name="Travel Survey gower similarity network")
+    graph = init_network(data, similarity_threshold=similarity_threshold, name="Travel Survey gower similarity network")
     edges = pd.DataFrame(graph.edges)
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
-    nodes = pd.concat([edges[0], edges[1]]).unique()
+    #nodes = pd.concat([edges[0], edges[1]]).unique()
 
     # initial vector labels
     # initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
     initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
+    return graph
 
 
 # the initial adapters are chosen based on the value of the column "Would_subscribe_car_sharing_if_available" column
@@ -45,7 +49,6 @@ def create_input(data, LABELS):
 #       Yes and I would give up one car I currently own
 # if 1: Maybe yes, maybe not. I would need to test the service before taking a decision
 # if 0: No, I would not be interested in this service
-
 def generate_vector_labels_based_on_attribute(attribute_values):
     adapter = [0.0, 1.0]
     non_adapter = [1.0, 0.0]
