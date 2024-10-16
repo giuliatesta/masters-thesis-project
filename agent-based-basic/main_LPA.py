@@ -77,5 +77,5 @@ if __name__ == '__main__':
         run_simulations(run)
 
     states = state_averaging(RESULTS_DIR)
-    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(total gender bias - SIM 08)")
+    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(pro same gender by 90% - SIM 09)")
     # plot_multiple_adapters_by_time()

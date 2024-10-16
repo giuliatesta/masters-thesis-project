@@ -1,0 +1,25 @@
+STATE CHANGING METHOD: 1 (aggregation function + 90% of gender bias)
+INITIAL NUMBER OF ADAPTERS: agents with Would_subscribe_car_sharing_if_available == "YES"
+SAME WEIGHT for SELF opinion and NEIGHBOURS opinion in the aggregation function
+SAME WEIGHT for NEIGHBOURS opinions
+!!! GENDER BIAS: pro same gender 90%
+NO AGE, EDUCATION biases
+SIMILARITY THRESHOLD in the creation of edges in the network = 0.50 (UPPER LIMIT for one connected component)
+
+
+N. INITIAL NODES: 1000
+N. EDGES: 243727
+N. NODES: 1000
+Average index DNA: 0.5529066838441191
+INITIAL ADAPTER/NON ADAPTER RATIO: 100/1000
+
+N. RUNS: 30
+N. ITERATIONS: 30
+
+privileged = 0.9,
+discriminated = 0.1,
+bias_attribute_label= "Gender",
+bias_attributes= [self.LPNet.nodes[self.id]["Gender"]]
+
+
+{1: 133, 2: 532, 3: 728, 4: 830, 5: 892, 6: 927, 7: 949, 8: 964, 9: 974, 10: 980, 11: 985, 13: 991, 14: 993, 15: 994, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 999, 24: 999, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}

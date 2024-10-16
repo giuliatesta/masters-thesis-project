@@ -64,8 +64,8 @@ class LPAgent(Sim.Process):
         if STATE_CHANGING_METHOD == 1:
             self.aggregation_function(
                 neighbours,
-                privileged= 1,
-                discriminated= 0,
+                privileged= 0.7,
+                discriminated= 0.3,
                 bias_attribute_label= "Gender",
                 bias_attributes= [self.LPNet.nodes[self.id]["Gender"]])
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
