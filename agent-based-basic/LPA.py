@@ -67,7 +67,7 @@ class LPAgent(Sim.Process):
                 privileged= 1,
                 discriminated= 0,
                 bias_attribute_label= "Gender",
-                bias_attributes= ["Male"])
+                bias_attributes= [self.LPNet.nodes[self.id]["Gender"]])
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
         self.state = determine_state(self.VL, get_index(self.LPNet.nodes[self.id]), LABELS, original_value=self.state)
 

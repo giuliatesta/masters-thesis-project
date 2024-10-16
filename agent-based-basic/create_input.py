@@ -40,6 +40,7 @@ def create_input_files(data, LABELS, similarity_threshold= 0.5):
     # initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
     initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
+
     return graph
 
 

@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from networkx import number_connected_components
 from pandas import DataFrame
 
-from network_building import create_network
+from create_network import init_network
 
 # plots the distribution of the similarity metrix over the nodes of the network
 def similarity_matrix_distribution_over_nodes(similarity_matrix, title="", x_label="", bins=20):
@@ -38,11 +38,10 @@ def connected_components_over_threshold(df: DataFrame, title=""):
     components = []
     thresholds = np.arange(0, 1.0, 0.05)
     for threshold in thresholds:
-        graph = create_network.init_network(df, similarity_threshold=threshold, no_logs=True,
+        graph = init_network(df, similarity_threshold=threshold, no_logs=True,
                                             name=f"{title}-{format_double(threshold)}")
         n = number_connected_components(graph)
         print(threshold + " --> " + n)
-        # plot_network(graph)
         components.append(n)
 
     plt.figure()
@@ -60,7 +59,7 @@ def connected_components_over_threshold(df: DataFrame, title=""):
 
 # plots the frequency of the degrees in the network
 # (how many nodes have a specific degree)
-def nodes_by_degree_distribution(graph):
+def nodes_by_degree_distribution(graph, title, file_name):
     degree_count = Counter(degree for _, degree in graph.degree())
     sorted_degrees = sorted(degree_count.items())
     degrees, counts = zip(*sorted_degrees)
@@ -74,6 +73,6 @@ def nodes_by_degree_distribution(graph):
     plt.bar(degrees, counts)
     plt.xlabel('Degree')
     plt.ylabel('Number of Nodes')
-    plt.title('Degree Distribution of Nodes (similarity threshold = 0.35)')
-    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/nodes_by_degree_35.png", dpi=1000)
+    plt.title(title)
+    plt.savefig(f"/home/giulia/giulia/masters-thesis-project/agent-based-basic/network_analysis/degrees/{file_name}.png", dpi=1000)
 

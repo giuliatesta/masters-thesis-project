@@ -15,6 +15,7 @@ from gower import gower_matrix
 from preprocessing import remove_all_except_for, remove_column
 from sklearn.metrics.pairwise import cosine_similarity
 
+# creates the network, adds the nodes and the edges based on the similarity value between the nodes is bigger then threshold
 def init_network(df: DataFrame, similarity_threshold: float, name="Network", no_logs=False):
     if not no_logs:
         print("Creating the network...")
@@ -44,6 +45,7 @@ def init_network(df: DataFrame, similarity_threshold: float, name="Network", no_
     return graph
 
 
+# returns multiple similarity measurements: Gower's distance, NumPy, SciKit, or "homemade" Cosine distance
 def get_similarities(df: DataFrame, similarity_metric: string):
     # computes the gower's distance
     # a smaller distance value indicates higher similarities between data points
@@ -84,7 +86,7 @@ def cosine_similarity_matrix(encoded_df: DataFrame, cosine_function):
 def one_hot_encoding(df: DataFrame):
     return pd.get_dummies(df)
 
-
+# draws the network, with its nodes and edges
 def plot_network(graph: Graph, file_path=""):
     plt.figure(figsize=(20, 15))
     plt.title(label=graph.name)
@@ -97,8 +99,11 @@ def plot_network(graph: Graph, file_path=""):
     if file_path == "":
         file_path = get_file_path(graph_name=graph.name)
     print(f"Saving in {file_path}")
-    n = number_connected_components(graph)
-    plt.legend([f'Connected components: {n}', f'Nodes: {graph.number_of_nodes()}, Edges: {graph.number_of_edges()}'],
+
+    plt.legend([
+                f'Connected components: {number_connected_components(graph)}',
+                f'Nodes: {graph.number_of_nodes()}, '
+                f'Edges: {graph.number_of_edges()}'],
                loc='upper right')
     plt.savefig(file_path, dpi= 1000)
     plt.close()
