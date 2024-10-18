@@ -74,29 +74,38 @@ def plot_multiple_adapters_by_time():
 # plots the heat map representing the vector labels changing in a specific time step during a simulation
 # TODO complete (wrong)
 def states_changing_heat_map(states, vector_labels, step, title, path):
-    # on X you have VL(0), on Y you have VL(1), the color is the state
+    # Extract the vector labels and states for the given step
     vector_data = vector_labels[step][1]
-    x_data = [vl[0] for vl in vector_data]
-    y_data = [vl[1] for vl in vector_data]
-    state_data = states[step][1]
-    data = pd.DataFrame({
-    'X': x_data,
-    'Y': y_data,
-    'color': state_data
-    })
-    print(data)
-    heatmap_data = data.pivot_table(index='Y', columns='X', values='color')
+    VL0 = [vl[0] for vl in vector_data]
+    VL1 = [vl[1] for vl in vector_data]
+    states_data = states[step][1]
 
-    plt.figure()
-    sns.heatmap(heatmap_data, cmap='coolwarm', cbar_kws={'label': 'State'},
-                 linewidths=0.1, linecolor='gray', mask=heatmap_data.isnull(),
-                 cbar=True, square=True, annot=False, vmin=-1, vmax=1)
+    # Check the range of the data
+    print(f"VL0 range: {min(VL0)} to {max(VL0)}")
+    print(f"VL1 range: {min(VL1)} to {max(VL1)}")
+    print(f"States data: {set(states_data)}")  # Should be {-1, 1}
 
-    # Set axis labels and title
-    plt.xlabel('VL0')
-    plt.ylabel('VL1')
-    plt.title('Heatmap of Node States based on VL0 and VL1')
+    # Create an empty 1000x1000 heatmap
+    heatmap_data = np.zeros((1000, 1000))
+
+    # Scale VL0 and VL1 to fit the grid (from [0,1] to [0,999])
+    for i in range(len(VL0)):
+        x_idx = int(VL0[i] * 999)  # scale VL0 to grid index
+        y_idx = int(VL1[i] * 999)  # scale VL1 to grid index
+        heatmap_data[x_idx, y_idx] = states_data[i]  # fill with state (+1/-1)
+
+        # Mask zeros (which are unfilled cells)
+    masked_heatmap = np.ma.masked_where(heatmap_data == 0, heatmap_data)
+
+    # Plot the heatmap with masking for zero values
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(masked_heatmap.T, cmap="coolwarm", cbar=True, center=0,
+                xticklabels=False, yticklabels=False, mask=(heatmap_data == 0))
 
     plt.title(title)
-    plt.savefig(f"{path}/state_changing_heat_map.png", dpi=1200)
-    print(f"Heat map saved in {path}")
+    plt.xlabel("VL0")
+    plt.ylabel("VL1")
+
+    # Save the heatmap to the provided path
+    plt.savefig(path)
+    plt.show()
