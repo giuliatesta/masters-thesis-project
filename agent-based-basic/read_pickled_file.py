@@ -19,7 +19,7 @@ states_changing_heat_map(
     vector_labels=vector_labels,
     step= 0,
     title="State changing Heat Map (SIM 3 - BASE LINE)",
-    path= "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03")
+    path= "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/heat_map.png")
 
 
 # for threshold in np.arange(0.2, 0.8, 0.05):
