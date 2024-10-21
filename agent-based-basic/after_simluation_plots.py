@@ -1,9 +1,8 @@
 import sys
 
 import numpy as np
-import pandas as pd
 from matplotlib import pyplot as plt
-import seaborn as sns
+import matplotlib.colors as mcolors
 
 from utils import read_pickled_file
 
@@ -82,22 +81,42 @@ def plot_multiple_adapters_by_time():
         dpi=1000)
 
 
+def create_custom_colormap():
+    # Define the colors: blue for VL1, red for VL0
+    colors = [
+        (0.6, 0, 0),  # Dark red
+        (1, 0, 0),  # Bright red
+        (1, 0.5, 0.5),  # Light red
+        (1, 1, 1),  # White (neutral)
+        (0.5, 0.5, 1),  # Light blue
+        (0, 0, 1),  # Bright blue
+        (0, 0, 0.6)  # Dark blue
+    ]
+    return mcolors.LinearSegmentedColormap.from_list("high_contrast", colors, N=256)
+
+
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 # TODO complete (wrong)
-import matplotlib.colors as mcolors
 
 def states_changing_heat_map(states, vector_labels, step, title, path):
+
     # Extract the vector labels.txt and states for the given step
     vector_data = vector_labels[step][1]
+    states_data = np.array(states[step][1])
 
+    sum = 0
+    for state in states_data:
+        if state == +1:
+            sum += 1
+
+    print(f"Adapters: {sum}")
+    print(f"Non Adapters: {len(states_data) - sum}")
     # Example Data
     # Assuming you have a list of VL0, VL1, and the resulting states
     VL0 = np.array([vl[0] for vl in vector_data])
     VL1 = np.array([vl[1] for vl in vector_data])
 
-    # Determine the final state: +1 if VL1 > VL0, -1 otherwise
-    final_state = states[step][1]
-    print(final_state)
+    values = VL1
 
     # Calculate the number of rows and columns for a square-like grid
     n_nodes = len(VL0)
@@ -106,25 +125,21 @@ def states_changing_heat_map(states, vector_labels, step, title, path):
 
     # Reshape the data into a 2D grid, padding with NaN if necessary
     grid = np.full((n_rows * n_cols), np.nan)
-    grid[:n_nodes] = final_state
+    grid[:n_nodes] = values
     grid = grid.reshape(n_rows, n_cols)
 
+    # Create a custom colormap
+    cmap = create_custom_colormap()
 
     # Create the plot
-    plt.figure(figsize=(12, 8))
-    im = plt.imshow(grid, cmap="plasma", interpolation='nearest', vmin=-1, vmax=1)
-    cbar = plt.colorbar(im, label='Adoption State')
-    cbar.set_ticks([-1, 1])
-    cbar.set_ticklabels(['Non-adopter (-1)', 'Adopter (+1)'])
-    plt.title(f'Opinion Formation Simulation Heatmap ({n_nodes} nodes)')
-    plt.xlabel('Column')
-    plt.ylabel('Row')
+   # plt.figure()
+    im = plt.imshow(grid, cmap=cmap, interpolation='nearest', vmin=0, vmax=1)
+    cbar = plt.colorbar(im)
+    # plt.title(title)
+    plt.title(f'{step}) Adapters: {sum}, Non-adapters: {len(states_data) - sum}')
+    plt.xlabel('VL0')
+    plt.ylabel('VL1')
 
-    # Add text annotations
-    adopters = np.sum(final_state == 1)
-    non_adopters = np.sum(final_state == -1)
-    plt.text(0.02, 0.98, f'Adopters: {adopters}', transform=plt.gca().transAxes, verticalalignment='top')
-    plt.text(0.02, 0.94, f'Non-adopters: {non_adopters}', transform=plt.gca().transAxes, verticalalignment='top')
 
-    plt.show()
-    plt.savefig(path)
+   #  plt.show()
+    #plt.savefig(path)

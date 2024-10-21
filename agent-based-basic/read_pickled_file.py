@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from networkx.algorithms.components import connected_components, is_weakly_connected, weakly_connected_components, \
@@ -11,16 +12,27 @@ from initial_network_plots import nodes_by_degree_distribution
 import utils
 from after_simluation_plots import states_changing_heat_map
 
+plt.figure(figsize=(18, 18))
+# plt.title(f"State changing Heat Map (SIM 3 - BASE LINE)\nsteps=[{[i for i in range(0, 30, 5)]}]")
+i = 1
 vector_labels = utils.read_pickled_file(
-    "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/trial_0_LPStates_L0_L1_0_RUN_10.pickled")
-states = utils.read_pickled_file("/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/trial_0_LPStates_0_RUN_10_STATES.pickled")
-states_changing_heat_map(
-    states=states,
-    vector_labels=vector_labels,
-    step= 0,
-    title="State changing Heat Map (SIM 3 - BASE LINE)",
-    path= "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/heat_map.png")
+    f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/trial_0_LPStates_L0_L1_0_RUN_0.pickled")
+states = utils.read_pickled_file(
+    f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/trial_0_LPStates_0_RUN_0_STATES.pickled")
 
+for time_step in range(0, 8, 1):
+    plt.subplot(4, 2, i)
+    i += 1
+    print(f"Time step: {time_step}, subplot: {i}")
+    states_changing_heat_map(
+        states=states,
+        vector_labels=vector_labels,
+        step= time_step,
+        title=f"State changing Heat Map (SIM 3 - BASE LINE)\nstep={time_step}",
+        path= f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/heat_map_{time_step}.png")
+
+plt.tight_layout()
+plt.savefig(f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/simulation_03/heat_map.png")
 
 # for threshold in np.arange(0.2, 0.8, 0.05):
 #     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
