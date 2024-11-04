@@ -11,6 +11,8 @@ from create_input import create_input_files
 from preprocessing import load_dataset_csv
 
 import network_analysis as na
+from scipy.stats import beta as beta_function
+
 
 INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
 
@@ -32,6 +34,7 @@ def run_simulations(run_index):
     for _, name in enumerate(attributes.columns):
         nx.set_node_attributes(LPNet, attributes[name], name)
 
+
     # Get VLs' values from file
     initial_VLs = []
     with open(INITIAL_VECTOR_LABELS_FILE, 'r') as read_obj:
@@ -44,6 +47,7 @@ def run_simulations(run_index):
     network_nodes = sorted(LPNet.nodes())
     # Initialize nodes' VLs
     for i, node in enumerate(network_nodes):
+        LPNet.nodes[node]["perseverance"] = beta_distribution(ALPHA, BETA)
         for j, label in enumerate(LABELS):
             if len(sys.argv) == 7:
                 LPNet.nodes[node][label] = initial_VLs[i][j]
@@ -54,13 +58,22 @@ def run_simulations(run_index):
     adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters/non adapters ratio: {len(adapters)}/{len(LPNet.nodes)}")
 
+    na.NetworkAnalysis(LPNet).analyse()
+    exit(1)
+
     # Run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM)
     simulation.run_simulation(run_index)
 
 
+def beta_distribution(alpha, beta):
+    return beta_function.rvs(alpha, beta)
+
+
 RUNS = 30
 SIMILARITY_THRESHOLD=0.60
+ALPHA = 2
+BETA = 2
 if __name__ == '__main__':
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
@@ -77,5 +90,10 @@ if __name__ == '__main__':
         run_simulations(run)
 
     states = state_averaging(RESULTS_DIR)
-    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(pro same gender by 90% - SIM 09)")
+    additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
+                       + f"Persevarance: beta distribution (alpha = {ALPHA}, beta = {BETA})\n"
+                         + f"Plasticity: scaled similarity weights\n"
+                       + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
+                       + f"Vector label changing: NO BIAS\nState changing: NO BIAS, NO SHA. INDEX")
+    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(BASE LINE - SIM 03)", additional_text=additional_text)
     # plot_multiple_adapters_by_time()
