@@ -159,13 +159,14 @@ def determine_state(vl, index, labels, original_value, use_sharing_index = True)
     # 0; 1    # adapter     1; 0    # non adapter
     non_adapter_label = vl[labels[0]]
     adapter_label = vl[labels[1]]
+    is_currently_adapter = original_value == +1
     # if non adapter
     if non_adapter_label > adapter_label:
         if use_sharing_index:
             # if the agent has 0.8 as index -> 80% of times becomes adapter
             if index < np.random.rand():
                 return + 1
-        else:
+        if not is_currently_adapter:
             return -1
     if non_adapter_label < adapter_label:
         # if the adapter's value is greater than non-adapter's value -> it becomes adapter
@@ -173,7 +174,6 @@ def determine_state(vl, index, labels, original_value, use_sharing_index = True)
     else:
         # if they are equal ([0.5, 0.5]) -> then it stays the same
         return original_value
-
 
 
 def get_sharing_index(node):
