@@ -1,5 +1,3 @@
-import sys
-
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.colors as mcolors
@@ -14,7 +12,7 @@ BASELINE = {1: 100, 2: 513, 3: 719, 4: 828, 5: 887, 6: 924, 7: 948, 8: 963, 9: 9
 
 # plots the evolution of the number of adapters as the time steps proceeds in the simulation
 # shows the differences with the BASELINE and indicates the slope of the curve
-def draw_adapter_by_time_plot(adapters, results_file_path, title):
+def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_text=""):
     plt.figure(figsize=(10, 6))
     plt.plot(list(adapters.keys()), list(adapters.values()), marker='x', label="Current simulation")
     last_value = list(adapters.values())[-1]
@@ -25,16 +23,19 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title):
             plt.axvline(x=key, linestyle='--', color=('cyan', 0.5), label='Convergence threshold')
             break
     slope = (last_value - first_value) / len(adapters)
-    plt.text(28, 280, f"slope: {slope:.2f}", fontsize=10,
-             bbox=dict(facecolor='none', alpha=0.2))
+   #  plt.text(28, 280, f"slope: {slope:.2f}", fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
     # for key, value in adapters.items():
     #     print(f"({key}, {value}")
     #     plt.text(key, value, f"({key:.2f}, {value})", fontsize=6, ha="center")
-    plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
+
+    #plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
     plt.title('Number of adapters by time' if title == "" else title)
     plt.legend(loc='lower right')
+    additional_text += f"\nSlope: : {slope:.2f}"
+    print(additional_text)
+    plt.text(16, 22, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
     plt.grid(True)
     plt.savefig(f"{results_file_path}/avg_adapters_by_time_plot.png", dpi=1000)
 

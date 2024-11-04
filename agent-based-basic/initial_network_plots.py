@@ -41,7 +41,6 @@ def connected_components_over_threshold(df: DataFrame, title=""):
         graph = init_network(df, similarity_threshold=threshold, no_logs=True,
                                             name=f"{title}-{format_double(threshold)}")
         n = number_connected_components(graph)
-        print(threshold + " --> " + n)
         components.append(n)
 
     plt.figure()
@@ -53,7 +52,7 @@ def connected_components_over_threshold(df: DataFrame, title=""):
     plt.ylabel("Number of components")
     plt.title("Number of connected components vs. Threshold")
     plt.grid(True)
-    plt.savefig(f"./plots/statistics/{title}.png", dpi=1200)
+    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/gower_components_over_threshold.png", dpi=1200)
     print("Done.")
 
 

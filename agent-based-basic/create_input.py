@@ -3,7 +3,8 @@ import json
 import numpy as np
 import pandas as pd
 
-from create_network import init_network
+from create_network import init_network, plot_network
+from initial_network_plots import connected_components_over_threshold
 
 NUMBER_OF_RECORDS = 1000
 INITIAL_ADAPTERS_PERC = 20
@@ -35,7 +36,7 @@ def create_input_files(data, LABELS, similarity_threshold= 0.5):
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
     #nodes = pd.concat([edges[0], edges[1]]).unique()
-
+    connected_components_over_threshold(data, "Number of connected components vs. Threshold")
     # initial vector labels
     # initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
     initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
