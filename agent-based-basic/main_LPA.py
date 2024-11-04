@@ -70,7 +70,7 @@ def beta_distribution(alpha, beta):
 
 
 RUNS = 30
-SIMILARITY_THRESHOLD=0.60
+SIMILARITY_THRESHOLD = 0.60
 ALPHA = 5
 BETA = 2
 USE_SHARING_INDEX = True
@@ -100,6 +100,7 @@ if __name__ == '__main__':
     #                      + f"Plasticity: 1 / (k+1)\n"
     #                    + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
     #                    + f"Vector label changing: NO BIAS\nState changing: WITH INDEX")
-    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(Bias incorporated case - CONFIRMATION BIAS)"
+    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(BASELINE - SIM A1)"
+                              "\n(open society)"
                               , additional_text=additional_text)
-    # plot_multiple_adapters_by_time()
+

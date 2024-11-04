@@ -7,6 +7,7 @@ PLASTICITY = scaled similarity values
 STATE CHANGING
 without INDEX
 if non_adapter > adapter -> non_adapter else adapter
+once adapters never changes back
 
 INITIAL NUMBER OF ADAPTERS: WOULD SUBSCRIBE TO CAR SERVICES IF AVAILABLE -> YES
 
@@ -22,4 +23,4 @@ INITIAL ADAPTER/NON ADAPTER RATIO: 133/1000
 N. RUNS: 30
 N. ITERATIONS: 30
 
-{1: 133, 2: 8, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 26: 0, 27: 0, 28: 0, 29: 0, 30: 0, 31: 0}
+{1: 133, 2: 528, 3: 727, 4: 831, 5: 893, 6: 929, 7: 953, 8: 966, 9: 977, 10: 983, 11: 987, 13: 991, 14: 993, 15: 994, 16: 995, 17: 996, 18: 997, 19: 997, 20: 997, 21: 998, 22: 998, 23: 998, 24: 998, 25: 998, 26: 998, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}

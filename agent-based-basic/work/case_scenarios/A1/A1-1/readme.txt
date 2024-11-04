@@ -6,6 +6,7 @@ PLASTICITY = scaled similarity values
 STATE CHANGING
 without INDEX
 if non_adapter > adapter -> non_adapter else adapter
+once adapters never changes back
 
 INITIAL NUMBER OF ADAPTERS: WOULD SUBSCRIBE TO CAR SERVICES IF AVAILABLE -> YES
 
