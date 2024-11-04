@@ -35,7 +35,7 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
     plt.legend(loc='lower right')
     additional_text += f"\nSlope: : {slope:.2f}"
     print(additional_text)
-    plt.text(16, 22, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
+    plt.text(15, 400, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
     plt.grid(True)
     plt.savefig(f"{results_file_path}/avg_adapters_by_time_plot.png", dpi=1000)
 
@@ -65,7 +65,7 @@ def plot_multiple_adapters_by_time():
     last_value = list(adapters50.values())[-1]
     first_value = list(adapters50.values())[0]
     slope50 = (last_value - first_value) / len(adapters50)
-    plt.text(25, 300, f"slope 90%: {slope90:.2f}\nslope 70%: {slope70:.2f}\nslope 50%: {slope50:.2f}", fontsize=10,
+    plt.text(25, 100, f"slope 90%: {slope90:.2f}\nslope 70%: {slope70:.2f}\nslope 50%: {slope50:.2f}", fontsize=10,
              bbox=dict(facecolor='none', alpha=0.2))
 
     # for key, value in adapters.items():
@@ -97,8 +97,6 @@ def create_custom_colormap():
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
-# TODO complete (wrong)
-
 def states_changing_heat_map(states, vector_labels, step, title, path):
 
     # Extract the vector labels.txt and states for the given step
@@ -133,14 +131,12 @@ def states_changing_heat_map(states, vector_labels, step, title, path):
     cmap = create_custom_colormap()
 
     # Create the plot
-   # plt.figure()
+    # plt.figure()
     im = plt.imshow(grid, cmap=cmap, interpolation='nearest', vmin=0, vmax=1)
-    cbar = plt.colorbar(im)
+    plt.colorbar(im)
     # plt.title(title)
     plt.title(f'{step}) Adapters: {sum}, Non-adapters: {len(states_data) - sum}')
     plt.xlabel('VL0')
     plt.ylabel('VL1')
-
-
    #  plt.show()
     #plt.savefig(path)

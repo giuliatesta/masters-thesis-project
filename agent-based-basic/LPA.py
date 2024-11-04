@@ -5,7 +5,7 @@ Module for the LPAgent class that can be subclassed by agents.
 import numpy as np
 from SimPy import Simulation as Sim
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
-from main_LPA import INDEX_DNA_COLUMN_NAME
+from main_LPA import INDEX_DNA_COLUMN_NAME, USE_SHARING_INDEX
 
 
 # An agent has its vector label with raw values and a state which depends on the vector label
@@ -48,10 +48,21 @@ class LPAgent(Sim.Process):
         else:
             neighbours = list(self.LPNet.predecessors(self.id))
 
-        # aggregation function with same weights for neighbours and personal opinion
-        # NO BIAS
-        # W_i = W_j = 1 / (k+1) with k = number of neighbours
+        # used for A0
         if STATE_CHANGING_METHOD == 0:
+            # both perseverance and total plasticity have the same value -> 1 / (k+1)
+            weight = float(1 / (len(neighbours) + 1))
+            for label in LABELS:
+                self_avg = self.LPNet.nodes[self.id][label] * weight
+
+                neighbours_avg = 0
+                for i in list(neighbours):
+                    neighbours_avg += float(self.LPNet.nodes[i][label])
+
+                self.VL[label] = self_avg + neighbours_avg * weight
+
+        # used for A1 (NO bias, but different weights)
+        if STATE_CHANGING_METHOD == 1:
             for label in LABELS:
                 # the weight of the current agent opinion is the opinion perseverance, and it is
                 # computed using a beta distribution with alpha = 2 and beta = 2
@@ -70,14 +81,14 @@ class LPAgent(Sim.Process):
                     weight = self.LPNet.get_edge_data(self.id, i)["weight"]
                     # the opinion plasiticity is the normalised version of the weight computed with the bias
                     # normalised to the maximum value which is 1 - perseverance
-                    opinion_plasticity = weight * total_opinion_plasticity
+                    opinion_plasticity = normalise(weight, to=total_opinion_plasticity)
                     neighbours_avg += float(self.LPNet.nodes[i][label]) * opinion_plasticity
 
                 # the aggregation function is
                 # opinion perseverance * agent'sopinion + sum of opinion plasticity * neighbour's opinion
                 self.VL[label] = self_avg + neighbours_avg
 
-        if STATE_CHANGING_METHOD == 1:
+        if STATE_CHANGING_METHOD == 2:
             privileged = 0.9
             discriminated = 0.1
             self.aggregation_function(
@@ -92,7 +103,7 @@ class LPAgent(Sim.Process):
                                      get_sharing_index(self.LPNet.nodes[self.id]),
                                      LABELS,
                                      original_value=self.state,
-                                     use_sharing_index=False)
+                                     use_sharing_index=USE_SHARING_INDEX)
 
     def aggregation_function(self, neighbours, privileged, discriminated, bias_attribute_label, bias_attributes):
         for label in LABELS:

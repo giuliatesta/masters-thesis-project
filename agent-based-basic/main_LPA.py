@@ -13,7 +13,6 @@ from preprocessing import load_dataset_csv
 import network_analysis as na
 from scipy.stats import beta as beta_function
 
-
 INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
 
 
@@ -58,8 +57,8 @@ def run_simulations(run_index):
     adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters/non adapters ratio: {len(adapters)}/{len(LPNet.nodes)}")
 
-    na.NetworkAnalysis(LPNet).analyse()
-    exit(1)
+   # na.NetworkAnalysis(LPNet).analyse()
+   # exit(1)
 
     # Run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM)
@@ -72,8 +71,9 @@ def beta_distribution(alpha, beta):
 
 RUNS = 30
 SIMILARITY_THRESHOLD=0.60
-ALPHA = 2
+ALPHA = 5
 BETA = 2
+USE_SHARING_INDEX = True
 if __name__ == '__main__':
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
@@ -91,9 +91,15 @@ if __name__ == '__main__':
 
     states = state_averaging(RESULTS_DIR)
     additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
-                       + f"Persevarance: beta distribution (alpha = {ALPHA}, beta = {BETA})\n"
-                         + f"Plasticity: scaled similarity weights\n"
-                       + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
-                       + f"Vector label changing: NO BIAS\nState changing: NO BIAS, NO SHA. INDEX")
-    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(BASE LINE - SIM 03)", additional_text=additional_text)
+                        + f"Persevarance: beta distribution (alpha = {ALPHA}, beta = {BETA})\n"
+                          + f"Plasticity: scaled similarity weights\n"
+                        + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
+                        + f"Vector label changing: NO BIAS\nState changing:WITH INDEX")
+    # additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
+    #                    + f"Persevarance: 1 / (k+1), "
+    #                      + f"Plasticity: 1 / (k+1)\n"
+    #                    + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
+    #                    + f"Vector label changing: NO BIAS\nState changing: WITH INDEX")
+    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(Bias incorporated case - CONFIRMATION BIAS)"
+                              , additional_text=additional_text)
     # plot_multiple_adapters_by_time()

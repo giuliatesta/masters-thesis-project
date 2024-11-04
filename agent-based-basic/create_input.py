@@ -36,12 +36,13 @@ def create_input_files(data, LABELS, similarity_threshold= 0.5):
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
     #nodes = pd.concat([edges[0], edges[1]]).unique()
-    connected_components_over_threshold(data, "Number of connected components vs. Threshold")
+
+    # connected_components_over_threshold(data, "Number of connected components vs. Threshold")
+
     # initial vector labels
     # initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
     initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
-
     return graph
 
 
