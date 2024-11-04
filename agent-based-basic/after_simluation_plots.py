@@ -27,8 +27,8 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
     # for key, value in adapters.items():
     #     print(f"({key}, {value}")
     #     plt.text(key, value, f"({key:.2f}, {value})", fontsize=6, ha="center")
-
-    #plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
+    BASELINE = {1: 133, 2: 526, 3: 722, 4: 828, 5: 892, 6: 927, 7: 949, 8: 964, 9: 975, 10: 981, 11: 985, 13: 991, 14: 993, 15: 995, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 998, 24: 998, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}
+    plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
     plt.title('Number of adapters by time' if title == "" else title)
@@ -98,8 +98,6 @@ def create_custom_colormap():
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 def states_changing_heat_map(states, vector_labels, step, title, path):
-
-    # Extract the vector labels.txt and states for the given step
     vector_data = vector_labels[step][1]
     states_data = np.array(states[step][1])
 
@@ -110,12 +108,9 @@ def states_changing_heat_map(states, vector_labels, step, title, path):
 
     print(f"Adapters: {sum}")
     print(f"Non Adapters: {len(states_data) - sum}")
-    # Example Data
-    # Assuming you have a list of VL0, VL1, and the resulting states
+
     VL0 = np.array([vl[0] for vl in vector_data])
     VL1 = np.array([vl[1] for vl in vector_data])
-
-    values = VL1
 
     # Calculate the number of rows and columns for a square-like grid
     n_nodes = len(VL0)
@@ -124,7 +119,7 @@ def states_changing_heat_map(states, vector_labels, step, title, path):
 
     # Reshape the data into a 2D grid, padding with NaN if necessary
     grid = np.full((n_rows * n_cols), np.nan)
-    grid[:n_nodes] = values
+    grid[:n_nodes] = VL1
     grid = grid.reshape(n_rows, n_cols)
 
     # Create a custom colormap

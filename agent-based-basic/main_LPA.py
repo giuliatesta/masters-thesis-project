@@ -69,7 +69,7 @@ def beta_distribution(alpha, beta):
     return beta_function.rvs(alpha, beta)
 
 
-RUNS = 30
+RUNS = 0
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 5
 BETA = 2
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     #                      + f"Plasticity: 1 / (k+1)\n"
     #                    + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
     #                    + f"Vector label changing: NO BIAS\nState changing: WITH INDEX")
-    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n(BASELINE - SIM A1)"
-                              "\n(open society)"
+    draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n"
+                                                        "(Bias incorporated case - CONFIRMATION BIAS)"
                               , additional_text=additional_text)
 
