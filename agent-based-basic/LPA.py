@@ -55,11 +55,11 @@ class LPAgent(Sim.Process):
             for label in LABELS:
                 self_avg = self.LPNet.nodes[self.id][label] * weight
 
-                neighbours_avg = 0
+                neighbours_acc = 0
                 for i in list(neighbours):
-                    neighbours_avg += float(self.LPNet.nodes[i][label])
+                    neighbours_acc += float(self.LPNet.nodes[i][label])
 
-                self.VL[label] = self_avg + neighbours_avg * weight
+                self.VL[label] = self_avg + neighbours_acc * weight
 
         # used for A1 (NO bias, but different weights)
         if STATE_CHANGING_METHOD == 1:
@@ -74,19 +74,22 @@ class LPAgent(Sim.Process):
 
                 # the total weight of the neighbours needs to obey the condition : w_i + \sum w_j = 1 -> \sum w_j = 1 - w_i
                 total_opinion_plasticity = 1 - opinion_perseverance
-                neighbours_avg = 0
+                neighbours_acc = []
+                neighbours_weights = []
 
                 for i in list(neighbours):
                     # the weight of each neighbour is its similarity value
-                    weight = self.LPNet.get_edge_data(self.id, i)["weight"]
-                    # the opinion plasiticity is the normalised version of the weight computed with the bias
-                    # normalised to the maximum value which is 1 - perseverance
-                    opinion_plasticity = normalise(weight, to=total_opinion_plasticity)
-                    neighbours_avg += float(self.LPNet.nodes[i][label]) * opinion_plasticity
+                    neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
+                    neighbours_acc.append(float(self.LPNet.nodes[i][label]))
+
+                # the opinion plasticity is the normalised version of the weight computed with the bias
+                # normalised to the maximum value which is 1 - perseverance
+                neighbours_acc = np.array(neighbours_acc)
+                normalised_weights = reweight(neighbours_weights, total_opinion_plasticity)
 
                 # the aggregation function is
                 # opinion perseverance * agent'sopinion + sum of opinion plasticity * neighbour's opinion
-                self.VL[label] = self_avg + neighbours_avg
+                self.VL[label] = self_avg + np.sum(neighbours_acc * normalised_weights)
 
         if STATE_CHANGING_METHOD == 2:
             privileged = 0.9
@@ -110,26 +113,34 @@ class LPAgent(Sim.Process):
             # the weight of the current agent opinion is the opinion perseverance, and it is
             # computed using a beta distribution with alpha = 2 and beta = 2
             vl = self.LPNet.nodes[self.id][label]
+            # agent's perseverance is an attribute of each node, since it is constant in time
+            # it has been initialised at network initialisation
             opinion_perseverance = self.LPNet.nodes[self.id]["perseverance"]
             self_avg = vl * opinion_perseverance
 
             # the total weight of the neighbours needs to obey the condition : w_i + \sum w_j = 1 -> \sum w_j = 1 - w_i
             total_opinion_plasticity = 1 - opinion_perseverance
-            neighbours_avg = 0
+            neighbours_acc = []
+            neighbours_weights = []
+
             for i in list(neighbours):
+                # the weight of each neighbour is its similarity value
                 bias_condition = [bias_attribute == self.LPNet.nodes[i][bias_attribute_label] for bias_attribute in
                                   bias_attributes]
                 # if at least one bias condition is satisfied then the weight is the privileged
                 # ex: if Male == the current gender, I have a privilege; otherwise (Female) is discriminated.
                 weight = privileged if (True in bias_condition) else discriminated
-                # the opinion plasiticity is the normalised version of the weight computed with the bias
-                # normalised to the maximum value which is 1 - perseverance
-                opinion_plasticity = normalise(weight, to=total_opinion_plasticity)
-                neighbours_avg += float(self.LPNet.nodes[i][label]) * opinion_plasticity
+                neighbours_weights.append(weight)
+                neighbours_acc.append(float(self.LPNet.nodes[i][label]))
+
+            # the opinion plasticity is the normalised version of the weight computed with the bias
+            # normalised to the maximum value which is 1 - perseverance
+            neighbours_acc = np.array(neighbours_acc)
+            normalised_weights = reweight(neighbours_weights, total_opinion_plasticity)
 
             # the aggregation function is
             # opinion perseverance * agent'sopinion + sum of opinion plasticity * neighbour's opinion
-            self.VL[label] = self_avg + neighbours_avg
+            self.VL[label] = self_avg + np.sum(neighbours_acc * normalised_weights)
 
     """
     Update the VL and the state used by other agents to update themselves
@@ -140,22 +151,16 @@ class LPAgent(Sim.Process):
             self.LPNet.nodes[self.id][label] = self.VL[label]
         self.LPNet.nodes[self.id]["state"] = self.state
 
-    def compute_average_index_DNA(self, neighbours):
-        neighbours_size = len(list(neighbours))
-        sum_for_average = 0
-        for neighbour in list(neighbours):
-            sum_for_average += float(self.LPNet.nodes[neighbour]["attribute-0"])
-        return float(sum_for_average / neighbours_size)
-
 
 # the normalisation returns the weight value between 0 and "to".
 # zero is the min value so the normalisation is just the division of x over to.
 # otherwise, it would have been (x - min) / (to - min)
-def normalise(x, to):
-    return float(x * to)
+def reweight(x, to):
+    x = np.array(x)
+    return (x * to) / np.sum(x)
 
 
-def determine_state(vl, index, labels, original_value, use_sharing_index = True):
+def determine_state(vl, index, labels, original_value, use_sharing_index=True):
     # 0; 1    # adapter     1; 0    # non adapter
     non_adapter_label = vl[labels[0]]
     adapter_label = vl[labels[1]]
