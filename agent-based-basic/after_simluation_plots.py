@@ -27,8 +27,8 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
     # for key, value in adapters.items():
     #     print(f"({key}, {value}")
     #     plt.text(key, value, f"({key:.2f}, {value})", fontsize=6, ha="center")
-    BASELINE = {1: 133, 2: 526, 3: 722, 4: 828, 5: 892, 6: 927, 7: 949, 8: 964, 9: 975, 10: 981, 11: 985, 13: 991, 14: 993, 15: 995, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 998, 24: 998, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}
-    plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
+    # BASELINE = {1: 133, 2: 526, 3: 722, 4: 828, 5: 892, 6: 927, 7: 949, 8: 964, 9: 975, 10: 981, 11: 985, 13: 991, 14: 993, 15: 995, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 998, 24: 998, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}
+    # plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
     plt.title('Number of adapters by time' if title == "" else title)
@@ -82,32 +82,17 @@ def plot_multiple_adapters_by_time():
         dpi=1000)
 
 
-def create_custom_colormap():
-    # Define the colors: blue for VL1, red for VL0
-    colors = [
-        (0.6, 0, 0),  # Dark red
-        (1, 0, 0),  # Bright red
-        (1, 0.5, 0.5),  # Light red
-        (1, 1, 1),  # White (neutral)
-        (0.5, 0.5, 1),  # Light blue
-        (0, 0, 1),  # Bright blue
-        (0, 0, 0.6)  # Dark blue
-    ]
-    return mcolors.LinearSegmentedColormap.from_list("high_contrast", colors, N=256)
-
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 def states_changing_heat_map(states, vector_labels, step, title, path):
     vector_data = vector_labels[step][1]
     states_data = np.array(states[step][1])
 
-    sum = 0
-    for state in states_data:
-        if state == +1:
-            sum += 1
+    adapters_count = np.sum(states_data == 1)
+    non_adapters_count = len(states_data) - adapters_count
 
-    print(f"Adapters: {sum}")
-    print(f"Non Adapters: {len(states_data) - sum}")
+    print(f"Adapters: {adapters_count}")
+    print(f"Non Adapters: {non_adapters_count}")
 
     VL0 = np.array([vl[0] for vl in vector_data])
     VL1 = np.array([vl[1] for vl in vector_data])
@@ -119,18 +104,16 @@ def states_changing_heat_map(states, vector_labels, step, title, path):
 
     # Reshape the data into a 2D grid, padding with NaN if necessary
     grid = np.full((n_rows * n_cols), np.nan)
-    grid[:n_nodes] = VL1
+    grid[:n_nodes] = VL0
     grid = grid.reshape(n_rows, n_cols)
 
-    # Create a custom colormap
-    cmap = create_custom_colormap()
 
     # Create the plot
     # plt.figure()
-    im = plt.imshow(grid, cmap=cmap, interpolation='nearest', vmin=0, vmax=1)
+    im = plt.imshow(grid, cmap="RdPu",  interpolation='nearest', vmin=0, vmax=1)
     plt.colorbar(im)
     # plt.title(title)
-    plt.title(f'{step}) Adapters: {sum}, Non-adapters: {len(states_data) - sum}')
+    plt.title(f'Step {step}) Adapters: {adapters_count}, Non-adapters: {non_adapters_count}')
     plt.xlabel('VL0')
     plt.ylabel('VL1')
    #  plt.show()

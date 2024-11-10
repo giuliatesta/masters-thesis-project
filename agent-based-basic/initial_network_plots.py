@@ -3,27 +3,23 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from matplotlib import colors as c
 from networkx import number_connected_components
 from pandas import DataFrame
 
-from create_network import init_network
-
 # plots the distribution of the similarity metrix over the nodes of the network
-def similarity_matrix_distribution_over_nodes(similarity_matrix, title="", x_label="", bins=20):
+def similarity_matrix_distribution_over_nodes(similarity_matrix, title="", x_label="", bins_count=20):
     print(f"Plotting the distribution {title}")
     plt.figure()
-    n, bins, patches = plt.hist(similarity_matrix, bins=bins)
-    cmap = plt.get_cmap('plasma')
-    bin_heights = (n - np.min(n)) / (np.max(n) - np.min(n))
-    for patch, color_value in zip(patches, bin_heights):
-        patch.set_facecolor(cmap(color_value))
-
+    cmap = plt.get_cmap('plasma', 1000)
+    custom_colors = [c.rgb2hex(cmap(i)) for i in range(cmap.N)]
+    plt.hist(similarity_matrix, bins=bins_count, color=custom_colors)
     plt.xlabel(x_label)
     plt.ylabel("Number of nodes")
     new_title = f"Distribution {title}"
     plt.title(new_title)
     plt.grid(True)
-    plt.savefig(f"./plots/statistics/{new_title}-{bins}bins.png", dpi=1200)
+    plt.savefig(f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/{new_title}-{bins_count}-bins.png", dpi=1200)
     plt.close()
     print("Done.")
 
@@ -34,6 +30,7 @@ def format_double(d):
 
 # plots the number of connected components in th network as the similarity threshold increases from 0 to 1.0
 def connected_components_over_threshold(df: DataFrame, title=""):
+    from create_network import init_network
     print("Plotting number of components over the threshold values...")
     components = []
     thresholds = np.arange(0, 1.0, 0.05)
@@ -75,3 +72,36 @@ def nodes_by_degree_distribution(graph, title, file_name):
     plt.title(title)
     plt.savefig(f"/home/giulia/giulia/masters-thesis-project/agent-based-basic/network_analysis/degrees/{file_name}.png", dpi=1000)
 
+
+
+from scipy.stats import beta
+def plot_beta_distributions():
+    # Define the x range (0 to 1) for the beta distributions
+    x = np.linspace(0, 1, 100)
+
+    # Define the three sets of alpha and beta parameters
+    params = [
+        (2, 2, "alpha=2, beta=2"),
+        (2, 5, "alpha=2, beta=5"),
+        (5, 2, "alpha=5, beta=2")
+    ]
+
+    # Create the plot
+    plt.figure(figsize=(10, 6))
+
+    # Plot each beta distribution
+    for alpha, beta_val, label in params:
+        y = beta.pdf(x, alpha, beta_val)
+        plt.plot(x, y, label=label)
+
+    # Add labels and title
+    plt.xlabel('x')
+    plt.ylabel('Density')
+    plt.grid()
+    plt.title('Beta Distributions')
+    plt.legend()
+
+    # Show the plot
+    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/beta_distribution.png", dpi = 1200)
+
+plot_beta_distributions()
