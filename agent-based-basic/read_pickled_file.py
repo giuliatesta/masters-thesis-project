@@ -16,7 +16,7 @@ plt.figure(figsize=(18, 18))
 # plt.title(f"State changing Heat Map (SIM 3 - BASE LINE)\nsteps=[{[i for i in range(0, 30, 5)]}]")
 i = 1
 
-prefix = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/case_scenarios/A0"
+prefix = "/home/giulia/giulia/masters-thesis-project/agent-based-basic/work/case_scenarios/A0" #"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/case_scenarios/A0"
 vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1_0_RUN_0.pickled")
 states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_0_RUN_0_STATES.pickled")
 
@@ -31,7 +31,7 @@ for time_step in range(0, 8, 1):
         title=f"State changing Heat Map (SIM 3 - BASE LINE)\nstep={time_step}",
         path= f"{prefix}heat_map_{time_step}.png")
 
-plt.suptitle("Heat maps for the first SEVEN steps of the simulations\n (BASELINE - SIM A1)", x=0.57, fontsize=20)
+plt.suptitle("Heat maps for the first SEVEN steps of the simulations\n (BASELINE - SIM A0)", x=0.57, fontsize=20)
 plt.tight_layout(rect=[0, 0, 1, 0.98])
 plt.savefig(f"{prefix}/heat_map.png")
 

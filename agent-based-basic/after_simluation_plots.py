@@ -1,8 +1,5 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import matplotlib.colors as mcolors
-
-from utils import read_pickled_file
 
 # results coming from simulation_03_BASE_LINE which has 20% of initial adapters and no biases.
 BASELINE = {1: 100, 2: 513, 3: 719, 4: 828, 5: 887, 6: 924, 7: 948, 8: 963, 9: 973, 10: 980, 11: 984, 13: 991, 14: 993,

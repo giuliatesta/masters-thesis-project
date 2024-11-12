@@ -103,5 +103,3 @@ def plot_beta_distributions():
 
     # Show the plot
     plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/beta_distribution.png", dpi = 1200)
-
-plot_beta_distributions()
