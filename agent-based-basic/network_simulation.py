@@ -1,9 +1,9 @@
-from SimPy import Simulation as Sim
+import simpy as sim
 from network_logging import NetworkLogger
 from conf import TRIALS
 
 
-class NetworkSimulation(Sim.Simulation):
+class NetworkSimulation:
 
     """
     Simulation support for agents in a complex network.
@@ -12,7 +12,7 @@ class NetworkSimulation(Sim.Simulation):
     """
 
     def __init__(self, LPNet, LPAgent, max_time):
-        Sim.Simulation.__init__(self)
+        self.env = sim.Environment()
         self.LPNet = LPNet
         self.LPAgent = LPAgent
         self.until = max_time
@@ -33,25 +33,27 @@ class NetworkSimulation(Sim.Simulation):
     """
 
     def run_trial(self, id, run_index):
-        self.initialize()
+        # the initilization is done simply by initializing the Environment
+        # self.initialize()
 
         print("Set up LP agents...")
 
         # Initialize agents
         for i in self.LPNet.nodes():
-            agent = self.LPAgent.LPAgent((i, self, self.LPNet))
+            agent = self.LPAgent.LPAgent((self.env, i, self, self.LPNet))
             self.LPNet.nodes[i]['agent'] = agent
-            self.activate(agent, agent.Run())
+            self.env.process(agent.Run())
+
 
         print("Set up logging...")
 
         # Set up logging
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval)
-        self.activate(logger, logger.Run(), prior=True)
+        self.env.process(logger.Run())
 
         # Run simulation
-        self.simulate(self.until)
+        self.env.run(self.until)
 
         # Write log files
         # saves in *.pickled the resulting nodes at each run until maxTime

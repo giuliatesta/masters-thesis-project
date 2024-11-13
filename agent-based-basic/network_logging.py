@@ -1,5 +1,4 @@
 import networkx as nx
-from SimPy import Simulation as Sim
 from conf import RESULTS_DIR, LABELS
 import time
 import utils
@@ -9,11 +8,11 @@ tt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
       32, 33, 34, 35, 36, 37, 38, 39, 40]
 
 
-class NetworkLogger(Sim.Process):
+class NetworkLogger:
 
     def __init__(self, sim, logging_interval):
-        Sim.Process.__init__(self, sim=sim)
         self.sim = sim
+        self.env = sim.env
         self.interval = logging_interval
         self.LPNet = nx.Graph()
         self.LPVLTuples = []
@@ -26,7 +25,7 @@ class NetworkLogger(Sim.Process):
             self.log_current_state()
             print("--- %i iterations completed in %fs ---" % (i, (time.time() - start_time)))
             i += 1
-            yield Sim.hold, self, self.interval
+            yield self.env.timeout(self.interval)
 
     def log_current_state(self):
         LPNodes = sorted(self.sim.LPNet.nodes(data=True), key=lambda x: x[0])
@@ -36,9 +35,9 @@ class NetworkLogger(Sim.Process):
         states = [node[1]["agent"].state for node in LPNodes]
 
         # Add actual VL value to logs
-        if self.sim.now() in tt:
-            self.LPVLTuples.append([self.sim.now() + 1, VLs])
-            self.LPStates.append([self.sim.now() + 1, states])
+        if self.env.now in tt:
+            self.LPVLTuples.append([self.env.now + 1, VLs])
+            self.LPStates.append([self.env.now + 1, states])
 
     def log_initial_state(self):
         LPNodes = sorted(self.sim.LPNet.nodes(data=True), key=lambda x: x[0])

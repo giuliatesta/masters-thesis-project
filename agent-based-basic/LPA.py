@@ -3,7 +3,6 @@ Module for the LPAgent class that can be subclassed by agents.
 """
 
 import numpy as np
-from SimPy import Simulation as Sim
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
 from main_LPA import INDEX_DNA_COLUMN_NAME, USE_SHARING_INDEX
 
@@ -11,15 +10,15 @@ from main_LPA import INDEX_DNA_COLUMN_NAME, USE_SHARING_INDEX
 # An agent has its vector label with raw values and a state which depends on the vector label
 # if L0 > L1; then the state is adapter
 # if L0 <= L1; then the state is non adapter
-class LPAgent(Sim.Process):
+class LPAgent:
     # Variables shared between all instances of this class
     TIMESTEP_DEFAULT = 1.0
 
     def __init__(self, initializer, name='network_process'):
-        Sim.Process.__init__(self, name)
         self.initialize(*initializer)
 
-    def initialize(self, id, sim, LPNet):
+    def initialize(self, env, id, sim, LPNet):
+        self.env = env
         self.id = id
         self.sim = sim
         self.LPNet = LPNet
@@ -34,9 +33,9 @@ class LPAgent(Sim.Process):
     def Run(self):
         while True:
             self.update_step()
-            yield Sim.hold, self, LPAgent.TIMESTEP_DEFAULT / 2
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT / 2)
             self.state_changing()
-            yield Sim.hold, self, LPAgent.TIMESTEP_DEFAULT / 2
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT / 2)
 
     """
     Updates all the belonging coefficients
