@@ -4,7 +4,6 @@ Module for the LPAgent class that can be subclassed by agents.
 
 import numpy as np
 from conf import LABELS, GRAPH_TYPE, STATE_CHANGING_METHOD
-from main_LPA import INDEX_DNA_COLUMN_NAME, USE_SHARING_INDEX
 
 
 # An agent has its vector label with raw values and a state which depends on the vector label
@@ -14,7 +13,7 @@ class LPAgent:
     # Variables shared between all instances of this class
     TIMESTEP_DEFAULT = 1.0
 
-    def __init__(self, initializer, name='network_process'):
+    def __init__(self, initializer):
         self.initialize(*initializer)
 
     def initialize(self, env, id, sim, LPNet):
@@ -101,12 +100,6 @@ class LPAgent:
                 bias_attributes=[self.LPNet.nodes[self.id]["Gender"]])
             bias_factor = privileged if self.LPNet.nodes[self.id]["Gender"] == "Male" else discriminated
         # once the vector label is changed, given the neighbours opinion, the agent's state changes
-        self.state = determine_state(self.VL,
-                                     get_sharing_index(self.LPNet.nodes[self.id]),
-                                     LABELS,
-                                     original_value=self.state,
-                                     use_sharing_index=USE_SHARING_INDEX)
-
     def aggregation_function(self, neighbours, privileged, discriminated, bias_attribute_label, bias_attributes):
         for label in LABELS:
             # the weight of the current agent opinion is the opinion perseverance, and it is
@@ -148,8 +141,6 @@ class LPAgent:
     def update_step(self):
         for label in LABELS:
             self.LPNet.nodes[self.id][label] = self.VL[label]
-        self.LPNet.nodes[self.id]["state"] = self.state
-
 
 # the normalisation returns the weight value between 0 and "to".
 # zero is the min value so the normalisation is just the division of x over to.
@@ -158,24 +149,3 @@ def reweight(x, to):
     x = np.array(x)
     return (x * to) / np.sum(x)
 
-
-def determine_state(vl, index, labels, original_value, use_sharing_index):
-    # 0; 1    # adapter     1; 0    # non adapter
-    non_adapter_label = vl[labels[0]]
-    adapter_label = vl[labels[1]]
-    is_currently_adapter = original_value == +1
-    # if non adapter
-    if not is_currently_adapter:
-        if non_adapter_label < adapter_label:
-            if use_sharing_index:
-                # if the agent has 0.8 as index -> 80% of times becomes adapter
-                rand = np.random.rand()
-                if index > rand:
-                    return +1
-    else:
-        # if they are equal ([0.5, 0.5]) -> then it stays the same
-        return original_value
-
-
-def get_sharing_index(node):
-    return node[INDEX_DNA_COLUMN_NAME]

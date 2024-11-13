@@ -5,16 +5,14 @@ import numpy as np
 from pandas import read_csv
 
 from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE, RESULTS_DIR
-from after_simluation_plots import draw_adapter_by_time_plot, states_changing_heat_map
+from after_simluation_plots import draw_adapter_by_time_plot
 from network_simulation import NetworkSimulation
 from create_input import create_input_files
 from preprocessing import load_dataset_csv
 
-import network_analysis as na
 from scipy.stats import beta as beta_function
 
 INDEX_DNA_COLUMN_NAME = "sha_ind_norm"
-
 
 def run_simulations(run_index):
     # Create the network from edges defined in EDGES_FILE file
@@ -71,7 +69,7 @@ def beta_distribution(alpha, beta):
 
 RUNS = 30
 SIMILARITY_THRESHOLD = 0.60
-ALPHA = 5
+ALPHA = 2
 BETA = 2
 USE_SHARING_INDEX = True
 if __name__ == '__main__':
@@ -90,18 +88,19 @@ if __name__ == '__main__':
         run_simulations(run)
 
     states = state_averaging(RESULTS_DIR)
-    # additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
-    #                     + f"Persevarance: beta distribution (alpha = {ALPHA}, beta = {BETA})\n"
-    #                       + f"Plasticity: scaled similarity weights\n"
-    #                     + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
-    #                     + f"Vector label changing: NO BIAS\nState changing:WITH INDEX")
     additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
-                       + f"Persevarance: 1 / (k+1), "
-                         + f"Plasticity: 1 / (k+1)\n"
-                       + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
-                       + f"Vector label changing: NO BIAS\nState changing: WITH INDEX")
+                        + f"Persevarance: 0.8, Plasticity: 0.2\n"
+                        #+ f"Plasticity: scaled similarity weights\n"
+                      # + f"Persevarance: beta distribution (alpha = {ALPHA}, beta = {BETA})\n"
+                        + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
+                        + f"Vector label changing: NO BIAS\nState changing:WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX")
+    # additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
+    #                    + f"Persevarance: 1 / (k+1), "
+    #                      + f"Plasticity: 1 / (k+1)\n"
+    #                    + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
+    #                    + f"Vector label changing: NO BIAS\nState changing: WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX")
     draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n"
-                                                        "(BASELINE - SIM A0)"
-                                                       # "(Bias incorporated case - CONFIRMATION BIAS)"
+                                                        # "(BASELINE with open-to-change agents - SIM A1)"
+                                                         "(EXTRAS - OL 0.8, OP 0.2)"
                               , additional_text=additional_text)
 

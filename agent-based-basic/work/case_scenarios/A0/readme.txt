@@ -1,5 +1,5 @@
 BASELINE
-STATE CHANGING METHOD: 1 (aggregation function)
+STATE CHANGING METHOD: 0 (aggregation function)
 PERSEVERANCE = PLASTICITY = 1 / (k+1)
 
 STATE CHANGING

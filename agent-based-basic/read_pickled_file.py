@@ -16,7 +16,7 @@ plt.figure(figsize=(18, 18))
 # plt.title(f"State changing Heat Map (SIM 3 - BASE LINE)\nsteps=[{[i for i in range(0, 30, 5)]}]")
 i = 1
 
-prefix = "/home/giulia/giulia/masters-thesis-project/agent-based-basic/work/case_scenarios/A0" #"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/case_scenarios/A0"
+prefix = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/case_scenarios/A0"
 vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1_0_RUN_0.pickled")
 states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_0_RUN_0_STATES.pickled")
 
