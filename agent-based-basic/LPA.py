@@ -69,7 +69,7 @@ class LPAgent(Sim.Process):
                 vl = self.LPNet.nodes[self.id][label]
                 # agent's perseverance is an attribute of each node, since it is constant in time
                 # it has been initialised at network initialisation
-                opinion_perseverance = self.LPNet.nodes[self.id]["perseverance"]
+                opinion_perseverance = 0.8 #self.LPNet.nodes[self.id]["perseverance"]
                 self_avg = vl * opinion_perseverance
 
                 # the total weight of the neighbours needs to obey the condition : w_i + \sum w_j = 1 -> \sum w_j = 1 - w_i
@@ -89,7 +89,7 @@ class LPAgent(Sim.Process):
 
                 # the aggregation function is
                 # opinion perseverance * agent'sopinion + sum of opinion plasticity * neighbour's opinion
-                self.VL[label] = self_avg + np.sum(neighbours_acc * normalised_weights)
+                self.VL[label] = self_avg + np.sum(neighbours_acc * 0.2) #normalised_weights)
 
         if STATE_CHANGING_METHOD == 2:
             privileged = 0.9
@@ -160,22 +160,19 @@ def reweight(x, to):
     return (x * to) / np.sum(x)
 
 
-def determine_state(vl, index, labels, original_value, use_sharing_index=True):
+def determine_state(vl, index, labels, original_value, use_sharing_index):
     # 0; 1    # adapter     1; 0    # non adapter
     non_adapter_label = vl[labels[0]]
     adapter_label = vl[labels[1]]
     is_currently_adapter = original_value == +1
     # if non adapter
-    if non_adapter_label > adapter_label:
-        if use_sharing_index:
-            # if the agent has 0.8 as index -> 80% of times becomes adapter
-            if index < np.random.rand():
-                return + 1
-        if not is_currently_adapter:
-            return -1
-    if non_adapter_label < adapter_label:
-        # if the adapter's value is greater than non-adapter's value -> it becomes adapter
-        return 1
+    if not is_currently_adapter:
+        if non_adapter_label < adapter_label:
+            if use_sharing_index:
+                # if the agent has 0.8 as index -> 80% of times becomes adapter
+                rand = np.random.rand()
+                if index > rand:
+                    return +1
     else:
         # if they are equal ([0.5, 0.5]) -> then it stays the same
         return original_value
