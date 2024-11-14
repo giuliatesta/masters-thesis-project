@@ -26,7 +26,7 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
     plt.legend(loc='lower right')
     additional_text += f"\nSlope: : {slope:.2f}"
     print(additional_text)
-    plt.text(15, 400, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
+    plt.text(5, 127, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
     plt.grid(True)
     plt.savefig(f"{results_file_path}/avg_adapters_by_time_plot.png", dpi=1000)
 
@@ -104,8 +104,8 @@ def description_text_for_plots(rule, simulation_id, ):
     from main_LPA import ALPHA, BETA, SIMILARITY_THRESHOLD, USE_SHARING_INDEX
     text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
             + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
-            + f"Vector label changing: NO BIAS"
-            + f"State determination: WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX")
+            + f"Vector label changing: NO BIAS\n"
+            + f"State determination: WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX\n")
     title = "Number of adapters by time\n"
     if rule == "same-weights":
         text += "OP: 1 / (k+1), OL: 1 / (k+1)"

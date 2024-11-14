@@ -70,7 +70,7 @@ def beta_distribution(alpha, beta):
     return beta_function.rvs(alpha, beta)
 
 
-RUNS = 10  # 30
+RUNS = 0  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
@@ -98,6 +98,6 @@ if __name__ == '__main__':
         run_simulations(run)
 
     states = state_averaging(RESULTS_DIR)
-    sim_id = RESULTS_DIR.split("/")[:-1]
+    sim_id = RESULTS_DIR.split("/")[-1]
     title, additional_text = description_text_for_plots(STATE_CHANGING_METHOD, sim_id)
     draw_adapter_by_time_plot(states, RESULTS_DIR, title=title, additional_text=additional_text)
