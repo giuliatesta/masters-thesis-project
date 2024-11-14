@@ -3,42 +3,48 @@ import json
 import numpy as np
 import pandas as pd
 
-from create_network import init_network, plot_network
+from create_network import init_network
 
 NUMBER_OF_RECORDS = 1000
 INITIAL_ADAPTERS_PERC = 20
+
 
 # builds the initial files used as input for the simulations
 # - ATTRIBUTES: contains the attributes of each node (usually, gender, age, education level,
 # sharing DNA and whether they would subscribe to a car sharing service if available)
 # - EDGES: contains the pairs of nodes that have an edge in the network
 # - INITIAL_VLS: contains the initial values of the vector labels of the nodes in the network
-def create_input_files(data, LABELS, similarity_threshold= 0.5):
+# - LABELS: contains only the labels names
+def create_input_files(data, LABELS, similarity_threshold=0.5):
     data.reset_index(drop=True, inplace=True)
+    # keeps only the first NUMBER_OF_RECORDS rows
     data = data.head(NUMBER_OF_RECORDS)
 
     # attributes file
     # needs the comma as separator since some values contain the semicolon
     attributes = transform_categorical_values(pd.DataFrame(data[LABELS]))
-    # with headers othrwise we lose the name of the attributes
+    # with headers otherwise we lose the name of the attributes
     attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, sep=",")
-    indexes_DNA = attributes.iloc[:, 0]
+    # indexes_DNA = attributes.iloc[:, 0]
     would_subscribe_car_sharing = attributes.iloc[:, -1]
 
-    # labels file only has L0, L1, L2
+    # labels file only has L0 and L1
     with open("work/LABELS", 'w') as f:
         f.write("L0;L1")
+        f.close()
 
     # create the network to extract the edges between nodes
-    graph = init_network(data, similarity_threshold=similarity_threshold, name="Travel Survey Numpy Cosine similarity network")
+    graph = init_network(data, similarity_threshold=similarity_threshold,
+                         name="Travel Survey similarity network")
     edges = pd.DataFrame(graph.edges)
     edges["weight"] = [float(data['weight']) for u, v, data in graph.edges(data=True) if 'weight' in data]
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
-    #nodes = pd.concat([edges[0], edges[1]]).unique()
+
     # connected_components_over_threshold(data, "Number of connected components vs. Threshold")
 
     # initial vector labels
-    # initial_vls = pd.DataFrame(generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC), dtype=float)
+    # vls = generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC)
+    # initial_vls = pd.DataFrame(vls, dtype=float)
     initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
     return graph
@@ -57,7 +63,7 @@ def generate_vector_labels_based_on_attribute(attribute_values):
 
 
 # the initial adapters are chosen from the list of nodes that will be actually present in the network
-# if considering all (from 0 to 1000), there is the risk of making adpters nodes that will not be present in the LPNet
+# if considering all (from 0 to 1000), there is the risk of making adapters nodes that will not be present in the LPNet
 # which is built given the edges (meaning that nodes without edges are not considered in LPNet)
 # the choice is made between 654 nodes with non-consecutive indices (that's why the DNAs needs to be filtered)
 def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):

@@ -2,6 +2,7 @@ import networkx as nx
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+
 class NetworkAnalysis:
 
     def __init__(self, graph):
@@ -25,7 +26,7 @@ class NetworkAnalysis:
         plt.xlabel("Degree")
         plt.ylabel("Density")
         plt.grid(True)
-        path = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/network_analysis/degrees/degree_distribution.png"
+        path = "./network_analysis/degrees/degree_distribution.png"
         plt.savefig(path, dpi=1200)
         print(f"saved in {path}")
         print("------------------------------------------------")
@@ -35,7 +36,7 @@ class NetworkAnalysis:
         sns.kdeplot(nx.degree_centrality(self.graph), fill=True, legend=True, color="mediumorchid")
         plt.grid()
         plt.title(f'KDE Plot of degree centrality')
-        path = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/network_analysis/centralities/network_degree_centrality.png"
+        path = "./network_analysis/centralities/network_degree_centrality.png"
         plt.savefig(path, dpi=1200)
         print(f"saved in {path}")
 
@@ -44,26 +45,26 @@ class NetworkAnalysis:
         sns.kdeplot(nx.betweenness_centrality(self.graph), fill=True, legend=True, color="mediumorchid")
         plt.grid()
         plt.title(f'KDE Plot of betweenness centrality')
-        path = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/network_analysis/centralities/network_betweenness_centrality.png"
+        path = "./network_analysis/centralities/network_betweenness_centrality.png"
         plt.savefig(path, dpi=1200)
         print(f"saved in {path}")
 
         # print(f"Closeness centrality: {nx.closeness_centrality(self.graph)}")
-        #plt.subplot(2, 2, 3)
+        # plt.subplot(2, 2, 3)
         sns.kdeplot(nx.closeness_centrality(self.graph), fill=True, legend=True, color="mediumorchid")
         plt.grid()
         plt.title(f'KDE Plot of closeness centrality')
-        path = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/network_analysis/centralities/network_closeness_centrality.png"
+        path = "./network_analysis/centralities/network_closeness_centrality.png"
         plt.savefig(path, dpi=1200)
         print(f"saved in {path}")
 
         # print(f"Eigenvector centrality: {nx.eigenvector_centrality(self.graph)}")
-       # plt.subplot(2,2, 4)
+        # plt.subplot(2,2, 4)
         sns.kdeplot(nx.eigenvector_centrality(self.graph), fill=True, legend=True, color="mediumorchid")
         plt.grid()
         plt.title(f'KDE Plot of eigenvector centrality')
         plt.tight_layout()
-        path = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/network_analysis/centralities/network_eigenvector_centrality.png"
+        path = "./network_analysis/centralities/network_eigenvector_centrality.png"
         plt.savefig(path, dpi=1200)
-        #plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/network_analysis/centralities/centralities.png", dpi=1200)
+        # plt.savefig("./network_analysis/centralities/centralities.png", dpi=1200)
         print(f"saved in {path}")

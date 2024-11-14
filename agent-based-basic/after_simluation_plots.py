@@ -1,10 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-# results coming from simulation_03_BASE_LINE which has 20% of initial adapters and no biases.
-BASELINE = {1: 100, 2: 513, 3: 719, 4: 828, 5: 887, 6: 924, 7: 948, 8: 963, 9: 973, 10: 980, 11: 984, 13: 991, 14: 993,
-            15: 994, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 998, 24: 998, 25: 999, 26: 999,
-            27: 999, 28: 999, 29: 999, 30: 999, 31: 999}
+# results coming from case scenarios A*
+BASELINE = {}
 
 
 # plots the evolution of the number of adapters as the time steps proceeds in the simulation
@@ -20,11 +18,7 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
             plt.axvline(x=key, linestyle='--', color=('cyan', 0.5), label='Convergence threshold')
             break
     slope = (last_value - first_value) / len(adapters)
-   #  plt.text(28, 280, f"slope: {slope:.2f}", fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
-    # for key, value in adapters.items():
-    #     print(f"({key}, {value}")
-    #     plt.text(key, value, f"({key:.2f}, {value})", fontsize=6, ha="center")
-    # BASELINE = {1: 133, 2: 526, 3: 722, 4: 828, 5: 892, 6: 927, 7: 949, 8: 964, 9: 975, 10: 981, 11: 985, 13: 991, 14: 993, 15: 995, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 998, 24: 998, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}
+
     # plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
@@ -40,15 +34,9 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
 # plots multiple simulations on the same plot
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time():
-    adapters90 = {1: 100, 2: 516, 3: 720, 4: 828, 5: 889, 6: 928, 7: 950, 8: 964, 9: 974, 10: 981, 11: 985, 13: 991,
-                  14: 993, 15: 994, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 999, 24: 999,
-                  25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 1000}
-    adapters70 = {1: 100, 2: 514, 3: 717, 4: 828, 5: 891, 6: 927, 7: 951, 8: 964, 9: 974, 10: 981, 11: 985, 13: 992,
-                  14: 993, 15: 995, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 998, 24: 999,
-                  25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}
-    adapters50 = {1: 100, 2: 515, 3: 720, 4: 829, 5: 891, 6: 928, 7: 951, 8: 965, 9: 975, 10: 981, 11: 985, 13: 991,
-                  14: 993, 15: 994, 16: 995, 17: 996, 18: 997, 19: 997, 20: 998, 21: 998, 22: 998, 23: 999, 24: 999,
-                  25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999, 31: 999}
+    adapters90 = {}
+    adapters70 = {}
+    adapters50 = {}
     plt.figure(figsize=(10, 6))
     plt.plot(list(adapters90.keys()), list(adapters90.values()), marker='x', label="Pro same gender by 90%")
     plt.plot(list(adapters70.keys()), list(adapters70.values()), marker='o', label="Pro same gender by 70%")
@@ -65,9 +53,6 @@ def plot_multiple_adapters_by_time():
     plt.text(25, 100, f"slope 90%: {slope90:.2f}\nslope 70%: {slope70:.2f}\nslope 50%: {slope50:.2f}", fontsize=10,
              bbox=dict(facecolor='none', alpha=0.2))
 
-    # for key, value in adapters.items():
-    #     print(f"({key}, {value}")
-    #     plt.text(key, value, f"({key:.2f}, {value})", fontsize=6, ha="center")
     plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'm--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
@@ -75,13 +60,12 @@ def plot_multiple_adapters_by_time():
     plt.legend(loc='lower right')
     plt.grid(True)
     plt.savefig(
-        f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/results/gender_bias_adapters_by_time_plot.png",
+        f"./work/results/gender_bias_adapters_by_time_plot.png",
         dpi=1000)
 
 
-
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
-def states_changing_heat_map(states, vector_labels, step, title, path):
+def states_changing_heat_map(states, vector_labels, step):
     vector_data = vector_labels[step][1]
     states_data = np.array(states[step][1])
 
@@ -104,14 +88,13 @@ def states_changing_heat_map(states, vector_labels, step, title, path):
     grid[:n_nodes] = VL0
     grid = grid.reshape(n_rows, n_cols)
 
-
     # Create the plot
     # plt.figure()
-    im = plt.imshow(grid, cmap="RdPu",  interpolation='nearest', vmin=0, vmax=1)
+    im = plt.imshow(grid, cmap="RdPu", interpolation='nearest', vmin=0, vmax=1)
     plt.colorbar(im)
     # plt.title(title)
     plt.title(f'Step {step}) Adapters: {adapters_count}, Non-adapters: {non_adapters_count}')
     plt.xlabel('VL0')
     plt.ylabel('VL1')
-   #  plt.show()
-    #plt.savefig(path)
+    #  plt.show()
+    # plt.savefig(path)

@@ -4,12 +4,9 @@ from network_logging import NetworkLogger
 from conf import TRIALS, LABELS
 
 
+# it can run multiple fresh trials with the same input parameters.
+# writes system state evolution to file (states & network topologies)
 class NetworkSimulation:
-    """
-    Simulation support for agents in a complex network.
-    Can run multiple fresh trials with the same input parameters. Writes system
-    state evolution to file (states & network topologies)
-    """
 
     def __init__(self, LPNet, LPAgent, max_time):
         self.env = sim.Environment()
@@ -17,10 +14,7 @@ class NetworkSimulation:
         self.LPAgent = LPAgent
         self.until = max_time
 
-    """
-    Run a simulation for TRIALS trials
-    """
-
+    # runs a simulation for TRIALS trials
     def run_simulation(self, run_index):
         print("Starting simulation...")
         for i in range(TRIALS):
@@ -28,54 +22,50 @@ class NetworkSimulation:
             self.run_trial(i, run_index)
         print("Simulation completed.")
 
-    """
-    Run a single trial
-    """
-
-    def run_trial(self, id, run_index):
-        # the initilization is done simply by initializing the Environment
-        # self.initialize()
-
+    # runs a single trial
+    def run_trial(self, trial_id, run_index):
+        # process that counts the number of adapters at the beginning of an iteration
         self.env.process(self.count_adapters())
 
         print("Let's start the agents")
-        # Initialize agents
+        # a process for each node is initialised and activated
         for i in self.LPNet.nodes():
-            agent = self.LPAgent.LPAgent((self.env, i, self, self.LPNet))
+            agent = self.LPAgent.LPAgent(self.env, i, self, self.LPNet)
             self.LPNet.nodes[i]['agent'] = agent
             self.env.process(agent.Run())
-        print("All agents run")
 
+        # the node's states are updated at the end of the interaction
+        # (after all agents have interacted with one another)
         print("Updating the states...")
         self.env.process(self.update_states())
 
-        print("Let's start logging")
-        # Set up logging
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval)
         self.env.process(logger.Run())
-
-
 
         # Run simulation
         self.env.run(self.until)
 
         # Write log files
         # saves in *.pickled the resulting nodes at each run until maxTime
-        # only for specific iteration --> modify tt variable to add and/or remove trials if uncesseray or useless.
-        logger.log_trial_to_files(id, run_index)
+        # only for specific iteration --> modify tt variable to add and/or remove trials if unnecessary or useless.
+        logger.log_trial_to_files(trial_id, run_index)
 
     def update_states(self):
         from main_LPA import USE_SHARING_INDEX
+        # for each node its state is updated based on the freshly re-calculated vector labels
+        # an assertion guarantees that each node has a valid state
         while True:
             for i in self.LPNet.nodes():
                 node = self.LPNet.nodes[i]
-                if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
-                node["state"] = determine_state(i, node, use_sharing_index=True)
+                # if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
+                node["state"] = determine_state(node, use_sharing_index=USE_SHARING_INDEX)
                 assert node["state"] == 1 or node["state"] == -1
-                if i in [0, 12, 220]: print(f"new state: {node['state']}")
+                if i in [0, 12, 220]:
+                    print(f"new state: {self.LPNet.nodes[i]['state']}")
             yield self.env.timeout(1)
 
+    # counts the number of adapters at each iteration
     def count_adapters(self):
         while True:
             adapters = 0
@@ -90,7 +80,13 @@ class NetworkSimulation:
             yield self.env.timeout(1)
 
 
-def determine_state(id, node, use_sharing_index):
+# determine the new state of a node based on its vector label
+# the state can change, if the node is not already an adopter
+# and for the confirmation bias scenarios (B* simulations) the sharing index is greater than a random number
+
+# TODO: what happens when use_sharing_index is False, they cannot update their state.
+#  Check it with Prof
+def determine_state(node, use_sharing_index):
     vl = get_vector_label(node)
     current_state = get_state(node)
     index = get_sharing_index(node)
@@ -103,13 +99,9 @@ def determine_state(id, node, use_sharing_index):
     if not is_currently_adapter:
         if non_adapter_label < adapter_label:
             if use_sharing_index:
-                rand = np.random.rand()
-                print(f"HERE: {index} > {rand} ? ")
                 # if the agent has 0.8 as index -> 80% of times becomes adapter
-                if index > rand:
-                    print(f"YES for node {id}")
+                if index > np.random.rand():
                     return +1
-
     # if they are equal ([0.5, 0.5]) -> then it stays the same
     return current_state
 

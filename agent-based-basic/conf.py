@@ -1,7 +1,7 @@
 import csv
 import sys
 
-### Useful global variables ###
+# Useful global variables
 
 # Simulation parameters
 # Max simulation time(number of iteration of the algorithm)
@@ -17,7 +17,6 @@ try:
     ATTRIBUTES_FILE = sys.argv[4]
     GRAPH_TYPE = sys.argv[5]
     RESULTS_DIR = sys.argv[6]
-    STATE_CHANGING_METHOD = int(sys.argv[7])
 except IndexError:
     print("Command line arguments not provided correctly")
     sys.exit(1)
@@ -26,4 +25,3 @@ except IndexError:
 with open(LABELS_NAMES_FILE, 'r') as f:
     csv_reader = csv.reader(f, delimiter=';')
     LABELS = [x.lstrip() for x in list(csv_reader)[0]]
-

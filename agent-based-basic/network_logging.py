@@ -4,8 +4,8 @@ import time
 import utils
 
 # The iterations whose VLs have to be stored
-tt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-      32, 33, 34, 35, 36, 37, 38, 39, 40]
+tt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+      21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
 
 
 class NetworkLogger:
@@ -48,5 +48,5 @@ class NetworkLogger:
         self.LPVLTuples.append([0, VLs])
         self.LPStates.append([0, states])
 
-    def log_trial_to_files(self, id, run_index):
-        utils.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, id, run_index)
+    def log_trial_to_files(self, run_id, run_index):
+        utils.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, run_id, run_index)

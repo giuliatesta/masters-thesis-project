@@ -6,6 +6,8 @@ from matplotlib import pyplot as plt
 from matplotlib import colors as c
 from networkx import number_connected_components
 from pandas import DataFrame
+from scipy.stats import beta
+
 
 # plots the distribution of the similarity metrix over the nodes of the network
 def similarity_matrix_distribution_over_nodes(similarity_matrix, title="", x_label="", bins_count=20):
@@ -19,7 +21,7 @@ def similarity_matrix_distribution_over_nodes(similarity_matrix, title="", x_lab
     new_title = f"Distribution {title}"
     plt.title(new_title)
     plt.grid(True)
-    plt.savefig(f"/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/{new_title}-{bins_count}-bins.png", dpi=1200)
+    plt.savefig(f"../plots/statistics/{new_title}-{bins_count}-bins.png", dpi=1200)
     plt.close()
     print("Done.")
 
@@ -36,7 +38,7 @@ def connected_components_over_threshold(df: DataFrame, title=""):
     thresholds = np.arange(0, 1.0, 0.05)
     for threshold in thresholds:
         graph = init_network(df, similarity_threshold=threshold, no_logs=True,
-                                            name=f"{title}-{format_double(threshold)}")
+                             name=f"{title}-{format_double(threshold)}")
         n = number_connected_components(graph)
         components.append(n)
 
@@ -44,12 +46,13 @@ def connected_components_over_threshold(df: DataFrame, title=""):
     plt.plot(thresholds, components, marker="o", color="mediumorchid")
     for i, _ in enumerate(components):
         print(f"({thresholds[i]}, {components[i]}")
-        plt.text(float(thresholds[i]), components[i], f"({thresholds[i]:.2f}, {components[i]})", fontsize=5, ha="center")
+        plt.text(float(thresholds[i]), components[i], f"({thresholds[i]:.2f}, {components[i]})", fontsize=5,
+                 ha="center")
     plt.xlabel("Threshold")
     plt.ylabel("Number of components")
     plt.title("Number of connected components vs. Threshold")
     plt.grid(True)
-    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/statistics/gower_components_over_threshold.png", dpi=1200)
+    plt.savefig("../plots/statistics/gower_components_over_threshold.png", dpi=1200)
     print("Done.")
 
 
@@ -70,11 +73,9 @@ def nodes_by_degree_distribution(graph, title, file_name):
     plt.xlabel('Degree')
     plt.ylabel('Number of Nodes')
     plt.title(title)
-    plt.savefig(f"/home/giulia/giulia/masters-thesis-project/agent-based-basic/network_analysis/degrees/{file_name}.png", dpi=1000)
+    plt.savefig(f"./network_analysis/degrees/{file_name}.png", dpi=1000)
 
 
-
-from scipy.stats import beta
 def plot_beta_distributions():
     # Define the x range (0 to 1) for the beta distributions
     x = np.linspace(0, 1, 100)
@@ -102,4 +103,4 @@ def plot_beta_distributions():
     plt.legend()
 
     # Show the plot
-    plt.savefig("/Users/giuliatesta/PycharmProjects/masters-thesis-project/plots/beta_distribution.png", dpi = 1200)
+    plt.savefig("../plots/beta_distribution.png", dpi=1200)
