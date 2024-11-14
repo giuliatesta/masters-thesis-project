@@ -67,11 +67,14 @@ class NetworkSimulation:
         from main_LPA import USE_SHARING_INDEX
         for i in self.LPNet.nodes():
             node = self.LPNet.nodes[i]
-            node["state"] = determine_state(node, use_sharing_index=True)
+            if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
+            node["state"] = determine_state(i, node, use_sharing_index=USE_SHARING_INDEX)
+            assert node["state"] == 1 or node["state"] == -1
+            if i in [0, 12, 220]: print(f"new state: {node['state']}")
         yield self.env.timeout(1)
 
 
-def determine_state(node, use_sharing_index):
+def determine_state(id, node, use_sharing_index):
     vl = get_vector_label(node)
     current_state = get_state(node)
     index = get_sharing_index(node)
@@ -84,12 +87,15 @@ def determine_state(node, use_sharing_index):
     if not is_currently_adapter:
         if non_adapter_label < adapter_label:
             if use_sharing_index:
+                rand = np.random.rand()
+                print(f"HERE: {index} > {rand} ? ")
                 # if the agent has 0.8 as index -> 80% of times becomes adapter
-                if index > np.random.rand():
+                if index > rand:
+                    print(f"YES for node {id}")
                     return +1
-    else:
-        # if they are equal ([0.5, 0.5]) -> then it stays the same
-        return current_state
+
+    # if they are equal ([0.5, 0.5]) -> then it stays the same
+    return current_state
 
 
 def get_sharing_index(node):

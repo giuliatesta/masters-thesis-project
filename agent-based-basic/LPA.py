@@ -61,6 +61,7 @@ class LPAgent:
 
         # used for A1 (NO bias, but different weights)
         if STATE_CHANGING_METHOD == 1:
+            if self.id in [0, 12, 220]: print(f"node {self.id}) my opinion: {self.VL}")
             for label in LABELS:
                 # the weight of the current agent opinion is the opinion perseverance, and it is
                 # computed using a beta distribution with alpha = 2 and beta = 2
@@ -70,12 +71,14 @@ class LPAgent:
                 opinion_perseverance = 0.8 #self.LPNet.nodes[self.id]["perseverance"]
                 self_avg = vl * opinion_perseverance
 
+
                 # the total weight of the neighbours needs to obey the condition : w_i + \sum w_j = 1 -> \sum w_j = 1 - w_i
                 total_opinion_plasticity = 1 - opinion_perseverance
                 neighbours_acc = []
                 neighbours_weights = []
-
+                if self.id in [0, 12, 220]: print(neighbours)
                 for i in list(neighbours):
+
                     # the weight of each neighbour is its similarity value
                     neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
                     neighbours_acc.append(float(self.LPNet.nodes[i][label]))
@@ -83,11 +86,18 @@ class LPAgent:
                 # the opinion plasticity is the normalised version of the weight computed with the bias
                 # normalised to the maximum value which is 1 - perseverance
                 neighbours_acc = np.array(neighbours_acc)
+                if self.id in [0, 12,220]:
+                    print(f"for {label}")
+                    print(f"self_avg: {self_avg}")
+                    print(f"acc: {neighbours_acc}")
+                    print(f"weights:{neighbours_weights}")
                 normalised_weights = reweight(neighbours_weights, total_opinion_plasticity)
 
                 # the aggregation function is
                 # opinion perseverance * agent'sopinion + sum of opinion plasticity * neighbour's opinion
-                self.VL[label] = self_avg + np.sum(neighbours_acc * 0.2) #normalised_weights)
+                sums = np.sum(neighbours_acc * (0.2 / len(neighbours_acc)))
+                self.VL[label] = self_avg + sums #normalised_weights)
+            if self.id in [0, 12, 220]: print(f"new labels: {self.VL}")
 
         if STATE_CHANGING_METHOD == 2:
             privileged = 0.9
@@ -129,7 +139,6 @@ class LPAgent:
             # normalised to the maximum value which is 1 - perseverance
             neighbours_acc = np.array(neighbours_acc)
             normalised_weights = reweight(neighbours_weights, total_opinion_plasticity)
-
             # the aggregation function is
             # opinion perseverance * agent'sopinion + sum of opinion plasticity * neighbour's opinion
             self.VL[label] = self_avg + np.sum(neighbours_acc * normalised_weights)

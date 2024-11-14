@@ -67,7 +67,7 @@ def beta_distribution(alpha, beta):
     return beta_function.rvs(alpha, beta)
 
 
-RUNS = 30
+RUNS = 10 #30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
