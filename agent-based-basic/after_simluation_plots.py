@@ -98,3 +98,30 @@ def states_changing_heat_map(states, vector_labels, step):
     plt.ylabel('VL1')
     #  plt.show()
     # plt.savefig(path)
+
+
+def description_text_for_plots(rule, simulation_id, ):
+    from main_LPA import ALPHA, BETA, SIMILARITY_THRESHOLD, USE_SHARING_INDEX
+    text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
+            + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
+            + f"Vector label changing: NO BIAS"
+            + f"State determination: WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX")
+    title = "Number of adapters by time\n"
+    if rule == "same-weights":
+        text += "OP: 1 / (k+1), OL: 1 / (k+1)"
+        title += f"(BASELINE with same weights - SIM {simulation_id})"
+    if rule == "beta-dist":
+        text += f"OP: scaled similarity weights\nOL: beta(alpha = {ALPHA}, beta = {BETA})"
+        if ALPHA == 2 and BETA == 2:
+            title += f"(quasi-normal distribution for beta - SIM {simulation_id})"
+        if ALPHA == 2 and BETA == 5:
+            title += f"(society with rigid agents - SIM {simulation_id})"
+        if ALPHA == 5 and BETA == 2:
+            title += f"(society with open-to-change agents - SIM {simulation_id})"
+    if rule == "over-confidence":
+        text += "OP: 0.8, OL: 0.2\n"
+        title += f"(overconfidence bias - SIM {simulation_id})"
+    if rule == "over-influenced":
+        text += "OP: 0.2, OL: 0.8\n"
+        title += f"(over-influenced bias - SIM {simulation_id})"
+    return title, text

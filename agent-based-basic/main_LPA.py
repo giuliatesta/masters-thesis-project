@@ -7,7 +7,7 @@ import numpy as np
 from pandas import read_csv
 
 from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE, RESULTS_DIR
-from after_simluation_plots import draw_adapter_by_time_plot
+from after_simluation_plots import draw_adapter_by_time_plot, description_text_for_plots
 from network_simulation import NetworkSimulation
 from create_input import create_input_files
 from preprocessing import load_dataset_csv
@@ -98,22 +98,6 @@ if __name__ == '__main__':
         run_simulations(run)
 
     states = state_averaging(RESULTS_DIR)
-    additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
-                       #  + f"Perseverance: 0.8, Plasticity: 0.2\n"
-                       + f"Perseverance: 1 / (k+1), "
-                       + f"Plasticity: 1 / (k+1)\n"
-                       # + f"Plasticity: scaled similarity weights\n"
-                       # + f"Perseverance: beta distribution (alpha = {ALPHA}, beta = {BETA})\n"
-                       + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
-                       + f"Vector label changing: NO BIAS\nState changing:WITH"
-                         f"{'' if USE_SHARING_INDEX else 'OUT'} INDEX")
-    # additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
-    #                    + f"Perseverance: 1 / (k+1), "
-    #                      + f"Plasticity: 1 / (k+1)\n"
-    #                    + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
-    #                    + f"Vector label changing: NO BIAS\nState changing:
-    #                    WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX")
-    draw_adapter_by_time_plot(states, RESULTS_DIR, title="Number of adapters by time\n"
-                                                         "(BASELINE with same weights - SIM B0-A0)",
-                              # "(EXTRAS - OL 0.8, OP 0.2)",
-                              additional_text=additional_text)
+    sim_id = RESULTS_DIR.split("/")[:-1]
+    title, additional_text = description_text_for_plots(STATE_CHANGING_METHOD, sim_id)
+    draw_adapter_by_time_plot(states, RESULTS_DIR, title=title, additional_text=additional_text)
