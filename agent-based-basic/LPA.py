@@ -50,6 +50,8 @@ class LPAgent:
         if STATE_CHANGING_METHOD == 0:
             # both perseverance and total plasticity have the same value -> 1 / (k+1)
             weight = float(1 / (len(neighbours) + 1))
+            if self.id in [0, 12, 220]: print(neighbours)
+            if self.id in [0, 12, 220]: print(f"node {self.id}) my opinion: {self.VL}")
             for label in LABELS:
                 self_avg = self.LPNet.nodes[self.id][label] * weight
 
@@ -57,8 +59,15 @@ class LPAgent:
                 for i in list(neighbours):
                     neighbours_acc += float(self.LPNet.nodes[i][label])
 
-                self.VL[label] = self_avg + neighbours_acc * weight
+                if self.id in [0, 12, 220]:
+                    print(f"for {label}")
+                    print(f"self_avg: {self_avg}")
+                    print(f"neigh_avg: {neighbours_acc * weight}")
 
+                  #  print(f"weights:{neighbours_weights}")
+
+                self.VL[label] = self_avg + neighbours_acc * weight
+            if self.id in [0, 12, 220]: print(f"new labels: {self.VL}")
         # used for A1 (NO bias, but different weights)
         if STATE_CHANGING_METHOD == 1:
             if self.id in [0, 12, 220]: print(f"node {self.id}) my opinion: {self.VL}")
@@ -68,7 +77,7 @@ class LPAgent:
                 vl = self.LPNet.nodes[self.id][label]
                 # agent's perseverance is an attribute of each node, since it is constant in time
                 # it has been initialised at network initialisation
-                opinion_perseverance = 0.8 #self.LPNet.nodes[self.id]["perseverance"]
+                opinion_perseverance = 0.8 # self.LPNet.nodes[self.id]["perseverance"]
                 self_avg = vl * opinion_perseverance
 
 
@@ -86,11 +95,11 @@ class LPAgent:
                 # the opinion plasticity is the normalised version of the weight computed with the bias
                 # normalised to the maximum value which is 1 - perseverance
                 neighbours_acc = np.array(neighbours_acc)
-                if self.id in [0, 12,220]:
+                if self.id in [0, 12, 220]:
                     print(f"for {label}")
                     print(f"self_avg: {self_avg}")
-                    print(f"acc: {neighbours_acc}")
-                    print(f"weights:{neighbours_weights}")
+                   # print(f"acc: {neighbours_acc}")
+                  #  print(f"weights:{neighbours_weights}")
                 normalised_weights = reweight(neighbours_weights, total_opinion_plasticity)
 
                 # the aggregation function is

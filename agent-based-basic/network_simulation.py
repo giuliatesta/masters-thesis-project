@@ -36,8 +36,9 @@ class NetworkSimulation:
         # the initilization is done simply by initializing the Environment
         # self.initialize()
 
-        print("Let's start the agents")
+        self.env.process(self.count_adapters())
 
+        print("Let's start the agents")
         # Initialize agents
         for i in self.LPNet.nodes():
             agent = self.LPAgent.LPAgent((self.env, i, self, self.LPNet))
@@ -49,11 +50,12 @@ class NetworkSimulation:
         self.env.process(self.update_states())
 
         print("Let's start logging")
-
         # Set up logging
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval)
         self.env.process(logger.Run())
+
+
 
         # Run simulation
         self.env.run(self.until)
@@ -65,13 +67,27 @@ class NetworkSimulation:
 
     def update_states(self):
         from main_LPA import USE_SHARING_INDEX
-        for i in self.LPNet.nodes():
-            node = self.LPNet.nodes[i]
-            if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
-            node["state"] = determine_state(i, node, use_sharing_index=USE_SHARING_INDEX)
-            assert node["state"] == 1 or node["state"] == -1
-            if i in [0, 12, 220]: print(f"new state: {node['state']}")
-        yield self.env.timeout(1)
+        while True:
+            for i in self.LPNet.nodes():
+                node = self.LPNet.nodes[i]
+                if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
+                node["state"] = determine_state(i, node, use_sharing_index=True)
+                assert node["state"] == 1 or node["state"] == -1
+                if i in [0, 12, 220]: print(f"new state: {node['state']}")
+            yield self.env.timeout(1)
+
+    def count_adapters(self):
+        while True:
+            adapters = 0
+            non_adapters = 0
+            for i in self.LPNet.nodes():
+                node = self.LPNet.nodes[i]
+                if node["state"] == 1:
+                    adapters += 1
+                else:
+                    non_adapters += 1
+            print(f"At the beginning of step {self.env.now}: # Adapters: {adapters}, # Non-Adapters: {non_adapters}")
+            yield self.env.timeout(1)
 
 
 def determine_state(id, node, use_sharing_index):

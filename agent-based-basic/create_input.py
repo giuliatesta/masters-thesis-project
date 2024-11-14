@@ -5,7 +5,7 @@ import pandas as pd
 
 from create_network import init_network, plot_network
 
-NUMBER_OF_RECORDS = 250
+NUMBER_OF_RECORDS = 1000
 INITIAL_ADAPTERS_PERC = 20
 
 # builds the initial files used as input for the simulations

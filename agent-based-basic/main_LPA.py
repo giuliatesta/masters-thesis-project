@@ -89,7 +89,9 @@ if __name__ == '__main__':
 
     states = state_averaging(RESULTS_DIR)
     additional_text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
-                        + f"Persevarance: 0.8, Plasticity: 0.2\n"
+                      #  + f"Persevarance: 0.8, Plasticity: 0.2\n"
+                       + f"Persevarance: 1 / (k+1), "
+                        + f"Plasticity: 1 / (k+1)\n"
                         #+ f"Plasticity: scaled similarity weights\n"
                       # + f"Persevarance: beta distribution (alpha = {ALPHA}, beta = {BETA})\n"
                         + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
@@ -100,7 +102,7 @@ if __name__ == '__main__':
     #                    + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
     #                    + f"Vector label changing: NO BIAS\nState changing: WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX")
     draw_adapter_by_time_plot(states, RESULTS_DIR,title="Number of adapters by time\n"
-                                                        # "(BASELINE with open-to-change agents - SIM A1)"
-                                                         "(EXTRAS - OL 0.8, OP 0.2)"
+                                                         "(BASELINE with same weights - SIM B0-A0)"
+                                                         # "(EXTRAS - OL 0.8, OP 0.2)"
                               , additional_text=additional_text)
 

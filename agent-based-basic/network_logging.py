@@ -31,8 +31,8 @@ class NetworkLogger:
         LPNodes = sorted(self.sim.LPNet.nodes(data=True), key=lambda x: x[0])
 
         # Actual VL belonging coefficients
-        VLs = [[float(node[1]["agent"].VL[str(i)]) for i in LABELS] for node in LPNodes]
-        states = [node[1]["agent"].state for node in LPNodes]
+        VLs = [[float(node[1][i]) for i in LABELS] for node in LPNodes]
+        states = [node[1]["state"] for node in LPNodes]
 
         # Add actual VL value to logs
         if self.env.now in tt:
