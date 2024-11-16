@@ -5,6 +5,7 @@ Module for the LPAgent class that can be subclassed by agents.
 import numpy as np
 from conf import LABELS, GRAPH_TYPE
 from main_LPA import STATE_CHANGING_METHOD
+from initial_network_plots import format_double
 
 
 # An agent has its vector label with raw values and a state which depends on the vector label
@@ -27,9 +28,9 @@ class LPAgent:
     def Run(self):
         while True:
             self.state_changing()
-            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT / 2)
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT)
             self.update_step()
-            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT / 2)
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT)
 
     def state_changing(self):
         neighbours = self.get_neighbours()
@@ -62,7 +63,10 @@ class LPAgent:
                 # normalised to the maximum value which is 1 - perseverance
                 reweighed = reweight(neighbours_weights, OL)
                 neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
-
+                print(f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}")
+                nc = [format_double(i) for i in neighbours_acc]
+                nw = [format_double(i) for i in reweighed]
+                print(f"{nc}\n{nw} -> {sum(reweighed): .2f}")
             if rule == "over-confidence" or rule == "over-influenced":
                 OP = 0.8 if rule == "over-confidence" else 0.2
                 OL = 1 - OP
@@ -92,6 +96,7 @@ class LPAgent:
                 reweighed = reweight(neighbours_weights, OL)
                 neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
 
+            print(f"node {self.id} for {label}: {self.VL[label]: .2f} -> {self_avg + neighbours_avg: .2f}")
             self.VL[label] = self_avg + neighbours_avg
 
     """

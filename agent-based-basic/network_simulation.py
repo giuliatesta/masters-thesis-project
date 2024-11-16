@@ -36,7 +36,6 @@ class NetworkSimulation:
 
         # the node's states are updated at the end of the interaction
         # (after all agents have interacted with one another)
-        print("Updating the states...")
         self.env.process(self.update_states())
 
         logging_interval = 1
@@ -56,13 +55,13 @@ class NetworkSimulation:
         # for each node its state is updated based on the freshly re-calculated vector labels
         # an assertion guarantees that each node has a valid state
         while True:
+            print("Updating the states...")
             for i in self.LPNet.nodes():
                 node = self.LPNet.nodes[i]
                 # if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
                 node["state"] = determine_state(node, use_sharing_index=USE_SHARING_INDEX)
                 assert node["state"] == 1 or node["state"] == -1
-                if i in [0, 12, 220]:
-                    print(f"new state: {self.LPNet.nodes[i]['state']}")
+                print(f"node {i}) new state: {self.LPNet.nodes[i]['state']}")
             yield self.env.timeout(1)
 
     # counts the number of adapters at each iteration
@@ -94,13 +93,18 @@ def determine_state(node, use_sharing_index):
     # 0; 1    # adapter     1; 0    # non adapter
     non_adapter_label = vl[0]
     adapter_label = vl[1]
-    is_currently_adapter = (current_state == +1)
+    is_currently_non_adapter = (current_state == -1)
     # if non adapter
-    if not is_currently_adapter:
-        if non_adapter_label < adapter_label:
+    if is_currently_non_adapter:
+        # and adapter label is bigger than non adapter label
+        if adapter_label > non_adapter_label:
+            print(f"{node} could become adopter")
             if use_sharing_index:
+                rand = np.random.rand()
+                print("is currectly non adopter, L0 < L1, uses shar.ind and index > rand?")
                 # if the agent has 0.8 as index -> 80% of times becomes adapter
-                if index > np.random.rand():
+                if index > rand:
+                    print("yes")
                     return +1
     # if they are equal ([0.5, 0.5]) -> then it stays the same
     return current_state

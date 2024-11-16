@@ -57,7 +57,7 @@ def run_simulations(run_index):
         LPNet.nodes[node]["state"] = initial_states[i]
     adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters/non adapters ratio: {len(adapters)}/{len(LPNet.nodes)}")
-
+    print(adapters)
     # na.NetworkAnalysis(LPNet).analyse()
     # exit(1)
 
@@ -70,7 +70,7 @@ def beta_distribution(alpha, beta):
     return beta_function.rvs(alpha, beta)
 
 
-RUNS = 0  # 30
+RUNS = 1  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
@@ -81,7 +81,7 @@ all_choices = {
     2: "over-confidence",  # OL and OP are fixed: OP = 0.8 (confidence in my opinion) (EX0-1)
     3: "over-influenced"  # OL and OP are fixed: OL = 0.8 (too easily influenced by others) (EX0-2)
 }
-STATE_CHANGING_METHOD = all_choices[2]
+STATE_CHANGING_METHOD = all_choices[1]
 if __name__ == '__main__':
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
