@@ -28,9 +28,9 @@ class LPAgent:
     def Run(self):
         while True:
             self.state_changing()
-            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT)
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT/2)
             self.update_step()
-            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT)
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT/2)
 
     def state_changing(self):
         neighbours = self.get_neighbours()

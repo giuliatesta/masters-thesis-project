@@ -62,7 +62,7 @@ class NetworkSimulation:
                 node["state"] = determine_state(node, use_sharing_index=USE_SHARING_INDEX)
                 assert node["state"] == 1 or node["state"] == -1
                 print(f"node {i}) new state: {self.LPNet.nodes[i]['state']}")
-            yield self.env.timeout(1)
+            yield self.env.timeout(1.5)
 
     # counts the number of adapters at each iteration
     def count_adapters(self):
