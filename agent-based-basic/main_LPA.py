@@ -1,12 +1,13 @@
 #!/usr/bin/python
-from average_results import state_averaging
+from average_results import state_averaging, count_adapters
 import networkx as nx
 import sys
 import LPA
 import numpy as np
 from pandas import read_csv
 
-from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE, RESULTS_DIR
+from conf import ITERATION_NUM, INITIAL_VECTOR_LABELS_FILE, EDGES_FILE, GRAPH_TYPE, LABELS, ATTRIBUTES_FILE, \
+    RESULTS_DIR, NON_CONSECUTIVE_NODE_INDEXES
 from after_simluation_plots import draw_adapter_by_time_plot, description_text_for_plots
 from network_simulation import NetworkSimulation
 from create_input import create_input_files
@@ -49,15 +50,18 @@ def run_simulations(run_index):
         LPNet.nodes[node]["perseverance"] = beta_distribution(ALPHA, BETA)
         # assign to the nodes the vector labels
         for j, label in enumerate(LABELS):
-            if len(sys.argv) == 7:
+            # If the network created from the edge list file does not contain
+            # all consecutive nodes and the INITIAL_VLS_FILE contains also the VLs of the nodes missing in the range:
+            # execute the script providing an additional command line argument 'X':
+            if NON_CONSECUTIVE_NODE_INDEXES:
                 LPNet.nodes[node][label] = initial_VLs[i][j]
             else:
                 LPNet.nodes[node][label] = initial_VLs[node - network_nodes[0]][j]
         # assigns the initial state
         LPNet.nodes[node]["state"] = initial_states[i]
-    adapters = [node for node in LPNet.nodes if LPNet.nodes[node]["state"] == 1]
+    adapters = [node for node in LPNet.nodes() if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters/non adapters ratio: {len(adapters)}/{len(LPNet.nodes)}")
-    print(adapters)
+    print(sorted(adapters))
     # na.NetworkAnalysis(LPNet).analyse()
     # exit(1)
 
@@ -70,18 +74,20 @@ def beta_distribution(alpha, beta):
     return beta_function.rvs(alpha, beta)
 
 
-RUNS = 1  # 30
-SIMILARITY_THRESHOLD = 0.60
+RUNS = 10 # 30
+SIMILARITY_THRESHOLD = 0.40
 ALPHA = 2
 BETA = 2
-USE_SHARING_INDEX = True
+USE_SHARING_INDEX = False
+USE_RANDOM_INITIAL_ADAPTERS = False
 all_choices = {
     0: "same-weights",  # trivial cases (SIM-*0)
     1: "beta-dist",  # baseline
     2: "over-confidence",  # OL and OP are fixed: OP = 0.8 (confidence in my opinion) (EX0-1)
-    3: "over-influenced"  # OL and OP are fixed: OL = 0.8 (too easily influenced by others) (EX0-2)
+    3: "over-influenced",  # OL and OP are fixed: OL = 0.8 (too easily influenced by others) (EX0-2)
+    4: "extreme-influenced"  # OL and OP are fixed: OP=0.02 and OL=0.98 (EX0-3)
 }
-STATE_CHANGING_METHOD = all_choices[1]
+STATE_CHANGING_METHOD = all_choices[4]
 if __name__ == '__main__':
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
@@ -94,6 +100,7 @@ if __name__ == '__main__':
             "Age",
             "Would_subscribe_car_sharing_if_available"],
                            similarity_threshold=SIMILARITY_THRESHOLD,
+                           use_random_initial_adapters=USE_RANDOM_INITIAL_ADAPTERS
                            )
         run_simulations(run)
 
