@@ -18,7 +18,7 @@ def count_adapters(states):
 
 
 # averages the final state results given the multiple RUNS over the same simulation
-# multiple runs are necessary to reduce the impact of the random selection of initial adapters
+# multiple runs are necessary to reduce the impact of the random_adapters_without_SI selection of initial adapters
 def state_averaging(state_files_path):
     state_files_content = []
     for filename in sorted(os.listdir(state_files_path)):

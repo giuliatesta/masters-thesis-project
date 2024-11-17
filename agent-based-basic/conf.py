@@ -17,6 +17,10 @@ try:
     ATTRIBUTES_FILE = sys.argv[4]
     GRAPH_TYPE = sys.argv[5]
     RESULTS_DIR = sys.argv[6]
+    try:
+        NON_CONSECUTIVE_NODE_INDEXES = (sys.argv[7] == "X")
+    except IndexError:
+        NON_CONSECUTIVE_NODE_INDEXES = False
 except IndexError:
     print("Command line arguments not provided correctly")
     sys.exit(1)

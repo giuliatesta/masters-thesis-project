@@ -6,7 +6,7 @@ import pandas as pd
 from create_network import init_network
 
 NUMBER_OF_RECORDS = 1000
-INITIAL_ADAPTERS_PERC = 20
+INITIAL_ADAPTERS_PERC = 40
 
 
 # builds the initial files used as input for the simulations
@@ -15,7 +15,7 @@ INITIAL_ADAPTERS_PERC = 20
 # - EDGES: contains the pairs of nodes that have an edge in the network
 # - INITIAL_VLS: contains the initial values of the vector labels of the nodes in the network
 # - LABELS: contains only the labels names
-def create_input_files(data, LABELS, similarity_threshold=0.5):
+def create_input_files(data, LABELS, similarity_threshold=0.5, use_random_initial_adapters=False):
     data.reset_index(drop=True, inplace=True)
     # keeps only the first NUMBER_OF_RECORDS rows
     data = data.head(NUMBER_OF_RECORDS)
@@ -25,8 +25,6 @@ def create_input_files(data, LABELS, similarity_threshold=0.5):
     attributes = transform_categorical_values(pd.DataFrame(data[LABELS]))
     # with headers otherwise we lose the name of the attributes
     attributes.to_csv(path_or_buf="work/ATTRIBUTES", index=False, sep=",")
-    # indexes_DNA = attributes.iloc[:, 0]
-    would_subscribe_car_sharing = attributes.iloc[:, -1]
 
     # labels file only has L0 and L1
     with open("work/LABELS", 'w') as f:
@@ -43,9 +41,13 @@ def create_input_files(data, LABELS, similarity_threshold=0.5):
     # connected_components_over_threshold(data, "Number of connected components vs. Threshold")
 
     # initial vector labels
-    # vls = generate_initial_vls_with_index(nodes, indexes_DNA, INITIAL_ADAPTERS_PERC)
-    # initial_vls = pd.DataFrame(vls, dtype=float)
-    initial_vls = pd.DataFrame(generate_vector_labels_based_on_attribute(would_subscribe_car_sharing), dtype=float)
+    if use_random_initial_adapters:
+        indexes_DNA = attributes.iloc[:, 0]
+        vls = generate_initial_vls_with_index(graph.nodes(), indexes_DNA, INITIAL_ADAPTERS_PERC)
+    else:
+        would_subscribe_car_sharing = attributes.iloc[:, -1]
+        vls = generate_vector_labels_based_on_attribute(would_subscribe_car_sharing)
+    initial_vls = pd.DataFrame(vls, dtype=float)
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
     return graph
 
@@ -92,7 +94,7 @@ def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
 
     # randomly choose indices to set to 1
     indices = np.random.choice(possible_adapters, number_of_initial_adapters, replace=False)
-    print(f"Initial adapters indices: {indices}")
+    print(f"Initial adapters indices: {sorted(indices)}")
     # set the chosen indices to 1
     for index in indices:
         vls[index] = [0.0, 1.0]

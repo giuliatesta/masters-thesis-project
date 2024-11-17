@@ -27,12 +27,12 @@ class LPAgent:
     # re-evaluation of the vector labels based on the vls of neighbours
     def Run(self):
         while True:
-            self.state_changing()
+            self.evaluate_vector_labels()
             yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT/2)
             self.update_step()
             yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT/2)
 
-    def state_changing(self):
+    def evaluate_vector_labels(self):
         neighbours = self.get_neighbours()
         rule = STATE_CHANGING_METHOD
 
@@ -66,20 +66,28 @@ class LPAgent:
                 print(f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}")
                 nc = [format_double(i) for i in neighbours_acc]
                 nw = [format_double(i) for i in reweighed]
-                print(f"{nc}\n{nw} -> {sum(reweighed): .2f}")
-            if rule == "over-confidence" or rule == "over-influenced":
-                OP = 0.8 if rule == "over-confidence" else 0.2
+                print(f"OL: {sum(reweighed): .2f}\n{nw}")
+            if rule == "over-confidence" or rule == "over-influenced" or rule == "extreme-influenced":
+                if rule == "over-confidence":
+                    OP = 0.8
+                if rule == "over-influenced":
+                    OP = 0.2
+                if rule == "extreme-influenced":
+                    OP = 0.02
                 OL = 1 - OP
 
                 self_avg = current_vl * OP
                 neighbours_acc = []
-                neighbours_weights = []
                 for i in list(neighbours):
-                    neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
                     neighbours_acc.append(float(self.LPNet.nodes[i][label]))
                 neighbours_count = len(neighbours)
                 neighbours_avg = sum([neighbours_acc[i] * (OL / neighbours_count) for i in range(neighbours_count)])
-
+                print(f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}, "
+                      f"neig count: {len(neighbours)}")
+                nc = [format_double(i) for i in neighbours_acc]
+                nw = [[format_double(neighbours_acc[i] * (OL / neighbours_count)) for i in range(neighbours_count)]]
+                print(f"acc: {nc} -> {sum(neighbours_acc)}")
+                print(f"OL: {OL: .2f}, each neighbour has {OL / neighbours_count: .2f}")
             # TODO divide into different biased case scenarios
             # now, it is just to keep what it has been done
             if rule == "social-bias":

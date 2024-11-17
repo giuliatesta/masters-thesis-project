@@ -106,6 +106,9 @@ def determine_state(node, use_sharing_index):
                 if index > rand:
                     print("yes")
                     return +1
+            else:
+                # if it doesn't use the SI, they become adopters as they have adapter_label> non adapter label
+                return +1
     # if they are equal ([0.5, 0.5]) -> then it stays the same
     return current_state
 

@@ -74,7 +74,6 @@ def states_changing_heat_map(states, vector_labels, step):
 
     print(f"Adapters: {adapters_count}")
     print(f"Non Adapters: {non_adapters_count}")
-
     VL0 = np.array([vl[0] for vl in vector_data])
     VL1 = np.array([vl[1] for vl in vector_data])
 

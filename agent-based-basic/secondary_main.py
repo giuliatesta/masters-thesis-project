@@ -16,9 +16,9 @@ plt.figure(figsize=(18, 18))
 # plt.title(f"State changing Heat Map (SIM 3 - BASE LINE)\nsteps=[{[i for i in range(0, 30, 5)]}]")
 i = 1
 
-prefix = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/case_scenarios/A0"
-vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1_0_RUN_0.pickled")
-states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_0_RUN_0_STATES.pickled")
+prefix = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/case_scenarios/EX0/EX0-2/random_adapters_without_SI"
+vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")
+states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")
 
 for time_step in range(0, 8, 1):
     plt.subplot(4, 2, i)
@@ -27,9 +27,7 @@ for time_step in range(0, 8, 1):
     states_changing_heat_map(
         states=states,
         vector_labels=vector_labels,
-        step= time_step,
-        title=f"State changing Heat Map (SIM 3 - BASE LINE)\nstep={time_step}",
-        path= f"{prefix}heat_map_{time_step}.png")
+        step= time_step)
 
 plt.suptitle("Heat maps for the first SEVEN steps of the simulations\n (BASELINE - SIM A0)", x=0.57, fontsize=20)
 plt.tight_layout(rect=[0, 0, 1, 0.98])
