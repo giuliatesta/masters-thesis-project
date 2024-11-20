@@ -1,7 +1,6 @@
 #!/usr/bin/python
 from average_results import state_averaging, count_adapters
 import networkx as nx
-import sys
 import LPA
 import numpy as np
 from pandas import read_csv
@@ -73,21 +72,41 @@ def run_simulations(run_index):
 def beta_distribution(alpha, beta):
     return beta_function.rvs(alpha, beta)
 
-
-RUNS = 10 # 30
-SIMILARITY_THRESHOLD = 0.40
-ALPHA = 2
-BETA = 2
-USE_SHARING_INDEX = False
-USE_RANDOM_INITIAL_ADAPTERS = False
-all_choices = {
+vector_labels_update_choices = {
     0: "same-weights",  # trivial cases (SIM-*0)
     1: "beta-dist",  # baseline
     2: "over-confidence",  # OL and OP are fixed: OP = 0.8 (confidence in my opinion) (EX0-1)
     3: "over-influenced",  # OL and OP are fixed: OL = 0.8 (too easily influenced by others) (EX0-2)
-    4: "extreme-influenced"  # OL and OP are fixed: OP=0.02 and OL=0.98 (EX0-3)
+    4: "extreme-influenced",  # OL and OP are fixed: OP=0.02 and OL=0.98 (EX0-3),
+    5: "simple-contagion",   # becomes adopter if at least one neighbours is
+    6: "majority",   # becomes adopters if the majority of the neighbours is
+    7: "reweight-only-on-adapters"
 }
-STATE_CHANGING_METHOD = all_choices[4]
+
+initialisation_choises = {
+    0: "random-adapters",        # completely random percentage of adapters
+    1: "adapters-with-SI",       # percentage of adapters with sharing index bigger than average
+    2: "would-subscribe-attributes" # who has responded Yes to Would_subscribe_car_sharing_if_available
+}
+
+# biases is introduced by using SI as perc for becoming adopter
+# the different type of biases depends on the moment of application
+all_cognitive_biases = {
+    0: "no-bias",
+    1: "confirmation-bias",  # if the majority of neighbours is non adopters
+    2: "availability-bias",  # if the majority of neighbours is adopter
+    3: "confirmation-availability-bias"     # in any case
+}
+
+RUNS = 5 #30
+SIMILARITY_THRESHOLD = 0.60
+ALPHA = 2
+BETA = 2
+VL_UPDATE_METHOD = vector_labels_update_choices[5]
+INITIALISATION = initialisation_choises[0]
+INITIAL_ADAPTERS_PERC = 20
+APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
+
 if __name__ == '__main__':
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
@@ -100,11 +119,13 @@ if __name__ == '__main__':
             "Age",
             "Would_subscribe_car_sharing_if_available"],
                            similarity_threshold=SIMILARITY_THRESHOLD,
-                           use_random_initial_adapters=USE_RANDOM_INITIAL_ADAPTERS
+                           initialisation=INITIALISATION,
+                           perc_of_adapters=INITIAL_ADAPTERS_PERC
                            )
         run_simulations(run)
 
     states = state_averaging(RESULTS_DIR)
     sim_id = RESULTS_DIR.split("/")[-1]
-    title, additional_text = description_text_for_plots(STATE_CHANGING_METHOD, sim_id)
+    title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id)
     draw_adapter_by_time_plot(states, RESULTS_DIR, title=title, additional_text=additional_text)
+    draw_adapter_by_time_plot(states, RESULTS_DIR, title=title, additional_text='')

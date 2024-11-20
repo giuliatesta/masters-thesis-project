@@ -1,6 +1,5 @@
 from matplotlib import pyplot as plt
 
-from preprocessing import load_dataset_csv
 import seaborn as sns
 import pandas as pd
 
@@ -36,7 +35,7 @@ def crosstab(attribute_1, attribute_2):
     plt.xticks(rotation=0, fontsize=8)
     plt.savefig(f"./crosstab/{attribute_1.lower()}_and_{attribute_2.lower()}_crosstab.png")
 
-
+from preprocessing import load_dataset_csv
 df = load_dataset_csv("/Users/giuliatesta/PycharmProjects/masters-thesis-project/dataset/df_DNA_sharingEU.csv",
                       index=False)
 df.rename(columns={"Age_c": "Age", "Location_of_resudence": "Location_of_residence", "Would_subsribe_car_sharing_if_available": "Would_subscribe_car_sharing_if_available"}, inplace=True)
@@ -99,21 +98,21 @@ df["Profession"] = df["Profession"].replace("storekeeper/tradesman/craftsman", "
 # kdeplot("Concern_environmental_impacts_DNA")
 # plt.subplot(4, 2, 7)
 # kdeplot("Country_DNA")
-# plt.subplot(4, 2, 8)
-# kdeplot("sha_ind_norm")
+plt.figure()#.subplot(4, 2, 8)
+kdeplot("sha_ind")
 # plt.tight_layout()
-# plt.savefig(f"./kdeplot/kdeplots_DNA.png")
+plt.savefig(f"./kdeplot/sha_ind_distribution.png")
 
 # BOX PLOTS
-plt.figure(figsize=(12, 8))
-numerical_columns = ["Education_DNA", "Income_level_DNA", "Profession_DNA", "Age_DNA", "Considering_electric_or_hybrid_vehicle_next_purchase_DNA", "Concern_environmental_impacts_DNA", "Country_DNA"]
-sns.boxplot(data=df[numerical_columns], legend=True, palette='plasma')
-plt.subplots_adjust(bottom=0.25)
-plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.35))
-plt.xticks([])
-plt.grid()
-plt.title(f'Box Plot of sharing DNA')
-plt.savefig(f"./exploratory_analysis/boxplot/sharing_dna_distribution.png")
+# plt.figure()
+# numerical_columns = ["Education_DNA", "Income_level_DNA", "Profession_DNA", "Age_DNA", "Considering_electric_or_hybrid_vehicle_next_purchase_DNA", "Concern_environmental_impacts_DNA", "Country_DNA"]
+# sns.boxplot(data=df[numerical_columns], legend=True, palette='plasma')
+# plt.subplots_adjust(bottom=0.25)
+# plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.35))
+# plt.xticks([])
+# plt.grid()
+# plt.title(f'Box Plot of sharing DNA')
+# plt.savefig(f"./exploratory_analysis/boxplot/sharing_dna_distribution.png")
 
 
 # Stacked bar plot of Education vs Willingness to subscribe to car sharing

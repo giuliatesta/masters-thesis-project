@@ -14,21 +14,22 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
     first_value = list(adapters.values())[0]
     for key, value in adapters.items():
         if value == last_value:
-            # plt.plot(key, value, marker='o')
             plt.axvline(x=key, linestyle='--', color=('cyan', 0.5), label='Convergence threshold')
             break
-    slope = (last_value - first_value) / len(adapters)
+    slope = 90 - (last_value - first_value) / len(adapters)
 
     # plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
     plt.title('Number of adapters by time' if title == "" else title)
     plt.legend(loc='lower right')
-    additional_text += f"\nSlope: : {slope:.2f}"
-    print(additional_text)
-    plt.text(5, 127, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
+    if additional_text != "":
+        additional_text += f"\n• Slope: : {slope:.2f}"
+        additional_text += f"\n• Max value: {last_value}"
+        print(additional_text)
+        plt.text(13, max(adapters.values()) / 2, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
     plt.grid(True)
-    plt.savefig(f"{results_file_path}/avg_adapters_by_time_plot.png", dpi=1000)
+    plt.savefig(f"{results_file_path}/avg_adapters_by_time_plot{'_annotated' if additional_text != '' else ''}.png", dpi=1000)
 
 
 # plots multiple simulations on the same plot
@@ -100,27 +101,30 @@ def states_changing_heat_map(states, vector_labels, step):
 
 
 def description_text_for_plots(rule, simulation_id, ):
-    from main_LPA import ALPHA, BETA, SIMILARITY_THRESHOLD, USE_SHARING_INDEX
-    text = ("Adapters: WOULD_SUBSCRIBE_CAR_SHARING (133)\n"
-            + f"Similarity threshold: {SIMILARITY_THRESHOLD}\n"
-            + f"Vector label changing: NO BIAS\n"
-            + f"State determination: WITH{'' if USE_SHARING_INDEX else 'OUT'} INDEX\n")
-    title = "Number of adapters by time\n"
+    from main_LPA import ALPHA, BETA, SIMILARITY_THRESHOLD, VL_UPDATE_METHOD, INITIALISATION, INITIAL_ADAPTERS_PERC, APPLY_COGNITIVE_BIAS
+    text = (f"• Initialisation of VLs: {INITIALISATION} {f'({INITIAL_ADAPTERS_PERC}%)' if INITIALISATION != 'would-subscribe-attributes' else ''}\n"
+            + f"• VLs update method: {VL_UPDATE_METHOD}\n"
+            + f"• State update: {APPLY_COGNITIVE_BIAS}\n"
+            + f"• Similarity threshold: {SIMILARITY_THRESHOLD}\n")
+    title = f"Number of adapters by time\n({rule} - SIM {simulation_id})"
     if rule == "same-weights":
-        text += "OP: 1 / (k+1), OL: 1 / (k+1)"
-        title += f"(BASELINE with same weights - SIM {simulation_id})"
+        text += "• OP: 1 / (k+1), OL: 1 / (k+1)"
     if rule == "beta-dist":
-        text += f"OP: scaled similarity weights\nOL: beta(alpha = {ALPHA}, beta = {BETA})"
+        text += f"• OP: scaled similarity weights\nOL: beta(alpha = {ALPHA}, beta = {BETA})\n"
         if ALPHA == 2 and BETA == 2:
-            title += f"(quasi-normal distribution for beta - SIM {simulation_id})"
+            text += f"(quasi-normal distribution for beta - SIM {simulation_id})"
         if ALPHA == 2 and BETA == 5:
-            title += f"(society with rigid agents - SIM {simulation_id})"
+            text += f"(society with rigid agents - SIM {simulation_id})"
         if ALPHA == 5 and BETA == 2:
-            title += f"(society with open-to-change agents - SIM {simulation_id})"
+            text += f"(society with open-to-change agents - SIM {simulation_id})"
     if rule == "over-confidence":
-        text += "OP: 0.8, OL: 0.2\n"
-        title += f"(overconfidence bias - SIM {simulation_id})"
+        text += "• OP: 0.8, OL: 0.2\n"
     if rule == "over-influenced":
-        text += "OP: 0.2, OL: 0.8\n"
-        title += f"(over-influenced bias - SIM {simulation_id})"
+        text += "• OP: 0.2, OL: 0.8\n"
+    if rule == "extreme-influenced":
+        text += "• OP: 0.02, OL: 0.98\n"
+    if rule == "simple-contagion":
+        text += "• At the first interaction with an adapter, it becomes adapter"
+    if rule == "majority":
+        text += "• OP: 0.0, OL: 1 (w_ij = 1 / # adapters if adapter; otherwise 0)\n"
     return title, text

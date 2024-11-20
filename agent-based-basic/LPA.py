@@ -4,7 +4,7 @@ Module for the LPAgent class that can be subclassed by agents.
 
 import numpy as np
 from conf import LABELS, GRAPH_TYPE
-from main_LPA import STATE_CHANGING_METHOD
+from main_LPA import VL_UPDATE_METHOD
 from initial_network_plots import format_double
 
 
@@ -28,13 +28,13 @@ class LPAgent:
     def Run(self):
         while True:
             self.evaluate_vector_labels()
-            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT/2)
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT / 2)
             self.update_step()
-            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT/2)
+            yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT / 2)
 
     def evaluate_vector_labels(self):
-        neighbours = self.get_neighbours()
-        rule = STATE_CHANGING_METHOD
+        neighbours = get_neighbours(self.LPNet, self.id)
+        rule = VL_UPDATE_METHOD
 
         non_adapter_label = "L0"
         adapter_label = "L1"
@@ -53,9 +53,9 @@ class LPAgent:
                 self.VL[non_adapter_label] = 0.0
                 self.VL[adapter_label] = 1.0
                 return 0
-        elif rule == "reweigh-only-on-adapters":
-            OP = 0.2
-            OL = 1-OP
+        elif rule == "reweight-only-on-adapters":
+            OP = 0.4 #self.LPNet.nodes[self.id]["perseverance"]
+            OL = 1 - OP
             self_avg = self.LPNet.nodes[self.id][adapter_label] * OP
             neighbours_acc = []
             neighbours_weights = []
@@ -124,8 +124,9 @@ class LPAgent:
                         neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
                     reweighed = reweight(neighbours_weights, OL)
                     neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
-                    print(f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}, "
-                          f"neig count: {len(neighbours)}, OL: {OL: .2f}")
+                    print(
+                        f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}, "
+                        f"neig count: {len(neighbours)}, OL: {OL: .2f}")
                     nc = [format_double(i) for i in neighbours_acc]
                     print(f"acc: {nc} -> {sum(neighbours_acc)}")
                     nw = [format_double(i) for i in reweighed]
@@ -158,8 +159,9 @@ class LPAgent:
         for label in LABELS:
             self.LPNet.nodes[self.id][label] = self.VL[label]
 
-    def get_neighbours(self):
-        return list(self.LPNet.neighbors(self.id)) if GRAPH_TYPE == "U" else list(self.LPNet.predecessors(self.id))
+
+def get_neighbours(graph, node):
+    return list(graph.neighbors(node)) if GRAPH_TYPE == "U" else list(graph.predecessors(node))
 
 
 # the normalisation returns the weight value between 0 and upper_limit.

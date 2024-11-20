@@ -1,7 +1,7 @@
 import numpy as np
 import simpy as sim
 from network_logging import NetworkLogger
-from conf import TRIALS, LABELS
+from conf import TRIALS, LABELS, GRAPH_TYPE
 
 
 # it can run multiple fresh trials with the same input parameters.
@@ -51,7 +51,7 @@ class NetworkSimulation:
         logger.log_trial_to_files(trial_id, run_index)
 
     def update_states(self):
-        from main_LPA import USE_SHARING_INDEX
+        from main_LPA import APPLY_COGNITIVE_BIAS
         # for each node its state is updated based on the freshly re-calculated vector labels
         # an assertion guarantees that each node has a valid state
         while True:
@@ -59,7 +59,7 @@ class NetworkSimulation:
             for i in self.LPNet.nodes():
                 node = self.LPNet.nodes[i]
                 # if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
-                node["state"] = determine_state(node, use_sharing_index=USE_SHARING_INDEX)
+                node["state"] = determine_state(node, self.LPNet, APPLY_COGNITIVE_BIAS)
                 assert node["state"] == 1 or node["state"] == -1
                 print(f"node {i}) new state: {self.LPNet.nodes[i]['state']}")
             yield self.env.timeout(1.5)
@@ -82,32 +82,42 @@ class NetworkSimulation:
 # determine the new state of a node based on its vector label
 # the state can change, if the node is not already an adopter
 # and for the confirmation bias scenarios (B* simulations) the sharing index is greater than a random number
-
-# TODO: what happens when use_sharing_index is False, they cannot update their state.
-#  Check it with Prof
-def determine_state(node, use_sharing_index):
+def determine_state(node, graph, bias):
     vl = get_vector_label(node)
     current_state = get_state(node)
     index = get_sharing_index(node)
+
+    node_id = node["agent"].id
+    neighbours = list(graph.neighbors(node_id)) if GRAPH_TYPE == "U" else list(graph.predecessors(node_id))
+    adapters = 0
+    for i in neighbours:
+        if graph.nodes()[i]["L1"] == 1:
+            adapters += 1
+    are_adapters_majority = (adapters >= len(neighbours) * 0.5)
 
     # 0; 1    # adapter     1; 0    # non adapter
     non_adapter_label = vl[0]
     adapter_label = vl[1]
     is_currently_non_adapter = (current_state == -1)
+
+    def try_become_adopter(sharing_index):
+        if sharing_index > np.random.rand():
+            return +1
+
     # if non adapter
     if is_currently_non_adapter:
         # and adapter label is bigger than non adapter label
         if adapter_label > non_adapter_label:
-            print(f"{node} could become adopter")
-            if use_sharing_index:
-                rand = np.random.rand()
-                print("is currectly non adopter, L0 < L1, uses shar.ind and index > rand?")
-                # if the agent has 0.8 as index -> 80% of times becomes adapter
-                if index > rand:
-                    print("yes")
-                    return +1
+
+            if bias == "confirmation-bias":
+                if not are_adapters_majority:
+                    try_become_adopter(index)
+            if bias == "availability-bias":
+                if are_adapters_majority:
+                    try_become_adopter(index)
+            if bias == "confirmation-availability-bias":
+                try_become_adopter(index)
             else:
-                # if it doesn't use the SI, they become adopters as they have adapter_label> non adapter label
                 return +1
     # if they are equal ([0.5, 0.5]) -> then it stays the same
     return current_state

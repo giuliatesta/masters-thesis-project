@@ -6,7 +6,6 @@ import pandas as pd
 from create_network import init_network
 
 NUMBER_OF_RECORDS = 1000
-INITIAL_ADAPTERS_PERC = 40
 
 
 # builds the initial files used as input for the simulations
@@ -15,7 +14,7 @@ INITIAL_ADAPTERS_PERC = 40
 # - EDGES: contains the pairs of nodes that have an edge in the network
 # - INITIAL_VLS: contains the initial values of the vector labels of the nodes in the network
 # - LABELS: contains only the labels names
-def create_input_files(data, LABELS, similarity_threshold=0.5, use_random_initial_adapters=False):
+def create_input_files(data, LABELS, similarity_threshold=0.5, initialisation="", perc_of_adapters=90):
     data.reset_index(drop=True, inplace=True)
     # keeps only the first NUMBER_OF_RECORDS rows
     data = data.head(NUMBER_OF_RECORDS)
@@ -41,10 +40,13 @@ def create_input_files(data, LABELS, similarity_threshold=0.5, use_random_initia
     # connected_components_over_threshold(data, "Number of connected components vs. Threshold")
 
     # initial vector labels
-    if use_random_initial_adapters:
+    vls=[]
+    if initialisation == "adapters-with-SI":
         indexes_DNA = attributes.iloc[:, 0]
-        vls = generate_initial_vls_with_index(graph.nodes(), indexes_DNA, INITIAL_ADAPTERS_PERC)
-    else:
+        vls = generate_initial_vls_with_index(graph.nodes(), indexes_DNA, perc_of_adapters)
+    if initialisation == "random-adapters":
+        vls = generate_initial_vls_randomly(graph.nodes(), perc_of_adapters)
+    elif initialisation == "would-subscribe-attribute" :
         would_subscribe_car_sharing = attributes.iloc[:, -1]
         vls = generate_vector_labels_based_on_attribute(would_subscribe_car_sharing)
     initial_vls = pd.DataFrame(vls, dtype=float)
@@ -91,7 +93,7 @@ def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     # out of the possible adapters, extract the percentage_of_adapters % to be adapters
     possible_adapters_length = len(possible_adapters)
     number_of_initial_adapters = int(possible_adapters_length * percentage_of_adapters)
-
+    print(possible_adapters_length)
     # randomly choose indices to set to 1
     indices = np.random.choice(possible_adapters, number_of_initial_adapters, replace=False)
     print(f"Initial adapters indices: {sorted(indices)}")
@@ -101,6 +103,20 @@ def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     print(f"Initial adapters: {len(indices)}")
     return vls
 
+def generate_initial_vls_randomly(nodes, percentage_of_adapters):
+    if percentage_of_adapters > 1:
+        percentage_of_adapters = percentage_of_adapters / 100
+
+    vls = np.array([[1.0, 0.0] for _ in range(len(nodes))])
+    number_of_initial_adapters = int(len(nodes) * percentage_of_adapters)
+    # randomly choose indices to set to 1
+    indices = np.random.choice(nodes, number_of_initial_adapters, replace=False)
+    print(f"Initial adapters indices: {sorted(indices)}")
+    # set the chosen indices to 1
+    for index in indices:
+        vls[index] = [0.0, 1.0]
+    print(f"Initial adapters: {len(indices)}")
+    return vls
 
 def transform_categorical_values(df):
     df.convert_dtypes()
