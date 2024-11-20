@@ -104,8 +104,8 @@ SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
 VL_UPDATE_METHOD = vector_labels_update_choices[6]
-INITIALISATION = initialisation_choises[0]
-INITIAL_ADAPTERS_PERC = 30
+INITIALISATION = initialisation_choises[1]
+INITIAL_ADAPTERS_PERC = 80
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 
 if __name__ == '__main__':
