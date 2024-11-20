@@ -102,7 +102,7 @@ def states_changing_heat_map(states, vector_labels, step):
 
 def description_text_for_plots(rule, simulation_id, ):
     from main_LPA import ALPHA, BETA, SIMILARITY_THRESHOLD, VL_UPDATE_METHOD, INITIALISATION, INITIAL_ADAPTERS_PERC, APPLY_COGNITIVE_BIAS
-    text = (f"• Initialisation of VLs: {INITIALISATION} {f'({INITIAL_ADAPTERS_PERC}%)' if INITIALISATION != 'would-subscribe-attributes' else ''}\n"
+    text = (f"• Initialisation of VLs: {INITIALISATION} {f'({INITIAL_ADAPTERS_PERC}%)' if INITIALISATION != 'would-subscribe-attribute' else ''}\n"
             + f"• VLs update method: {VL_UPDATE_METHOD}\n"
             + f"• State update: {APPLY_COGNITIVE_BIAS}\n"
             + f"• Similarity threshold: {SIMILARITY_THRESHOLD}\n")

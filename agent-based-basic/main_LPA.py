@@ -40,6 +40,7 @@ def run_simulations(run_index):
             array = [float(x) for x in line.strip().split(sep=';')]
             initial_VLs.append(array)
     initial_VLs = np.array(initial_VLs)
+    print(initial_VLs)
     initial_states = [1 if vls[0] == 0. and vls[1] == 1 else -1 for vls in initial_VLs]
 
     network_nodes = sorted(LPNet.nodes())
@@ -86,7 +87,7 @@ vector_labels_update_choices = {
 initialisation_choises = {
     0: "random-adapters",        # completely random percentage of adapters
     1: "adapters-with-SI",       # percentage of adapters with sharing index bigger than average
-    2: "would-subscribe-attributes" # who has responded Yes to Would_subscribe_car_sharing_if_available
+    2: "would-subscribe-attribute" # who has responded Yes to Would_subscribe_car_sharing_if_available
 }
 
 # biases is introduced by using SI as perc for becoming adopter
@@ -102,12 +103,13 @@ RUNS = 5 #30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
-VL_UPDATE_METHOD = vector_labels_update_choices[5]
-INITIALISATION = initialisation_choises[1]
-INITIAL_ADAPTERS_PERC = 40
+VL_UPDATE_METHOD = vector_labels_update_choices[6]
+INITIALISATION = initialisation_choises[0]
+INITIAL_ADAPTERS_PERC = 30
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 
 if __name__ == '__main__':
+
     for run in range(0, RUNS):
         print(f"---- Run {run} ----")
         data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)

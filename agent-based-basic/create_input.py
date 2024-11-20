@@ -46,7 +46,7 @@ def create_input_files(data, LABELS, similarity_threshold=0.5, initialisation=""
         vls = generate_initial_vls_with_index(graph.nodes(), indexes_DNA, perc_of_adapters)
     if initialisation == "random-adapters":
         vls = generate_initial_vls_randomly(graph.nodes(), perc_of_adapters)
-    elif initialisation == "would-subscribe-attribute" :
+    if initialisation == "would-subscribe-attribute":
         would_subscribe_car_sharing = attributes.iloc[:, -1]
         vls = generate_vector_labels_based_on_attribute(would_subscribe_car_sharing)
     initial_vls = pd.DataFrame(vls, dtype=float)
