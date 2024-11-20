@@ -40,7 +40,6 @@ def run_simulations(run_index):
             array = [float(x) for x in line.strip().split(sep=';')]
             initial_VLs.append(array)
     initial_VLs = np.array(initial_VLs)
-    print(initial_VLs)
     initial_states = [1 if vls[0] == 0. and vls[1] == 1 else -1 for vls in initial_VLs]
 
     network_nodes = sorted(LPNet.nodes())
@@ -99,13 +98,13 @@ all_cognitive_biases = {
     3: "confirmation-availability-bias"     # in any case
 }
 
-RUNS = 5 #30
+RUNS = 1 #30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
-VL_UPDATE_METHOD = vector_labels_update_choices[6]
-INITIALISATION = initialisation_choises[1]
-INITIAL_ADAPTERS_PERC = 80
+VL_UPDATE_METHOD = vector_labels_update_choices[2]
+INITIALISATION = initialisation_choises[0]
+INITIAL_ADAPTERS_PERC = 5
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 
 if __name__ == '__main__':

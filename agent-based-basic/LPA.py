@@ -53,8 +53,14 @@ class LPAgent:
                 self.VL[non_adapter_label] = 0.0
                 self.VL[adapter_label] = 1.0
                 return 0
-        elif rule == "reweight-only-on-adapters":
-            OP = 0.4 #self.LPNet.nodes[self.id]["perseverance"]
+        else:
+            OP = 0
+            if rule == "over-confidence":
+                OP = 0.8
+            if rule == "over-influenced":
+                OP = 0.2
+            if rule == "extreme-influenced":
+                OP = 0.02
             OL = 1 - OP
             self_avg = self.LPNet.nodes[self.id][adapter_label] * OP
             neighbours_acc = []
@@ -74,82 +80,81 @@ class LPAgent:
             self.VL[adapter_label] = self_avg + neighbours_avg
             self.VL[non_adapter_label] = 1 - self.VL[adapter_label]
             print(f"node {self.id} new VLS: {self.VL}")
-            return 0
-        else:
-            for label in LABELS:
-                current_vl = self.LPNet.nodes[self.id][label]
-                self_avg = 0
-                neighbours_avg = 0
-                if rule == "same-weights":
-                    OP = 1 / (len(neighbours) + 1)
-                    OL = OP
-                    self_avg = current_vl * OP
-                    neighbours_avg = 0
-                    for i in list(neighbours):
-                        neighbours_avg += float(self.LPNet.nodes[i][label]) * OL
-
-                if rule == "beta-dist":
-                    OP = self.LPNet.nodes[self.id]["perseverance"]
-                    OL = 1 - OP
-                    self_avg = current_vl * OP
-                    neighbours_acc = []
-                    neighbours_weights = []
-                    for i in list(neighbours):
-                        # the weight of each neighbour is its similarity value
-                        neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
-                        neighbours_acc.append(float(self.LPNet.nodes[i][label]))
-
-                    # the opinion plasticity is the normalised version of the weight computed with the bias
-                    # normalised to the maximum value which is 1 - perseverance
-                    reweighed = reweight(neighbours_weights, OL)
-                    neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
-                    print(f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}")
-                    nc = [format_double(i) for i in neighbours_acc]
-                    nw = [format_double(i) for i in reweighed]
-                    print(f"OL: {sum(reweighed): .2f}\n{nw}")
-                if rule == "over-confidence" or rule == "over-influenced" or rule == "extreme-influenced":
-                    if rule == "over-confidence":
-                        OP = 0.8
-                    if rule == "over-influenced":
-                        OP = 0.2
-                    if rule == "extreme-influenced":
-                        OP = 0.02
-                    OL = 1 - OP
-
-                    self_avg = current_vl * OP
-                    neighbours_acc = []
-                    neighbours_weights = []
-                    for i in list(neighbours):
-                        neighbours_acc.append(float(self.LPNet.nodes[i][label]))
-                        neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
-                    reweighed = reweight(neighbours_weights, OL)
-                    neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
-                    print(
-                        f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}, "
-                        f"neig count: {len(neighbours)}, OL: {OL: .2f}")
-                    nc = [format_double(i) for i in neighbours_acc]
-                    print(f"acc: {nc} -> {sum(neighbours_acc)}")
-                    nw = [format_double(i) for i in reweighed]
-                    print(f"acc: {nw} -> {sum(reweighed)}")
-
-                # TODO divide into different biased case scenarios
-                # now, it is just to keep what it has been done
-                if rule == "social-bias":
-                    OP = self.LPNet.nodes[self.id]["perseverance"]
-                    OL = 1 - OP
-                    self_avg = current_vl * OP
-                    neighbours_acc = []
-                    neighbours_weights = []
-                    for i in list(neighbours):
-                        # the weight depends on some social bias: trusting more Males than Females
-                        neighbours_weights.append(0.8 if self.LPNet.nodes[self.id]["Gender"] == "Male" else 0.2)
-                        neighbours_acc.append(float(self.LPNet.nodes[i][label]))
-
-                    reweighed = reweight(neighbours_weights, OL)
-                    neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
-
-                print(f"node {self.id} for {label}: {self.VL[label]: .2f} -> {self_avg + neighbours_avg: .2f}")
-                self.VL[label] = self_avg + neighbours_avg
+        # else:
+        #     for label in LABELS:
+        #         current_vl = self.LPNet.nodes[self.id][label]
+        #         self_avg = 0
+        #         neighbours_avg = 0
+        #         if rule == "same-weights":
+        #             OP = 1 / (len(neighbours) + 1)
+        #             OL = OP
+        #             self_avg = current_vl * OP
+        #             neighbours_avg = 0
+        #             for i in list(neighbours):
+        #                 neighbours_avg += float(self.LPNet.nodes[i][label]) * OL
+        #
+        #         if rule == "beta-dist":
+        #             OP = self.LPNet.nodes[self.id]["perseverance"]
+        #             OL = 1 - OP
+        #             self_avg = current_vl * OP
+        #             neighbours_acc = []
+        #             neighbours_weights = []
+        #             for i in list(neighbours):
+        #                 # the weight of each neighbour is its similarity value
+        #                 neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
+        #                 neighbours_acc.append(float(self.LPNet.nodes[i][label]))
+        #
+        #             # the opinion plasticity is the normalised version of the weight computed with the bias
+        #             # normalised to the maximum value which is 1 - perseverance
+        #             reweighed = reweight(neighbours_weights, OL)
+        #             neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
+        #             print(f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}")
+        #             nc = [format_double(i) for i in neighbours_acc]
+        #             nw = [format_double(i) for i in reweighed]
+        #             print(f"OL: {sum(reweighed): .2f}\n{nw}")
+        #         if rule == "over-confidence" or rule == "over-influenced" or rule == "extreme-influenced":
+        #             if rule == "over-confidence":
+        #                 OP = 0.8
+        #             if rule == "over-influenced":
+        #                 OP = 0.2
+        #             if rule == "extreme-influenced":
+        #                 OP = 0.02
+        #             OL = 1 - OP
+        #
+        #             self_avg = current_vl * OP
+        #             neighbours_acc = []
+        #             neighbours_weights = []
+        #             for i in list(neighbours):
+        #                 neighbours_acc.append(float(self.LPNet.nodes[i][label]))
+        #                 neighbours_weights.append(self.LPNet.get_edge_data(self.id, i)["weight"])
+        #             reweighed = reweight(neighbours_weights, OL)
+        #             neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
+        #             print(
+        #                 f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}, "
+        #                 f"neig count: {len(neighbours)}, OL: {OL: .2f}")
+        #             nc = [format_double(i) for i in neighbours_acc]
+        #             print(f"acc: {nc} -> {sum(neighbours_acc)}")
+        #             nw = [format_double(i) for i in reweighed]
+        #             print(f"acc: {nw} -> {sum(reweighed)}")
+        #
+        #         # TODO divide into different biased case scenarios
+        #         # now, it is just to keep what it has been done
+        #         if rule == "social-bias":
+        #             OP = self.LPNet.nodes[self.id]["perseverance"]
+        #             OL = 1 - OP
+        #             self_avg = current_vl * OP
+        #             neighbours_acc = []
+        #             neighbours_weights = []
+        #             for i in list(neighbours):
+        #                 # the weight depends on some social bias: trusting more Males than Females
+        #                 neighbours_weights.append(0.8 if self.LPNet.nodes[self.id]["Gender"] == "Male" else 0.2)
+        #                 neighbours_acc.append(float(self.LPNet.nodes[i][label]))
+        #
+        #             reweighed = reweight(neighbours_weights, OL)
+        #             neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
+        #
+        #         print(f"node {self.id} for {label}: {self.VL[label]: .2f} -> {self_avg + neighbours_avg: .2f}")
+        #         self.VL[label] = self_avg + neighbours_avg
 
     """
     Update the VL and the state used by other agents to update themselves
