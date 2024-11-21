@@ -104,7 +104,7 @@ SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
 VL_UPDATE_METHOD = vector_labels_update_choices[3]
-INITIALISATION = initialisation_choises[0]
+INITIALISATION = initialisation_choises[2]
 INITIAL_ADAPTERS_PERC = 40
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 
