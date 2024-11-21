@@ -1,8 +1,7 @@
 import pickle
 import os
 
-
-from conf import LABELS
+from conf import LABELS, RESULTS_DIR
 
 STATE = "_LPStates"
 # / + "log_trial_"
@@ -72,3 +71,21 @@ def read_pickled_file(file_path):
         # load the data from the file
         data = pickle.load(file)
     return data
+
+
+def write_simulation_readme_file(dir, vl_update, initialisation, adapters_perc, similarity_threshold, cognitive_bias,
+                                 states):
+    splits = dir.split("/")
+    simulation_type = splits[4]
+
+    with open(dir + "/readme.txt", "w") as file:
+        file.write(f"{simulation_type}\n\n")
+        file.write(f"VL_UPDATE_METHOD: \"{vl_update}\"\n")
+        file.write(f"INITIALISATION: \"{initialisation}\"\n")
+        file.write(f"INITIAL_ADAPTERS_PERC: {adapters_perc}%\n")
+        file.write(f"APPLY_COGNITIVE_BIAS: \"{cognitive_bias}\"\n")
+        file.write(f"SIMILARITY THRESHOLD = {similarity_threshold}\n")
+        file.write("RUNS = 5\nITERATION_NUM = 30\nN. EDGES: 42761\nN. NODES: 1000\n\nNO GENDER, AGE, EDUCATION biases\n")
+        file.write(f"{states}\n")
+
+        file.close()

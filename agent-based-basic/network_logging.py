@@ -10,13 +10,14 @@ tt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 
 class NetworkLogger:
 
-    def __init__(self, sim, logging_interval):
+    def __init__(self, sim, logging_interval, results_dir):
         self.sim = sim
         self.env = sim.env
         self.interval = logging_interval
         self.LPNet = nx.Graph()
         self.LPVLTuples = []
         self.LPStates = []
+        self.dir = results_dir
 
     def Run(self):
         i = 0
@@ -49,4 +50,4 @@ class NetworkLogger:
         self.LPStates.append([0, states])
 
     def log_trial_to_files(self, run_id, run_index):
-        utils.store_all_to_file(self.LPVLTuples, self.LPStates, RESULTS_DIR, run_id, run_index)
+        utils.store_all_to_file(self.LPVLTuples, self.LPStates, self.dir, run_id, run_index)

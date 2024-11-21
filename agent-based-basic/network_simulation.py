@@ -8,11 +8,12 @@ from conf import TRIALS, LABELS, GRAPH_TYPE
 # writes system state evolution to file (states & network topologies)
 class NetworkSimulation:
 
-    def __init__(self, LPNet, LPAgent, max_time):
+    def __init__(self, LPNet, LPAgent, max_time, results_dir):
         self.env = sim.Environment()
         self.LPNet = LPNet
         self.LPAgent = LPAgent
         self.until = max_time
+        self.results_dir = results_dir
 
     # runs a simulation for TRIALS trials
     def run_simulation(self, run_index):
@@ -39,7 +40,7 @@ class NetworkSimulation:
         self.env.process(self.update_states())
 
         logging_interval = 1
-        logger = NetworkLogger(self, logging_interval)
+        logger = NetworkLogger(self, logging_interval, self.results_dir)
         self.env.process(logger.Run())
 
         # Run simulation

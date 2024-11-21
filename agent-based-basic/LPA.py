@@ -61,6 +61,8 @@ class LPAgent:
                 OP = 0.2
             if rule == "extreme-influenced":
                 OP = 0.02
+            if rule == "extreme-confidence":
+                OP = 0.98
             if rule == "beta-dist":
                 OP = self.LPNet.nodes[self.id]["perseverance"]
             OL = 1 - OP
