@@ -149,4 +149,6 @@ if __name__ == '__main__':
                                                similarity_threshold=SIMILARITY_THRESHOLD,
                                                cognitive_bias=APPLY_COGNITIVE_BIAS,
                                                states=states)
+            if init_type == initialisation_choises[2]:
+                break
             counter += 1
