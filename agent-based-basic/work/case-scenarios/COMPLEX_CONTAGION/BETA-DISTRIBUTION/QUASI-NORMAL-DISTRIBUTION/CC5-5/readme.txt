@@ -1,0 +1,16 @@
+BETA-DISTRIBUTION
+
+VL_UPDATE_METHOD: "beta-dist"
+OP: scaled similarity weights
+OL: beta(alpha = 2, beta = 2)
+(quasi-normal distribution for beta)INITIALISATION: "adapters-with-SI"
+INITIAL_ADAPTERS_PERC: 20%
+APPLY_COGNITIVE_BIAS: "no-bias"
+SIMILARITY THRESHOLD = 0.6
+RUNS = 5
+ITERATION_NUM = 30
+N. EDGES: 42761
+N. NODES: 1000
+
+NO GENDER, AGE, EDUCATION biases
+{1: 100, 2: 100, 3: 520, 4: 521, 5: 521, 6: 521, 7: 521, 8: 521, 9: 521, 10: 521, 11: 521, 12: 521, 13: 521, 14: 521, 15: 521, 16: 521, 17: 521, 18: 521, 19: 521, 20: 521, 21: 521, 22: 521, 23: 521, 24: 521, 25: 521, 26: 521, 27: 521, 28: 521, 29: 521, 30: 521}

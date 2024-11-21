@@ -1,0 +1,16 @@
+BETA-DISTRIBUTION
+
+VL_UPDATE_METHOD: "beta-dist"
+OP: scaled similarity weights
+OL: beta(alpha = 5, beta = 2)
+(society with open-to-change agents)INITIALISATION: "adapters-with-SI"
+INITIAL_ADAPTERS_PERC: 20%
+APPLY_COGNITIVE_BIAS: "no-bias"
+SIMILARITY THRESHOLD = 0.6
+RUNS = 5
+ITERATION_NUM = 30
+N. EDGES: 42761
+N. NODES: 1000
+
+NO GENDER, AGE, EDUCATION biases
+{1: 100, 2: 100, 3: 195, 4: 196, 5: 196, 6: 196, 7: 196, 8: 196, 9: 196, 10: 196, 11: 196, 12: 196, 13: 196, 14: 196, 15: 196, 16: 196, 17: 196, 18: 196, 19: 196, 20: 196, 21: 196, 22: 196, 23: 196, 24: 196, 25: 196, 26: 196, 27: 196, 28: 196, 29: 196, 30: 196}
