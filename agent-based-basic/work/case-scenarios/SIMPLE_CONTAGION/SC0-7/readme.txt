@@ -2,7 +2,7 @@ SIMPLE CONTAGION
 
 VL_UPDATE METHOD: (5) "simple-contagion" (at first encounter with an adapter neighbour, it becomes adapter)
 INITIALISATION = (2) "would-subscribe-attributes" (who has responded Yes to Would_subscribe_car_sharing_if_available)
-INITIAL_ADAPTERS_PERC = 5
+INITIAL_ADAPTERS_PERC = nan
 APPLY_COGNITIVE_BIAS = (0) "no-bias" (if adapter_label > non_adapter_label, it becomes adapter)
 SIMILARITY THRESHOLD = 0.60 (UPPER LIMIT for one connected component)
 RUNS = 5
