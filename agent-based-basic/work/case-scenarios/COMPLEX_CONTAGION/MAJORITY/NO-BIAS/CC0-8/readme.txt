@@ -1,6 +1,6 @@
 SIMPLE CONTAGION
 
-VL_UPDATE METHOD: (6) "majority" (if majority of neighbours is adapter, it becomes adapter)
+VL_UPDATE METHOD: (6) "majority" (if the majority of neighbours is adapter, it becomes adapter)
 INITIALISATION = (1) "adapters-with-SI" (percentage of adapters with sharing index bigger than average)
 INITIAL_ADAPTERS_PERC = 80 %
 APPLY_COGNITIVE_BIAS = (0) "no-bias" (if adapter_label > non_adapter_label, it becomes adapter)
