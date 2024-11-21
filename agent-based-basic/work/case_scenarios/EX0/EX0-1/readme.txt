@@ -1,5 +1,5 @@
 BIASED SCENARIOS (CONFIRMATION BIAS)
-STATE CHANGING METHOD: 1 (aggregation function)
+STATE CHANGING METHOD: 2 (aggregation function)
 PERSEVERANCE = 0.8 (fixed)
 PLASTICITY = 0.2 (fixed)
 
