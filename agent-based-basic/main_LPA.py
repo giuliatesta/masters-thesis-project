@@ -105,7 +105,7 @@ RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
-VL_UPDATE_METHOD = vector_labels_update_choices[7]
+VL_UPDATE_METHOD = vector_labels_update_choices[4]
 INITIALISATION = initialisation_choises[2]
 INITIAL_ADAPTERS_PERC = -2
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
@@ -115,7 +115,6 @@ if __name__ == '__main__':
         INITIALISATION = init_type
         for perc in percentages:
             INITIAL_ADAPTERS_PERC = perc
-            print(f"INITIAL_ADAPTERS_PERC:{INITIAL_ADAPTERS_PERC}")
             path = RESULTS_DIR.split("/")
             sim_id = path[-1]
             new_sim_id = sim_id + f"-{counter}"
@@ -141,12 +140,13 @@ if __name__ == '__main__':
             states = state_averaging(dir)
             title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id,
                                                                 sim_threshold=SIMILARITY_THRESHOLD,
+                                                                vl_update=VL_UPDATE_METHOD,
                                                                 initialisation=INITIALISATION,
                                                                 adapters_perc=INITIAL_ADAPTERS_PERC,
-                                                                vl_update=VL_UPDATE_METHOD,
-                                                                cognitive_bias=APPLY_COGNITIVE_BIAS,
-                                                                alpha=ALPHA, beta=BETA)
-            draw_adapter_by_time_plot(states, dir, title=title, additional_text=additional_text,)
+                                                                cognitive_bias= APPLY_COGNITIVE_BIAS,
+                                                                alpha=ALPHA,
+                                                                beta=BETA,)
+            draw_adapter_by_time_plot(states, dir, title=title, additional_text=additional_text)
             draw_adapter_by_time_plot(states, dir, title=title, additional_text='')
             utils.write_simulation_readme_file(dir,
                                                vl_update=VL_UPDATE_METHOD,
