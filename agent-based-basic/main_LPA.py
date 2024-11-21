@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from average_results import state_averaging, count_adapters
 import networkx as nx
+import sys
 import LPA
 import numpy as np
 from pandas import read_csv
@@ -61,8 +62,8 @@ def run_simulations(run_index):
     adapters = [node for node in LPNet.nodes() if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters/non adapters ratio: {len(adapters)}/{len(LPNet.nodes)}")
     print(sorted(adapters))
-    # na.NetworkAnalysis(LPNet).analyse()
-    # exit(1)
+    #na.NetworkAnalysis(LPNet).analyse()
+    #exit(1)
 
     # run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM)
@@ -98,13 +99,13 @@ all_cognitive_biases = {
     3: "confirmation-availability-bias"     # in any case
 }
 
-RUNS = 1 #30
+RUNS = 5 #30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
-VL_UPDATE_METHOD = vector_labels_update_choices[2]
+VL_UPDATE_METHOD = vector_labels_update_choices[3]
 INITIALISATION = initialisation_choises[0]
-INITIAL_ADAPTERS_PERC = 5
+INITIAL_ADAPTERS_PERC = 40
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 
 if __name__ == '__main__':
