@@ -74,13 +74,21 @@ def read_pickled_file(file_path):
 
 
 def write_simulation_readme_file(dir, vl_update, initialisation, adapters_perc, similarity_threshold, cognitive_bias,
-                                 states):
+                                 states, alpha, beta):
     splits = dir.split("/")
     simulation_type = splits[4]
 
     with open(dir + "/readme.txt", "w") as file:
         file.write(f"{simulation_type}\n\n")
         file.write(f"VL_UPDATE_METHOD: \"{vl_update}\"\n")
+        if vl_update == "beta-dist":
+            file.write(f"OP: scaled similarity weights\nOL: beta(alpha = {alpha}, beta = {beta})\n")
+            if alpha == 2 and beta == 2:
+                file.write("(quasi-normal distribution for beta)")
+            if alpha == 2 and beta == 5:
+                file.write("(society with rigid agents)")
+            if alpha == 5 and beta == 2:
+                file.write("(society with open-to-change agents)")
         file.write(f"INITIALISATION: \"{initialisation}\"\n")
         file.write(f"INITIAL_ADAPTERS_PERC: {adapters_perc}%\n")
         file.write(f"APPLY_COGNITIVE_BIAS: \"{cognitive_bias}\"\n")

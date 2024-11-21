@@ -16,15 +16,15 @@ class NetworkSimulation:
         self.results_dir = results_dir
 
     # runs a simulation for TRIALS trials
-    def run_simulation(self, run_index):
+    def run_simulation(self, run_index, bias):
         print("Starting simulation...")
         for i in range(TRIALS):
             print("--- Trial %i ---" % i)
-            self.run_trial(i, run_index)
+            self.run_trial(i, run_index, bias)
         print("Simulation completed.")
 
     # runs a single trial
-    def run_trial(self, trial_id, run_index):
+    def run_trial(self, trial_id, run_index, bias):
         # process that counts the number of adapters at the beginning of an iteration
         self.env.process(self.count_adapters())
 
@@ -37,7 +37,7 @@ class NetworkSimulation:
 
         # the node's states are updated at the end of the interaction
         # (after all agents have interacted with one another)
-        self.env.process(self.update_states())
+        self.env.process(self.update_states(bias))
 
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval, self.results_dir)
@@ -51,8 +51,7 @@ class NetworkSimulation:
         # only for specific iteration --> modify tt variable to add and/or remove trials if unnecessary or useless.
         logger.log_trial_to_files(trial_id, run_index)
 
-    def update_states(self):
-        from main_LPA import APPLY_COGNITIVE_BIAS
+    def update_states(self, bias):
         # for each node its state is updated based on the freshly re-calculated vector labels
         # an assertion guarantees that each node has a valid state
         while True:
@@ -60,7 +59,7 @@ class NetworkSimulation:
             for i in self.LPNet.nodes():
                 node = self.LPNet.nodes[i]
                 # if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
-                node["state"] = determine_state(node, self.LPNet, APPLY_COGNITIVE_BIAS)
+                node["state"] = determine_state(node, self.LPNet, bias)
                 assert node["state"] == 1 or node["state"] == -1
                 print(f"node {i}) new state: {self.LPNet.nodes[i]['state']}")
             yield self.env.timeout(1.5)

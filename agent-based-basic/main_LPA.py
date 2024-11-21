@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from average_results import state_averaging, count_adapters
+from average_results import state_averaging
 import networkx as nx
 import LPA
 import numpy as np
@@ -15,7 +15,7 @@ from preprocessing import load_dataset_csv
 from scipy.stats import beta as beta_function
 import utils
 
-def run_simulations(run_index, results_dir):
+def run_simulations(run_index, bias, results_dir):
     # Create the network from edges defined in EDGES_FILE file
     if GRAPH_TYPE == "D":
         LPNet = nx.read_edgelist(EDGES_FILE, nodetype=int, create_using=nx.DiGraph, data=[('weight', float)])
@@ -66,7 +66,7 @@ def run_simulations(run_index, results_dir):
 
     # run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM, results_dir)
-    simulation.run_simulation(run_index)
+    simulation.run_simulation(run_index, bias)
 
 
 def beta_distribution(alpha, beta):
@@ -84,7 +84,7 @@ vector_labels_update_choices = {
     7: "extreme-confidence"
 }
 
-initialisation_choises = {
+initialisation_choices = {
     0: "random-adapters",  # completely random percentage of adapters
     1: "adapters-with-SI",  # percentage of adapters with sharing index bigger than average
     2: "would-subscribe-attribute"  # who has responded Yes to Would_subscribe_car_sharing_if_available
@@ -93,68 +93,71 @@ initialisation_choises = {
 # biases is introduced by using SI as perc for becoming adopter
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
-    0: "no-bias",
+  #  0: "no-bias",
     1: "confirmation-bias",  # if the majority of neighbours is non adopters
     2: "availability-bias",  # if the majority of neighbours is adopter
     3: "confirmation-availability-bias"  # in any case
 }
 
 percentages = [5, 20, 40]
-
 RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
-BETA = 2
-VL_UPDATE_METHOD = vector_labels_update_choices[4]
-INITIALISATION = initialisation_choises[2]
+BETA = 5
+VL_UPDATE_METHOD = vector_labels_update_choices[2]
+INITIALISATION = initialisation_choices[2]
 INITIAL_ADAPTERS_PERC = -2
-APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
-counter = 1
-if __name__ == '__main__':
-    for init_type in initialisation_choises.values():
-        INITIALISATION = init_type
-        for perc in percentages:
-            INITIAL_ADAPTERS_PERC = perc
-            path = RESULTS_DIR.split("/")
-            sim_id = path[-1]
-            new_sim_id = sim_id + f"-{counter}"
-            dir = RESULTS_DIR.replace(sim_id, new_sim_id)
-            utils.create_if_not_exist(dir)
-            print(RESULTS_DIR)
-            for run in range(0, RUNS):
-                print(f"---- Run {run} ----")
-                data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-                create_input_files(data, [
-                    "sha_ind_norm",
-                    "Gender",
-                    "Education",
-                    "Income_level",
-                    "Age",
-                    "Would_subscribe_car_sharing_if_available"],
-                                   similarity_threshold=SIMILARITY_THRESHOLD,
-                                   initialisation=INITIALISATION,
-                                   perc_of_adapters=INITIAL_ADAPTERS_PERC
-                                   )
-                run_simulations(run, dir)
+APPLY_COGNITIVE_BIAS = all_cognitive_biases[3]
 
-            states = state_averaging(dir)
-            title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id,
-                                                                sim_threshold=SIMILARITY_THRESHOLD,
-                                                                vl_update=VL_UPDATE_METHOD,
-                                                                initialisation=INITIALISATION,
-                                                                adapters_perc=INITIAL_ADAPTERS_PERC,
-                                                                cognitive_bias= APPLY_COGNITIVE_BIAS,
-                                                                alpha=ALPHA,
-                                                                beta=BETA,)
-            draw_adapter_by_time_plot(states, dir, title=title, additional_text=additional_text)
-            draw_adapter_by_time_plot(states, dir, title=title, additional_text='')
-            utils.write_simulation_readme_file(dir,
-                                               vl_update=VL_UPDATE_METHOD,
-                                               initialisation=init_type,
-                                               adapters_perc=perc,
-                                               similarity_threshold=SIMILARITY_THRESHOLD,
-                                               cognitive_bias=APPLY_COGNITIVE_BIAS,
-                                               states=states)
-            if init_type == initialisation_choises[2]:
-                break
-            counter += 1
+if __name__ == '__main__':
+    for bias in all_cognitive_biases.values():
+        APPLY_COGNITIVE_BIAS = bias
+        additional_dir = bias.upper()
+        counter = 1
+        for init_type in initialisation_choices.values():
+            INITIALISATION = init_type
+            for perc in percentages:
+                INITIAL_ADAPTERS_PERC = perc
+                path = RESULTS_DIR.split("/")
+                sim_id = path[-1]
+                new_results_dir = RESULTS_DIR.replace(sim_id, additional_dir + "/" + sim_id + f"-{counter}")
+                print(new_results_dir)
+                utils.create_if_not_exist(new_results_dir)
+                for run in range(0, RUNS):
+                    print(f"---- Run {run} ----")
+                    data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
+                    create_input_files(data, [
+                        "sha_ind_norm",
+                        "Gender",
+                        "Education",
+                        "Income_level",
+                        "Age",
+                        "Would_subscribe_car_sharing_if_available"],
+                                       similarity_threshold=SIMILARITY_THRESHOLD,
+                                       initialisation=INITIALISATION,
+                                       perc_of_adapters=INITIAL_ADAPTERS_PERC
+                                       )
+                    run_simulations(run, bias, new_results_dir)
+
+                states = state_averaging(new_results_dir)
+                title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id,
+                                                                    sim_threshold=SIMILARITY_THRESHOLD,
+                                                                    vl_update=VL_UPDATE_METHOD,
+                                                                    initialisation=INITIALISATION,
+                                                                    adapters_perc=INITIAL_ADAPTERS_PERC,
+                                                                    cognitive_bias= APPLY_COGNITIVE_BIAS,
+                                                                    alpha=ALPHA,
+                                                                    beta=BETA,)
+                draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text=additional_text)
+                draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text='')
+                utils.write_simulation_readme_file(new_results_dir,
+                                                   vl_update=VL_UPDATE_METHOD,
+                                                   initialisation=init_type,
+                                                   adapters_perc=perc,
+                                                   similarity_threshold=SIMILARITY_THRESHOLD,
+                                                   cognitive_bias=APPLY_COGNITIVE_BIAS,
+                                                   states=states,
+                                                   alpha=ALPHA, beta=BETA)
+                if init_type == initialisation_choices[2]:
+                    break
+                counter += 1

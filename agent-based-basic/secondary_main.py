@@ -10,8 +10,8 @@ from preprocessing import load_dataset_csv
 from create_network import plot_network
 from initial_network_plots import nodes_by_degree_distribution
 import utils
-from after_simluation_plots import states_changing_heat_map
-
+from after_simluation_plots import states_changing_heat_map, draw_adapter_by_time_plot, description_text_for_plots
+from average_results import state_averaging
 plt.figure(figsize=(18, 18))
 # plt.title(f"State changing Heat Map (SIM 3 - BASE LINE)\nsteps=[{[i for i in range(0, 30, 5)]}]")
 i = 1
@@ -20,6 +20,10 @@ prefix = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-
 vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")
 states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")
 
+dir = "/Users/giuliatesta/PycharmProjects/masters-thesis-project/agent-based-basic/work/case-scenarios/SIMPLE_CONTAGION/CONFIRMATION-BIAS/SCB0-1"
+states = state_averaging(dir)
+draw_adapter_by_time_plot(states, dir, title="Number of adapters by time\n(beta-dist - SIM SCB0.1)", additional_text='')
+exit(1)
 for time_step in range(0, 8, 1):
     plt.subplot(4, 2, i)
     i += 1
