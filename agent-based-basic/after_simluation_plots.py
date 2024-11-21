@@ -11,13 +11,11 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
     plt.figure(figsize=(10, 6))
     x = np.array(list(adapters.keys()))
     y = np.array(list(adapters.values()))
-    print(x)
-    print(y)
     for key, value in adapters.items():
-
         if value == y[-1]:
             plt.axvline(x=key, linestyle='--', color=('cyan', 0.5), label='Convergence threshold')
             break
+
     slope = 90 - (y[-1] - y[0]) / len(adapters)
 
     ci = confidence * np.std(y) / np.sqrt(len(y))

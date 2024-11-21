@@ -1,0 +1,16 @@
+AVAILABILITY-BIAS
+
+VL_UPDATE_METHOD: "beta-dist"
+OP: scaled similarity weights
+OL: beta(alpha = 2, beta = 5)
+(society with rigid agents)INITIALISATION: "random-adapters"
+INITIAL_ADAPTERS_PERC: 40%
+APPLY_COGNITIVE_BIAS: "availability-bias"
+SIMILARITY THRESHOLD = 0.6
+RUNS = 5
+ITERATION_NUM = 30
+N. EDGES: 42761
+N. NODES: 1000
+
+NO GENDER, AGE, EDUCATION biases
+{1: 400, 2: 400, 3: 932, 4: 961, 5: 961, 6: 961, 7: 961, 8: 961, 9: 961, 10: 961, 11: 961, 12: 961, 13: 961, 14: 961, 15: 961, 16: 961, 17: 961, 18: 961, 19: 961, 20: 961, 21: 961, 22: 961, 23: 961, 24: 961, 25: 961, 26: 961, 27: 961, 28: 961, 29: 961, 30: 961}
