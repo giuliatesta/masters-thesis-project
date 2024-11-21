@@ -7,16 +7,23 @@ BASELINE = {}
 
 # plots the evolution of the number of adapters as the time steps proceeds in the simulation
 # shows the differences with the BASELINE and indicates the slope of the curve
-def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_text=""):
+def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_text="", confidence=0.95):
     plt.figure(figsize=(10, 6))
-    plt.plot(list(adapters.keys()), list(adapters.values()), marker='x', label="Current simulation")
-    last_value = list(adapters.values())[-1]
-    first_value = list(adapters.values())[0]
+    x = np.array(list(adapters.keys()))
+    y = np.array(list(adapters.values()))
+    print(x)
+    print(y)
     for key, value in adapters.items():
-        if value == last_value:
+
+        if value == y[-1]:
             plt.axvline(x=key, linestyle='--', color=('cyan', 0.5), label='Convergence threshold')
             break
-    slope = 90 - (last_value - first_value) / len(adapters)
+    slope = 90 - (y[-1] - y[0]) / len(adapters)
+
+    ci = confidence * np.std(y) / np.sqrt(len(y))
+    fig, ax = plt.subplots()
+    ax.plot(x, y, marker='x', label="Current simulation")
+    ax.fill_between(x, (y - ci), (y + ci), color='b', alpha=.1)
 
     # plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'g--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
@@ -25,7 +32,7 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
     plt.legend(loc='lower right')
     if additional_text != "":
         additional_text += f"\n• Slope: : {slope:.2f}"
-        additional_text += f"\n• Max value: {last_value}"
+        additional_text += f"\n• Max value: {max(y)}"
         print(additional_text)
         plt.text(13, max(adapters.values()) / 2, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
     plt.grid(True)
@@ -109,7 +116,7 @@ def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, in
     if rule == "same-weights":
         text += "• OP: 1 / (k+1), OL: 1 / (k+1)"
     if rule == "beta-dist":
-        text += f"• OP: scaled similarity weights\nOL: beta(alpha = {alpha}, beta = {beta})\n"
+        text += f"• OP: scaled similarity weights\n• OL: beta(alpha = {alpha}, beta = {beta})\n"
         if alpha == 2 and beta == 2:
             text += f"(quasi-normal distribution for beta - SIM {simulation_id})"
         if alpha == 2 and beta == 5:
