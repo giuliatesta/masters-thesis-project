@@ -100,22 +100,21 @@ def states_changing_heat_map(states, vector_labels, step):
     # plt.savefig(path)
 
 
-def description_text_for_plots(rule, simulation_id, ):
-    from main_LPA import ALPHA, BETA, SIMILARITY_THRESHOLD, VL_UPDATE_METHOD, INITIALISATION, INITIAL_ADAPTERS_PERC, APPLY_COGNITIVE_BIAS
-    text = (f"• Initialisation of VLs: {INITIALISATION} {f'({INITIAL_ADAPTERS_PERC}%)' if INITIALISATION != 'would-subscribe-attribute' else ''}\n"
-            + f"• VLs update method: {VL_UPDATE_METHOD}\n"
-            + f"• State update: {APPLY_COGNITIVE_BIAS}\n"
-            + f"• Similarity threshold: {SIMILARITY_THRESHOLD}\n")
+def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, initialisation, adapters_perc, cognitive_bias, alpha, beta):
+    text = (f"• Initialisation of VLs: {initialisation} {f'({adapters_perc}%)' if initialisation != 'would-subscribe-attribute' else ''}\n"
+            + f"• VLs update method: {vl_update}\n"
+            + f"• State update: {cognitive_bias}\n"
+            + f"• Similarity threshold: {sim_threshold}\n")
     title = f"Number of adapters by time\n({rule} - SIM {simulation_id})"
     if rule == "same-weights":
         text += "• OP: 1 / (k+1), OL: 1 / (k+1)"
     if rule == "beta-dist":
-        text += f"• OP: scaled similarity weights\nOL: beta(alpha = {ALPHA}, beta = {BETA})\n"
-        if ALPHA == 2 and BETA == 2:
+        text += f"• OP: scaled similarity weights\nOL: beta(alpha = {alpha}, beta = {beta})\n"
+        if alpha == 2 and beta == 2:
             text += f"(quasi-normal distribution for beta - SIM {simulation_id})"
-        if ALPHA == 2 and BETA == 5:
+        if alpha == 2 and beta == 5:
             text += f"(society with rigid agents - SIM {simulation_id})"
-        if ALPHA == 5 and BETA == 2:
+        if alpha == 5 and beta == 2:
             text += f"(society with open-to-change agents - SIM {simulation_id})"
     if rule == "over-confidence":
         text += "• OP: 0.8, OL: 0.2\n"
