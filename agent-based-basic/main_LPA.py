@@ -98,13 +98,13 @@ all_cognitive_biases = {
     3: "confirmation-availability-bias"     # in any case
 }
 
-RUNS = 1 #30
+RUNS = 5 #30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 2
 VL_UPDATE_METHOD = vector_labels_update_choices[2]
 INITIALISATION = initialisation_choises[0]
-INITIAL_ADAPTERS_PERC = 5
+INITIAL_ADAPTERS_PERC = 40
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 
 if __name__ == '__main__':

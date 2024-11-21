@@ -61,6 +61,8 @@ class LPAgent:
                 OP = 0.2
             if rule == "extreme-influenced":
                 OP = 0.02
+            if rule == "beta-dist":
+                OP = self.LPNet.nodes[self.id]["perseverance"]
             OL = 1 - OP
             self_avg = self.LPNet.nodes[self.id][adapter_label] * OP
             neighbours_acc = []
@@ -68,18 +70,23 @@ class LPAgent:
             adapter_count = 0
             for i in list(neighbours):
                 weight = 0
+                # if is an adapter, then its opinion is considered with weight 1
                 if self.LPNet.nodes[i][adapter_label] == 1.0:
                     weight = 1
                     adapter_count += 1
                 neighbours_weights.append(weight)
                 neighbours_acc.append(float(self.LPNet.nodes[i][adapter_label]))
+            # need to reweight to satisfy the balance between plasticity and perseverance
             reweighed = np.array(neighbours_weights) * OL / adapter_count
             neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
-            print(f"node {self.id}) OP: {OP: .2f}, self avg: {self_avg: .2f}, neigh avg: {neighbours_avg: .2f}, "
-                  f"current state: {self.LPNet.nodes()[self.id]['state']}\ncurrent VLS: {self.VL}")
+            nc = [format_double(i) for i in neighbours_acc]
+            nw = [format_double(i) for i in reweighed]
+            print(f"node {self.id}) OP: {OP: .2f}, OL: {OL: .2f}, self avg: {self_avg}, neigh avg: {neighbours_avg}, "
+                  f"current state: {self.LPNet.nodes()[self.id]['state']}\ncurrent VLS: {self.VL}, adapters: {adapter_count}")
+            # print(f"nc: {nc}\nnw:{nw}")
             self.VL[adapter_label] = self_avg + neighbours_avg
             self.VL[non_adapter_label] = 1 - self.VL[adapter_label]
-            print(f"node {self.id} new VLS: {self.VL}")
+            print(f"node {self.id} new VLS: {self.VL}\n")
         # else:
         #     for label in LABELS:
         #         current_vl = self.LPNet.nodes[self.id][label]

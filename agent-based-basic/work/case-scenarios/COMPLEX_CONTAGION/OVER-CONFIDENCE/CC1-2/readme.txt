@@ -2,7 +2,7 @@ SIMPLE CONTAGION
 
 VL_UPDATE METHOD: (2) "over-confidence" (OL and OP are fixed: OP = 0.8, OL = 0.2 (confidence in their own opinion))
 INITIALISATION = (0) "random-adapters" (chooses randomly a perc of adapters)
-INITIAL_ADAPTERS_PERC = 5 %
+INITIAL_ADAPTERS_PERC = 20 %
 APPLY_COGNITIVE_BIAS = (0) "no-bias" (if adapter_label > non_adapter_label, it becomes adapter)
 SIMILARITY THRESHOLD = 0.60 (UPPER LIMIT for one connected component)
 RUNS = 5
@@ -12,7 +12,8 @@ N. NODES: 1000
 
 NO GENDER, AGE, EDUCATION biases
 
-INITIAL ADAPTER/NON ADAPTER RATIO: 50/1000
-{1: 50, 2: 50, 3: 50, 4: 50, 5: 50, 6: 50, 7: 50, 8: 50, 9: 50, 10: 50, 11: 50, 12: 50, 13: 50, 14: 50, 15: 50, 16: 50, 17: 50, 18: 50, 19: 50, 20: 50, 21: 50, 22: 50, 23: 50, 24: 50, 25: 50, 26: 50, 27: 50, 28: 50, 29: 50, 30: 50}
+INITIAL ADAPTER/NON ADAPTER RATIO: 200/1000
+{1: 200, 2: 200, 3: 200, 4: 200, 5: 200, 6: 200, 7: 200, 8: 200, 9: 200, 10: 200, 11: 200, 12: 200, 13: 200, 14: 200, 15: 200, 16: 200, 17: 200, 18: 200, 19: 200, 20: 200, 21: 200, 22: 200, 23: 200, 24: 200, 25: 200, 26: 200, 27: 200, 28: 200, 29: 200, 30: 200}
+
 
 
