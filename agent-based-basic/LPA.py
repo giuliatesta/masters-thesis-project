@@ -174,8 +174,25 @@ class LPAgent:
             self.LPNet.nodes[self.id][label] = self.VL[label]
 
 
-def get_neighbours(graph, node):
-    return list(graph.neighbors(node)) if GRAPH_TYPE == "U" else list(graph.predecessors(node))
+def get_neighbours(graph, node, social_bias):
+    neighbours = list(graph.neighbors(node)) if GRAPH_TYPE == "U" else list(graph.predecessors(node))
+
+    agent_gender = graph.nodes()[node]["Gender"]
+    agent_age = graph.nodes()[node]["Age"]
+
+    if social_bias == "no-bias":
+        return neighbours
+    if social_bias == "against-opposite-gender":
+        # filters outs all agents that have the opposite gender to the current LPAgent
+        return [n for n in neighbours if graph.nodes()[n]["Gender"] != agent_gender]
+    if social_bias == "against-women":
+        if agent_gender == "Male":
+            return [n for n in neighbours if graph.nodes()[n]["Gender"] == "Male"]
+        else:
+            return neighbours
+    #if social_bias == "against-young":
+    #if social_bias == "against-old":
+    #if social_bias == "against-low-educated":
 
 
 # the normalisation returns the weight value between 0 and upper_limit.
