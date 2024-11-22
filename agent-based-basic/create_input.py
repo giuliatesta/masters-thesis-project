@@ -1,4 +1,5 @@
 import json
+from math import ceil
 
 import numpy as np
 import pandas as pd
@@ -38,9 +39,11 @@ def create_input_files(data, LABELS, similarity_threshold=0.5, initialisation=""
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
 
     # connected_components_over_threshold(data, "Number of connected components vs. Threshold")
-
+    potentially_adapter_ids = [node for node in graph.nodes() if graph.nodes()[node]["Would_subscribe_car_sharing_if_available_new"] == 2]
+    print(f"Nodes indices of agent that answered 'Yes' to Would_subscribe_car_sharing_if_available ({len(potentially_adapter_ids)}): ")
+    print(sorted(potentially_adapter_ids))
     # initial vector labels
-    vls=[]
+    vls = []
     if initialisation == "adapters-with-SI":
         indexes_DNA = attributes.iloc[:, 0]
         vls = generate_initial_vls_with_index(graph.nodes(), indexes_DNA, perc_of_adapters)
@@ -48,7 +51,7 @@ def create_input_files(data, LABELS, similarity_threshold=0.5, initialisation=""
         vls = generate_initial_vls_randomly(graph.nodes(), perc_of_adapters)
     if initialisation == "would-subscribe-attribute":
         would_subscribe_car_sharing = attributes.iloc[:, -1]
-        vls = generate_vector_labels_based_on_attribute(would_subscribe_car_sharing)
+        vls = generate_vector_labels_based_on_attribute(graph.nodes(), would_subscribe_car_sharing, perc_of_adapters)
     initial_vls = pd.DataFrame(vls, dtype=float)
     initial_vls.to_csv(path_or_buf="work/INITIAL_VLS", index=False, header=False, sep=";")
     return graph
@@ -60,11 +63,17 @@ def create_input_files(data, LABELS, similarity_threshold=0.5, initialisation=""
 #       Yes and I would give up one car I currently own
 # if 1: Maybe yes, maybe not. I would need to test the service before taking a decision
 # if 0: No, I would not be interested in this service
-def generate_vector_labels_based_on_attribute(attribute_values):
-    adapter = [0.0, 1.0]
-    non_adapter = [1.0, 0.0]
-    return [adapter if i == 2 else non_adapter for i in attribute_values]
-
+def generate_vector_labels_based_on_attribute(nodes, attribute_values, percentage_of_adapters=1):
+    possible_adapters = [node for node in nodes if
+                               nodes[node]["Would_subscribe_car_sharing_if_available_new"] == 2]
+    vls = np.array([[1.0, 0.0] for _ in range(len(attribute_values))])
+    possible_adapters_length = len(possible_adapters)
+    number_of_initial_adapters = ceil(possible_adapters_length * (percentage_of_adapters/100))
+    indices = np.random.choice(possible_adapters, number_of_initial_adapters, replace=False)
+    print(f"Indices of {percentage_of_adapters}% of agents that have been initialised as adapters:\n{sorted(indices)}")
+    for index in indices:
+        vls[index] = [0.0, 1.0]
+    return vls
 
 # the initial adapters are chosen from the list of nodes that will be actually present in the network
 # if considering all (from 0 to 1000), there is the risk of making adapters nodes that will not be present in the LPNet

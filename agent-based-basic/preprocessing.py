@@ -21,7 +21,7 @@ def load_dataset_csv(path: str, index: bool):
     dataset.rename(columns={
         "Age_c": "Age",
         "Location_of_resudence": "Location_of_residence",
-        "Would_subsribe_car_sharing_if_available": "Would_subscribe_car_sharing_if_available"},
+        "Would_subsribe_car_sharing_if_available_new": "Would_subscribe_car_sharing_if_available_new"},
         inplace=True)
 
     # casts the values of numerical columns into numbers

@@ -61,6 +61,7 @@ def run_simulations(run_index, bias, results_dir):
     adapters = [node for node in LPNet.nodes() if LPNet.nodes[node]["state"] == 1]
     print(f"Initial adapters/non adapters ratio: {len(adapters)}/{len(LPNet.nodes)}")
     print(sorted(adapters))
+
     # na.NetworkAnalysis(LPNet).analyse()
     # exit(1)
 
@@ -93,7 +94,7 @@ initialisation_choices = {
 # biases is introduced by using SI as perc for becoming adopter
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
-  #  0: "no-bias",
+    0: "no-bias",
     1: "confirmation-bias",  # if the majority of neighbours is non adopters
     2: "availability-bias",  # if the majority of neighbours is adopter
     3: "confirmation-availability-bias"  # in any case
@@ -104,10 +105,10 @@ RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 5
-VL_UPDATE_METHOD = vector_labels_update_choices[2]
+VL_UPDATE_METHOD = vector_labels_update_choices[5]
 INITIALISATION = initialisation_choices[2]
-INITIAL_ADAPTERS_PERC = -2
-APPLY_COGNITIVE_BIAS = all_cognitive_biases[3]
+INITIAL_ADAPTERS_PERC = 5
+APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 
 if __name__ == '__main__':
     for bias in all_cognitive_biases.values():

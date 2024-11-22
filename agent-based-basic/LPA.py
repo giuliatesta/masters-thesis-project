@@ -4,7 +4,6 @@ Module for the LPAgent class that can be subclassed by agents.
 
 import numpy as np
 from conf import LABELS, GRAPH_TYPE
-from main_LPA import VL_UPDATE_METHOD
 from initial_network_plots import format_double
 
 
@@ -33,6 +32,7 @@ class LPAgent:
             yield self.env.timeout(LPAgent.TIMESTEP_DEFAULT / 2)
 
     def evaluate_vector_labels(self):
+        from main_LPA import VL_UPDATE_METHOD
         neighbours = get_neighbours(self.LPNet, self.id)
         rule = VL_UPDATE_METHOD
 

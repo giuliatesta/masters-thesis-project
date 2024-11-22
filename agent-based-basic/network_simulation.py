@@ -27,7 +27,6 @@ class NetworkSimulation:
     def run_trial(self, trial_id, run_index, bias):
         # process that counts the number of adapters at the beginning of an iteration
         self.env.process(self.count_adapters())
-
         print("Let's start the agents")
         # a process for each node is initialised and activated
         for i in self.LPNet.nodes():
@@ -46,6 +45,10 @@ class NetworkSimulation:
         # Run simulation
         self.env.run(self.until)
 
+        adapters_indices = sorted([node for node in self.LPNet.nodes() if
+                             self.LPNet.nodes()[node]["state"] == 1])
+
+        print(f"Final adapters:\n{adapters_indices}")
         # Write log files
         # saves in *.pickled the resulting nodes at each run until maxTime
         # only for specific iteration --> modify tt variable to add and/or remove trials if unnecessary or useless.
