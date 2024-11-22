@@ -1,19 +1,14 @@
-SIMPLE CONTAGION
+OVER-INFLUENCED
 
-VL_UPDATE METHOD: (2) "over-influenced" (OL and OP are fixed: OP = 0.2, OL = 0.8 (trust in others' opinions))
-INITIALISATION = (1) "adapters-with-SI" (percentage of adapters with sharing index bigger than average)
-INITIAL_ADAPTERS_PERC = 40%
-APPLY_COGNITIVE_BIAS = (0) "no-bias" (if adapter_label > non_adapter_label, it becomes adapter)
-SIMILARITY THRESHOLD = 0.60 (UPPER LIMIT for one connected component)
+VL_UPDATE_METHOD: "over-influenced"
+INITIALISATION: "would-subscribe-attribute"
+INITIAL_ADAPTERS_PERC: 100%
+APPLY_COGNITIVE_BIAS: "no-bias"
+SIMILARITY THRESHOLD = 0.6
 RUNS = 5
 ITERATION_NUM = 30
 N. EDGES: 42761
 N. NODES: 1000
 
 NO GENDER, AGE, EDUCATION biases
-
-INITIAL ADAPTER/NON ADAPTER RATIO: 133/1000
-{1: 133, 2: 133, 3: 951, 4: 951, 5: 951, 6: 951, 7: 951, 8: 951, 9: 951, 10: 951, 11: 951, 12: 951, 13: 951, 14: 951, 15: 951, 16: 951, 17: 951, 18: 951, 19: 951, 20: 951, 21: 951, 22: 951, 23: 951, 24: 951, 25: 951, 26: 951, 27: 951, 28: 951, 29: 951, 30: 951}
-
-
-
+{1: 284, 2: 284, 3: 976, 4: 976, 5: 976, 6: 976, 7: 976, 8: 976, 9: 976, 10: 976, 11: 976, 12: 976, 13: 976, 14: 976, 15: 976, 16: 976, 17: 976, 18: 976, 19: 976, 20: 976, 21: 976, 22: 976, 23: 976, 24: 976, 25: 976, 26: 976, 27: 976, 28: 976, 29: 976, 30: 976}

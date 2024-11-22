@@ -1,6 +1,6 @@
-BOTH-BIAS
+OVER-INFLUENCED
 
-VL_UPDATE_METHOD: "simple-contagion"
+VL_UPDATE_METHOD: "over-influenced"
 INITIALISATION: "would-subscribe-attribute"
 INITIAL_ADAPTERS_PERC: 100%
 APPLY_COGNITIVE_BIAS: "confirmation-availability-bias"
