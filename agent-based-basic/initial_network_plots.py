@@ -1,5 +1,6 @@
 from collections import Counter
 
+import networkx as nx
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -7,6 +8,7 @@ from matplotlib import colors as c
 from networkx import number_connected_components
 from pandas import DataFrame
 from scipy.stats import beta
+import plotly.graph_objects as go
 
 
 # plots the distribution of the similarity metrix over the nodes of the network
@@ -104,3 +106,30 @@ def plot_beta_distributions():
 
     # Show the plot
     plt.savefig("../plots/beta_distribution.png", dpi=1200)
+
+
+def plotly_network_plot(graph):
+    fig = go.Figure()
+
+    # Define layout
+    pos = nx.spring_layout(graph)
+
+    # Add nodes
+    node_x = [pos[node][0] for node in graph.nodes()]
+    node_y = [pos[node][1] for node in graph.nodes()]
+    fig.add_trace(go.Scatter(x=node_x, y=node_y, mode='markers', marker=dict(size=10, color='blue')))
+
+    # Add edges
+    edge_x = []
+    edge_y = []
+    for edge in graph.edges():
+        x0, y0 = pos[edge[0]]
+        x1, y1 = pos[edge[1]]
+        edge_x.append(x0)
+        edge_x.append(x1)
+        edge_y.append(y0)
+        edge_y.append(y1)
+    fig.add_trace(go.Scatter(x=edge_x, y=edge_y, mode='lines', line=dict(width=0.5, color='black')))
+
+    # Show interactive plot
+    fig.show()

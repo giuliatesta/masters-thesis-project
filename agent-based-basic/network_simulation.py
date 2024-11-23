@@ -1,8 +1,11 @@
 import numpy as np
 import simpy as sim
+from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
+
 from network_logging import NetworkLogger
-from conf import TRIALS, LABELS, GRAPH_TYPE
-from after_simluation_plots import draw_color_changing_network
+from conf import TRIALS, LABELS, GRAPH_TYPE, RESULTS_DIR
+from network_plotter import NetworkPlotter
 
 # it can run multiple fresh trials with the same input parameters.
 # writes system state evolution to file (states & network topologies)
@@ -37,8 +40,9 @@ class NetworkSimulation:
         # the node's states are updated at the end of the interaction
         # (after all agents have interacted with one another)
         self.env.process(self.update_states(cognitive_bias))
-        network_snapshots = []
-        # self.env.process(self.draw_network())
+
+        plotter = NetworkPlotter(self.env, self.LPNet, RESULTS_DIR)
+        self.env.process(plotter.Run())
 
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval, self.results_dir)
@@ -56,11 +60,7 @@ class NetworkSimulation:
         # only for specific iteration --> modify tt variable to add and/or remove trials if unnecessary or useless.
         logger.log_trial_to_files(trial_id, run_index)
 
-    def draw_network(self):
-        while True:
-            print(f"DRAW COLOR CHANGING NETWORK: {self.env.now}")
-            draw_color_changing_network(self.LPNet, self.env.now)
-            yield self.env.timeout(1)
+        plotter.create_animation()
 
     def update_states(self, cognitive_bias):
         # for each node its state is updated based on the freshly re-calculated vector labels
