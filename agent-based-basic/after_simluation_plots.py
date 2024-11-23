@@ -144,7 +144,7 @@ def draw_color_changing_network(graph, time):
     colors = {-1: 'blue', 1: 'red'}  # Mapping of states to colors
     plt.figure()
     node_colors = [colors[graph.nodes()[node]["state"]] for node in graph.nodes()]
-    nx.draw(graph, nx.spring_layout(graph), node_color=node_colors)
+    nx.draw(graph, nx.spring_layout(graph), node_color=node_colors, with_labels=True)
     plt.title(f"Network graph at time {time}")
     adapters = sum(n for n in graph.nodes() if graph.nodes()[n]["state"] == +1)
     plt.legend([

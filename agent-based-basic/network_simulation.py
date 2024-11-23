@@ -37,7 +37,7 @@ class NetworkSimulation:
         # the node's states are updated at the end of the interaction
         # (after all agents have interacted with one another)
         self.env.process(self.update_states(cognitive_bias))
-
+        network_snapshots = []
         # self.env.process(self.draw_network())
 
         logging_interval = 1
