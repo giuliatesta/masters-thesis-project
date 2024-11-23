@@ -38,7 +38,7 @@ class NetworkSimulation:
         # (after all agents have interacted with one another)
         self.env.process(self.update_states(cognitive_bias))
 
-        self.env.process(self.draw_network())
+        # self.env.process(self.draw_network())
 
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval, self.results_dir)
