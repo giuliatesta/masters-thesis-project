@@ -1,7 +1,10 @@
 import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.patches import Patch
+
 from conf import RESULTS_DIR
+import utils
 
 # results coming from case scenarios A*
 BASELINE = {}
@@ -139,16 +142,3 @@ def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, in
     return title, text
 
 
-def draw_color_changing_network(graph, time):
-    # Draw the graph with current node states
-    colors = {-1: 'blue', 1: 'red'}  # Mapping of states to colors
-    plt.figure()
-    node_colors = [colors[graph.nodes()[node]["state"]] for node in graph.nodes()]
-    nx.draw(graph, nx.spring_layout(graph), node_color=node_colors, with_labels=True)
-    plt.title(f"Network graph at time {time}")
-    adapters = sum(n for n in graph.nodes() if graph.nodes()[n]["state"] == +1)
-    plt.legend([
-        f'Number of adapters: {adapters}',
-        f'Number of non-adapters: {len(graph.nodes()) - adapters}'],
-        loc='upper right')
-    plt.savefig(f"{RESULTS_DIR}/network-graphs/graph_{time}.png")
