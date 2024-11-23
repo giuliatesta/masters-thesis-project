@@ -67,7 +67,7 @@ def run_simulations(run_index, bias, results_dir):
 
     # run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM, results_dir)
-    simulation.run_simulation(run_index, bias)
+    simulation.run_simulation(run_index, social_bias=bias)
 
 
 def beta_distribution(alpha, beta):
@@ -102,12 +102,12 @@ all_cognitive_biases = {
 }
 
 all_social_biases = {
-    0: "no-bias",
-    1: "against-opposite-gender",
-    2: "against-women",
-    3: "against-young",
-    4: "against-old",
-    5: "against-low-educated"
+    4: "no-bias",
+    5: "against-opposite-gender",
+    6: "against-women",
+    7: "against-young",
+    8: "against-old",
+    9: "against-low-educated"
 }
 
 percentages = [5, 20, 40]
@@ -115,49 +115,14 @@ RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 5
-VL_UPDATE_METHOD = vector_labels_update_choices[3]
-INITIALISATION = initialisation_choices[2]
-INITIAL_ADAPTERS_PERC = 100
+VL_UPDATE_METHOD = vector_labels_update_choices[6]
+INITIALISATION = initialisation_choices[1]
+INITIAL_ADAPTERS_PERC = 5
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
-if __name__ == '__main__':
-    for run in range(0, RUNS):
-        print(f"---- Run {run} ----")
-        data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-        create_input_files(data, [
-            "sha_ind_norm",
-            "Gender",
-            "Education",
-            "Income_level",
-            "Age",
-            "Would_subscribe_car_sharing_if_available_new"],
-                           similarity_threshold=SIMILARITY_THRESHOLD,
-                           initialisation=INITIALISATION,
-                           perc_of_adapters=INITIAL_ADAPTERS_PERC
-                           )
-        run_simulations(run, APPLY_COGNITIVE_BIAS, RESULTS_DIR)
-    states = state_averaging(RESULTS_DIR)
-    title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, "SC0-7",
-                                                        sim_threshold=SIMILARITY_THRESHOLD,
-                                                        vl_update=VL_UPDATE_METHOD,
-                                                        initialisation=INITIALISATION,
-                                                        adapters_perc=INITIAL_ADAPTERS_PERC,
-                                                        cognitive_bias=APPLY_COGNITIVE_BIAS,
-                                                        alpha=ALPHA,
-                                                        beta=BETA, )
-    draw_adapter_by_time_plot(states, RESULTS_DIR, title=title, additional_text=additional_text)
-    draw_adapter_by_time_plot(states, RESULTS_DIR, title=title, additional_text='')
-    utils.write_simulation_readme_file(RESULTS_DIR,
-                                       vl_update=VL_UPDATE_METHOD,
-                                       initialisation=INITIALISATION,
-                                       adapters_perc=INITIAL_ADAPTERS_PERC,
-                                       similarity_threshold=SIMILARITY_THRESHOLD,
-                                       cognitive_bias=APPLY_COGNITIVE_BIAS,
-                                       states=states,
-                                       alpha=ALPHA, beta=BETA)
-    exit(1)
+APPLY_SOCIAL_BIAS = all_social_biases[4]
 
-    for bias in all_cognitive_biases.values():
-        APPLY_COGNITIVE_BIAS = bias
+if __name__ == '__main__':
+    for bias in all_social_biases.values():
         additional_dir = bias.upper()
         counter = 1
         for init_type in initialisation_choices.values():
@@ -178,7 +143,7 @@ if __name__ == '__main__':
                         "Education",
                         "Income_level",
                         "Age",
-                        "Would_subscribe_car_sharing_if_available"],
+                        "Would_subscribe_car_sharing_if_available_new"],
                                        similarity_threshold=SIMILARITY_THRESHOLD,
                                        initialisation=INITIALISATION,
                                        perc_of_adapters=INITIAL_ADAPTERS_PERC
@@ -202,6 +167,7 @@ if __name__ == '__main__':
                                                    adapters_perc=perc,
                                                    similarity_threshold=SIMILARITY_THRESHOLD,
                                                    cognitive_bias=APPLY_COGNITIVE_BIAS,
+                                                   social_bias=bias,
                                                    states=states,
                                                    alpha=ALPHA, beta=BETA)
                 if init_type == initialisation_choices[2]:

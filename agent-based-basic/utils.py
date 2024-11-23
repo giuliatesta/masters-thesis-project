@@ -74,7 +74,7 @@ def read_pickled_file(file_path):
 
 
 def write_simulation_readme_file(dir, vl_update, initialisation, adapters_perc, similarity_threshold, cognitive_bias,
-                                 states, alpha, beta):
+                                 social_bias, states, alpha, beta):
     splits = dir.split("/")
     simulation_type = splits[4]
 
@@ -92,8 +92,9 @@ def write_simulation_readme_file(dir, vl_update, initialisation, adapters_perc, 
         file.write(f"INITIALISATION: \"{initialisation}\"\n")
         file.write(f"INITIAL_ADAPTERS_PERC: {adapters_perc}%\n")
         file.write(f"APPLY_COGNITIVE_BIAS: \"{cognitive_bias}\"\n")
+        file.write(f"APPLY_SOCIAL_BIAS: \"{social_bias}\"\n")
         file.write(f"SIMILARITY THRESHOLD = {similarity_threshold}\n")
-        file.write("RUNS = 5\nITERATION_NUM = 30\nN. EDGES: 42761\nN. NODES: 1000\n\nNO GENDER, AGE, EDUCATION biases\n")
+        file.write("RUNS = 5\nITERATION_NUM = 30\nN. EDGES: 42761\nN. NODES: 1000\n")
         file.write(f"{states}\n")
 
         file.close()

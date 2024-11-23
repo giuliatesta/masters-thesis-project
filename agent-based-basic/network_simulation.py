@@ -2,7 +2,7 @@ import numpy as np
 import simpy as sim
 from network_logging import NetworkLogger
 from conf import TRIALS, LABELS, GRAPH_TYPE
-
+from after_simluation_plots import draw_color_changing_network
 
 # it can run multiple fresh trials with the same input parameters.
 # writes system state evolution to file (states & network topologies)
@@ -16,27 +16,29 @@ class NetworkSimulation:
         self.results_dir = results_dir
 
     # runs a simulation for TRIALS trials
-    def run_simulation(self, run_index, bias):
+    def run_simulation(self, run_index, cognitive_bias="no-bias", social_bias="no-bias"):
         print("Starting simulation...")
         for i in range(TRIALS):
             print("--- Trial %i ---" % i)
-            self.run_trial(i, run_index, bias)
+            self.run_trial(i, run_index, cognitive_bias, social_bias)
         print("Simulation completed.")
 
     # runs a single trial
-    def run_trial(self, trial_id, run_index, bias):
+    def run_trial(self, trial_id, run_index, cognitive_bias, social_bias):
         # process that counts the number of adapters at the beginning of an iteration
         self.env.process(self.count_adapters())
         print("Let's start the agents")
         # a process for each node is initialised and activated
         for i in self.LPNet.nodes():
-            agent = self.LPAgent.LPAgent(self.env, i, self, self.LPNet)
+            agent = self.LPAgent.LPAgent(self.env, i, self, self.LPNet, social_bias)
             self.LPNet.nodes[i]['agent'] = agent
             self.env.process(agent.Run())
 
         # the node's states are updated at the end of the interaction
         # (after all agents have interacted with one another)
-        self.env.process(self.update_states(bias))
+        self.env.process(self.update_states(cognitive_bias))
+
+        self.env.process(self.draw_network())
 
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval, self.results_dir)
@@ -46,7 +48,7 @@ class NetworkSimulation:
         self.env.run(self.until)
 
         adapters_indices = sorted([node for node in self.LPNet.nodes() if
-                             self.LPNet.nodes()[node]["state"] == 1])
+                                   self.LPNet.nodes()[node]["state"] == 1])
 
         print(f"Final adapters:\n{adapters_indices}")
         # Write log files
@@ -54,7 +56,13 @@ class NetworkSimulation:
         # only for specific iteration --> modify tt variable to add and/or remove trials if unnecessary or useless.
         logger.log_trial_to_files(trial_id, run_index)
 
-    def update_states(self, bias):
+    def draw_network(self):
+        while True:
+            print(f"DRAW COLOR CHANGING NETWORK: {self.env.now}")
+            draw_color_changing_network(self.LPNet, self.env.now)
+            yield self.env.timeout(1)
+
+    def update_states(self, cognitive_bias):
         # for each node its state is updated based on the freshly re-calculated vector labels
         # an assertion guarantees that each node has a valid state
         while True:
@@ -62,7 +70,7 @@ class NetworkSimulation:
             for i in self.LPNet.nodes():
                 node = self.LPNet.nodes[i]
                 # if i in [0, 12, 220]: print(f"old state: {node['state']}, {USE_SHARING_INDEX}")
-                node["state"] = determine_state(node, self.LPNet, bias)
+                node["state"] = determine_state(node, self.LPNet, cognitive_bias)
                 assert node["state"] == 1 or node["state"] == -1
                 print(f"node {i}) new state: {self.LPNet.nodes[i]['state']}")
             yield self.env.timeout(1.5)
@@ -85,7 +93,7 @@ class NetworkSimulation:
 # determine the new state of a node based on its vector label
 # the state can change, if the node is not already an adopter
 # and for the confirmation bias scenarios (B* simulations) the sharing index is greater than a random number
-def determine_state(node, graph, bias):
+def determine_state(node, graph, cognitive_bias):
     vl = get_vector_label(node)
     current_state = get_state(node)
     index = get_sharing_index(node)
@@ -112,13 +120,13 @@ def determine_state(node, graph, bias):
         # and adapter label is bigger than non adapter label
         if adapter_label > non_adapter_label:
 
-            if bias == "confirmation-bias":
+            if cognitive_bias == "confirmation-bias":
                 if not are_adapters_majority:
                     try_become_adopter(index)
-            if bias == "availability-bias":
+            if cognitive_bias == "availability-bias":
                 if are_adapters_majority:
                     try_become_adopter(index)
-            if bias == "confirmation-availability-bias":
+            if cognitive_bias == "confirmation-availability-bias":
                 try_become_adopter(index)
             else:
                 return +1

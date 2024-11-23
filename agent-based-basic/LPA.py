@@ -14,11 +14,12 @@ class LPAgent:
     # Variables shared between all instances of this class
     TIMESTEP_DEFAULT = 1.0
 
-    def __init__(self, env, node_id, sim, LPNet):
+    def __init__(self, env, node_id, sim, LPNet, social_bias):
         self.env = env
         self.id = node_id
         self.sim = sim
         self.LPNet = LPNet
+        self.social_bias = social_bias
         self.VL = {label: LPNet.nodes[node_id][label] for label in LABELS}  # [0.0, 1.0] for example
         self.state = 1 if self.VL[LABELS[0]] == 0. and self.VL[LABELS[1]] == 1 else -1
 
@@ -33,7 +34,7 @@ class LPAgent:
 
     def evaluate_vector_labels(self):
         from main_LPA import VL_UPDATE_METHOD
-        neighbours = get_neighbours(self.LPNet, self.id)
+        neighbours = get_neighbours(self.LPNet, self.id, self.social_bias)
         rule = VL_UPDATE_METHOD
 
         non_adapter_label = "L0"
@@ -179,6 +180,7 @@ def get_neighbours(graph, node, social_bias):
 
     agent_gender = graph.nodes()[node]["Gender"]
     agent_age = graph.nodes()[node]["Age"]
+    agent_education_level = graph.nodes()[node]["Education"]
 
     if social_bias == "no-bias":
         return neighbours
@@ -186,13 +188,28 @@ def get_neighbours(graph, node, social_bias):
         # filters outs all agents that have the opposite gender to the current LPAgent
         return [n for n in neighbours if graph.nodes()[n]["Gender"] != agent_gender]
     if social_bias == "against-women":
+        # for males, it filters out all females il the neighbourhood
         if agent_gender == "Male":
             return [n for n in neighbours if graph.nodes()[n]["Gender"] == "Male"]
-        else:
-            return neighbours
-    #if social_bias == "against-young":
-    #if social_bias == "against-old":
-    #if social_bias == "against-low-educated":
+    if social_bias == "against-young":
+        # for all agents with more than 30 years old, it filters outs all younger agents in the neighbourhood
+        if not has_less_than_30_years_old(agent_age):
+            # keeps only older agents
+            return [n for n in neighbours if not has_less_than_30_years_old(graph.nodes()[n]["Age"])]
+    if social_bias == "against-old":
+        # for all younger agents, it filters out the older agents in the neighbourhood
+        if has_less_than_30_years_old(agent_age):
+            # keeps only younger agents
+            return [n for n in neighbours if has_less_than_30_years_old(graph.nodes()[n]["Age"])]
+    if social_bias == "against-low-educated":
+        # 2: Lower secondary (upper elementary school or similar),
+        # 4: Primary (elementary school or similar)
+        # for all agents with higher education, it filters outs all agent with lower education in the neighbourhood
+        if agent_education_level != 2 or agent_education_level != 4:
+            # keeps only higher-educated agents
+            # 1: tertiary and higher (uni, phds); 3: upper secondary (high school)
+            return [n for n in neighbours if graph.nodes()[n]["Education"] == 1 or graph.nodes()[n]["Education"] == 3]
+    return neighbours
 
 
 # the normalisation returns the weight value between 0 and upper_limit.
@@ -201,3 +218,7 @@ def get_neighbours(graph, node, social_bias):
 def reweight(x, upper_limit):
     x = np.array(x)
     return (x * upper_limit) / np.sum(x)
+
+
+def has_less_than_30_years_old(age):
+    return age == 2 or age == 4

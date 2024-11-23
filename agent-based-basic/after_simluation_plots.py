@@ -1,5 +1,7 @@
+import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
+from conf import RESULTS_DIR
 
 # results coming from case scenarios A*
 BASELINE = {}
@@ -34,7 +36,8 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
         print(additional_text)
         plt.text(13, max(adapters.values()) / 2, additional_text, fontsize=10, bbox=dict(facecolor='none', alpha=0.2))
     plt.grid(True)
-    plt.savefig(f"{results_file_path}/avg_adapters_by_time_plot{'_annotated' if additional_text != '' else ''}.png", dpi=1000)
+    plt.savefig(f"{results_file_path}/avg_adapters_by_time_plot{'_annotated' if additional_text != '' else ''}.png",
+                dpi=1000)
 
 
 # plots multiple simulations on the same plot
@@ -105,11 +108,13 @@ def states_changing_heat_map(states, vector_labels, step):
     # plt.savefig(path)
 
 
-def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, initialisation, adapters_perc, cognitive_bias, alpha, beta):
-    text = (f"• Initialisation of VLs: {initialisation} {f'({adapters_perc}%)' if initialisation != 'would-subscribe-attribute' else ''}\n"
-            + f"• VLs update method: {vl_update}\n"
-            + f"• State update: {cognitive_bias}\n"
-            + f"• Similarity threshold: {sim_threshold}\n")
+def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, initialisation, adapters_perc,
+                               cognitive_bias, alpha, beta):
+    text = (
+                f"• Initialisation of VLs: {initialisation} {f'({adapters_perc}%)' if initialisation != 'would-subscribe-attribute' else ''}\n"
+                + f"• VLs update method: {vl_update}\n"
+                + f"• State update: {cognitive_bias}\n"
+                + f"• Similarity threshold: {sim_threshold}\n")
     title = f"Number of adapters by time\n({rule} - SIM {simulation_id})"
     if rule == "same-weights":
         text += "• OP: 1 / (k+1), OL: 1 / (k+1)"
@@ -132,3 +137,18 @@ def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, in
     if rule == "majority":
         text += "• OP: 0.0, OL: 1 (w_ij = 1 / # adapters if adapter; otherwise 0)\n"
     return title, text
+
+
+def draw_color_changing_network(graph, time):
+    # Draw the graph with current node states
+    colors = {-1: 'blue', 1: 'red'}  # Mapping of states to colors
+    plt.figure()
+    node_colors = [colors[graph.nodes()[node]["state"]] for node in graph.nodes()]
+    nx.draw(graph, nx.spring_layout(graph), node_color=node_colors)
+    plt.title(f"Network graph at time {time}")
+    adapters = sum(n for n in graph.nodes() if graph.nodes()[n]["state"] == +1)
+    plt.legend([
+        f'Number of adapters: {adapters}',
+        f'Number of non-adapters: {len(graph.nodes()) - adapters}'],
+        loc='upper right')
+    plt.savefig(f"{RESULTS_DIR}/network-graphs/graph_{time}.png")
