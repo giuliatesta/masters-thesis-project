@@ -67,7 +67,7 @@ def run_simulations(run_index, bias, results_dir):
 
     # run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM, results_dir)
-    simulation.run_simulation(run_index, social_bias=bias)
+    simulation.run_simulation(run_index, cognitive_bias=bias)
 
 
 def beta_distribution(alpha, beta):
@@ -95,7 +95,7 @@ initialisation_choices = {
 # biases is introduced by using SI as perc for becoming adopter
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
-    0: "no-bias",
+   # 0: "no-bias",
     1: "confirmation-bias",  # if the majority of neighbours is non adopters
     2: "availability-bias",  # if the majority of neighbours is adopter
     3: "confirmation-availability-bias"  # in any case
@@ -115,14 +115,14 @@ RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 5
-VL_UPDATE_METHOD = vector_labels_update_choices[6]
+VL_UPDATE_METHOD = vector_labels_update_choices[1]
 INITIALISATION = initialisation_choices[1]
 INITIAL_ADAPTERS_PERC = 5
-APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
+APPLY_COGNITIVE_BIAS = all_cognitive_biases[1]
 APPLY_SOCIAL_BIAS = all_social_biases[5]
 
 if __name__ == '__main__':
-    for bias in all_social_biases.values():
+    for bias in all_cognitive_biases.values():
         additional_dir = bias.upper()
         counter = 1
         for init_type in initialisation_choices.values():
