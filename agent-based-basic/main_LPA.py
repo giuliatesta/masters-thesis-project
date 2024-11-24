@@ -11,7 +11,6 @@ from after_simluation_plots import draw_adapter_by_time_plot, description_text_f
 from network_simulation import NetworkSimulation
 from create_input import create_input_files
 from preprocessing import load_dataset_csv
-from initial_network_plots import plotly_network_plot
 
 from scipy.stats import beta as beta_function
 import utils
@@ -68,7 +67,7 @@ def run_simulations(run_index, bias, results_dir):
 
     # run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM, results_dir)
-    simulation.run_simulation(run_index, social_bias=bias)
+    simulation.run_simulation(run_index, cognitive_bias=bias)
 
 
 def beta_distribution(alpha, beta):
@@ -123,7 +122,7 @@ APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
 APPLY_SOCIAL_BIAS = all_social_biases[4]
 
 if __name__ == '__main__':
-    for bias in all_social_biases.values():
+    for bias in all_cognitive_biases.values():
         additional_dir = bias.upper()
         counter = 1
         for init_type in initialisation_choices.values():
