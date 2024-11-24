@@ -102,7 +102,7 @@ all_cognitive_biases = {
 }
 
 all_social_biases = {
-     4: "no-bias",
+    4: "no-bias",
     5: "against-opposite-gender",
     6: "against-women",
     7: "against-young",

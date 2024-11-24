@@ -39,8 +39,10 @@ def create_input_files(data, LABELS, similarity_threshold=0.5, initialisation=""
     edges.to_csv(path_or_buf="work/EDGES", index=False, header=False, sep=" ")
 
     # connected_components_over_threshold(data, "Number of connected components vs. Threshold")
-    potentially_adapter_ids = [node for node in graph.nodes() if graph.nodes()[node]["Would_subscribe_car_sharing_if_available_new"] == 2]
-    print(f"Nodes indices of agent that answered 'Yes' to Would_subscribe_car_sharing_if_available ({len(potentially_adapter_ids)}): ")
+    potentially_adapter_ids = [node for node in graph.nodes() if
+                               graph.nodes()[node]["Would_subscribe_car_sharing_if_available_new"] == 2]
+    print(
+        f"Nodes indices of agent that answered 'Yes' to Would_subscribe_car_sharing_if_available ({len(potentially_adapter_ids)}): ")
     print(sorted(potentially_adapter_ids))
     # initial vector labels
     vls = []
@@ -65,15 +67,16 @@ def create_input_files(data, LABELS, similarity_threshold=0.5, initialisation=""
 # if 0: No, I would not be interested in this service
 def generate_vector_labels_based_on_attribute(nodes, attribute_values, percentage_of_adapters=1):
     possible_adapters = [node for node in nodes if
-                               nodes[node]["Would_subscribe_car_sharing_if_available_new"] == 2]
+                         nodes[node]["Would_subscribe_car_sharing_if_available_new"] == 2]
     vls = np.array([[1.0, 0.0] for _ in range(len(attribute_values))])
     possible_adapters_length = len(possible_adapters)
-    number_of_initial_adapters = ceil(possible_adapters_length * (percentage_of_adapters/100))
+    number_of_initial_adapters = ceil(possible_adapters_length * (percentage_of_adapters / 100))
     indices = np.random.choice(possible_adapters, number_of_initial_adapters, replace=False)
     print(f"Indices of {percentage_of_adapters}% of agents that have been initialised as adapters:\n{sorted(indices)}")
     for index in indices:
         vls[index] = [0.0, 1.0]
     return vls
+
 
 # the initial adapters are chosen from the list of nodes that will be actually present in the network
 # if considering all (from 0 to 1000), there is the risk of making adapters nodes that will not be present in the LPNet
@@ -112,6 +115,7 @@ def generate_initial_vls_with_index(nodes, values, percentage_of_adapters):
     print(f"Initial adapters: {len(indices)}")
     return vls
 
+
 def generate_initial_vls_randomly(nodes, percentage_of_adapters):
     if percentage_of_adapters > 1:
         percentage_of_adapters = percentage_of_adapters / 100
@@ -126,6 +130,7 @@ def generate_initial_vls_randomly(nodes, percentage_of_adapters):
         vls[index] = [0.0, 1.0]
     print(f"Initial adapters: {len(indices)}")
     return vls
+
 
 def transform_categorical_values(df):
     df.convert_dtypes()

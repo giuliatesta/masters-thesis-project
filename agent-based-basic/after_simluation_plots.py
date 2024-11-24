@@ -1,10 +1,6 @@
-import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib.patches import Patch
 
-from conf import RESULTS_DIR
-import utils
 
 # results coming from case scenarios A*
 BASELINE = {}
@@ -96,12 +92,12 @@ def states_changing_heat_map(states, vector_labels, step):
 
     # Reshape the data into a 2D grid, padding with NaN if necessary
     grid = np.full((n_rows * n_cols), np.nan)
-    grid[:n_nodes] = VL0
+    grid[:n_nodes] = VL1
     grid = grid.reshape(n_rows, n_cols)
 
     # Create the plot
     # plt.figure()
-    im = plt.imshow(grid, cmap="RdPu", interpolation='nearest', vmin=0, vmax=1)
+    im = plt.imshow(grid, cmap="RdPu", vmin=0, vmax=1)
     plt.colorbar(im)
     # plt.title(title)
     plt.title(f'Step {step}) Adapters: {adapters_count}, Non-adapters: {non_adapters_count}')

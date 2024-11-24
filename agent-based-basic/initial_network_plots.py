@@ -133,3 +133,25 @@ def plotly_network_plot(graph):
 
     # Show interactive plot
     fig.show()
+
+def plot_step_function():
+    x = np.linspace(0, 1, 1000)
+    y = np.where(x < 0.5, 0, 1)
+    plt.step(x, y, where='post', color='blue', label='Confirmation Bias')
+
+    plt.step(x, np.where(x > 0.5, 1, np.nan), where='post', color='red', label='Availability Bias')
+
+    plt.title("Bias application based on Majority of Neighbours being Adapters")
+    plt.xlabel("Percentage of Adapter Neighbours")
+    plt.ylabel("Bias Applied")
+    plt.axhline(0, color='black', linewidth=0.5)
+    plt.axvline(0, color='black', linewidth=0.5)
+    plt.grid(True)
+    plt.xticks(np.linspace(0, 1, 11), labels=[f"{int(i * 100)}%" for i in np.linspace(0, 1, 11)])
+    plt.legend()
+
+    # Show the plot
+    #plt.show()
+    plt.savefig("../plots/bias_application_step_function.png", dpi=1200)
+
+plot_step_function()
