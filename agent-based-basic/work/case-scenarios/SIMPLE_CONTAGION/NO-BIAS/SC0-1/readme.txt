@@ -1,17 +1,13 @@
-SIMPLE CONTAGION
+NO-BIAS
 
-VL_UPDATE METHOD: (5) "simple-contagion" (at first encounter with an adapter neighbour, it becomes adapter)
-INITIALISATION = (0) "random-adapters" (chooses randomly a perc of adapters)
-INITIAL_ADAPTERS_PERC = 5 %
-APPLY_COGNITIVE_BIAS = (0) "no-bias" (if adapter_label > non_adapter_label, it becomes adapter)
-SIMILARITY THRESHOLD = 0.60 (UPPER LIMIT for one connected component)
+VL_UPDATE_METHOD: "simple-contagion"
+INITIALISATION: "random-adapters"
+INITIAL_ADAPTERS_PERC: 5%
+APPLY_COGNITIVE_BIAS: "no-bias"
+APPLY_SOCIAL_BIAS: "no-bias"
+SIMILARITY THRESHOLD = 0.6
 RUNS = 5
 ITERATION_NUM = 30
 N. EDGES: 42761
 N. NODES: 1000
-
-NO GENDER, AGE, EDUCATION biases
-
-INITIAL ADAPTER/NON ADAPTER RATIO: 25/1000
-
-{1: 25, 2: 25, 3: 764, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, 16: 1000, 17: 1000, 18: 1000, 19: 1000, 20: 1000, 21: 1000, 22: 1000, 23: 1000, 24: 1000, 25: 1000, 26: 1000, 27: 1000, 28: 1000, 29: 1000, 30: 1000}
+{1: 50, 2: 50, 3: 919, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, 16: 1000, 17: 1000, 18: 1000, 19: 1000, 20: 1000, 21: 1000, 22: 1000, 23: 1000, 24: 1000, 25: 1000, 26: 1000, 27: 1000, 28: 1000, 29: 1000, 30: 1000}

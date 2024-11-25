@@ -98,3 +98,15 @@ def write_simulation_readme_file(dir, vl_update, initialisation, adapters_perc, 
         file.write(f"{states}\n")
 
         file.close()
+
+
+def get_adapters_count(graph):
+    adapters = 0
+    non_adapters = 0
+    for i in graph.nodes():
+        node = graph.nodes[i]
+        if node["state"] == 1:
+            adapters += 1
+        else:
+            non_adapters += 1
+    return adapters, non_adapters

@@ -1,11 +1,10 @@
 import numpy as np
 import simpy as sim
-from matplotlib import pyplot as plt
-from matplotlib.animation import FuncAnimation
 
 from network_logging import NetworkLogger
 from conf import TRIALS, LABELS, GRAPH_TYPE, RESULTS_DIR
 from network_plotter import NetworkPlotter
+import utils
 
 # it can run multiple fresh trials with the same input parameters.
 # writes system state evolution to file (states & network topologies)
@@ -78,14 +77,7 @@ class NetworkSimulation:
     # counts the number of adapters at each iteration
     def count_adapters(self):
         while True:
-            adapters = 0
-            non_adapters = 0
-            for i in self.LPNet.nodes():
-                node = self.LPNet.nodes[i]
-                if node["state"] == 1:
-                    adapters += 1
-                else:
-                    non_adapters += 1
+            adapters, non_adapters = utils.get_adapters_count(self.LPNet)
             print(f"At the beginning of step {self.env.now}: # Adapters: {adapters}, # Non-Adapters: {non_adapters}")
             yield self.env.timeout(1)
 
@@ -119,7 +111,6 @@ def determine_state(node, graph, cognitive_bias):
     if is_currently_non_adapter:
         # and adapter label is bigger than non adapter label
         if adapter_label > non_adapter_label:
-
             if cognitive_bias == "confirmation-bias":
                 if not are_adapters_majority:
                     try_become_adopter(index)
