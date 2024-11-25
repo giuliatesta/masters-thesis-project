@@ -96,9 +96,9 @@ initialisation_choices = {
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
     0: "no-bias",
-    1: "confirmation-bias",  # if the majority of neighbours is non adopters
-    2: "availability-bias",  # if the majority of neighbours is adopter
-    3: "confirmation-availability-bias"  # in any case
+    #1: "confirmation-bias",  # if the majority of neighbours is non adopters
+   # 2: "availability-bias",  # if the majority of neighbours is adopter
+   # 3: "confirmation-availability-bias"  # in any case
 }
 
 all_social_biases = {

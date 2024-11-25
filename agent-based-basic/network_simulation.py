@@ -41,8 +41,8 @@ class NetworkSimulation:
         # (after all agents have interacted with one another)
         self.env.process(self.update_states(cognitive_bias))
 
-        plotter = NetworkPlotter(self.env, self.LPNet, RESULTS_DIR)
-        self.env.process(plotter.Run())
+        #plotter = NetworkPlotter(self.env, self.LPNet, RESULTS_DIR)
+        #self.env.process(plotter.Run())
 
         logging_interval = 1
         logger = NetworkLogger(self, logging_interval, self.results_dir)
@@ -60,7 +60,7 @@ class NetworkSimulation:
         # only for specific iteration --> modify tt variable to add and/or remove trials if unnecessary or useless.
         logger.log_trial_to_files(trial_id, run_index)
 
-        plotter.create_animation()
+        #plotter.create_animation()
 
     def update_states(self, cognitive_bias):
         # for each node its state is updated based on the freshly re-calculated vector labels

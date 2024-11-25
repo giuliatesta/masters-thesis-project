@@ -5,6 +5,7 @@ from matplotlib.patches import Patch
 
 from conf import RESULTS_DIR
 import utils
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 # results coming from case scenarios A*
 BASELINE = {}
@@ -46,33 +47,43 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
 # plots multiple simulations on the same plot
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time():
-    adapters90 = {}
-    adapters70 = {}
-    adapters50 = {}
-    plt.figure(figsize=(10, 6))
-    plt.plot(list(adapters90.keys()), list(adapters90.values()), marker='x', label="Pro same gender by 90%")
-    plt.plot(list(adapters70.keys()), list(adapters70.values()), marker='o', label="Pro same gender by 70%")
-    plt.plot(list(adapters50.keys()), list(adapters50.values()), marker='.', label="Pro same gender by 50%")
-    last_value = list(adapters90.values())[-1]
-    first_value = list(adapters90.values())[0]
-    slope90 = (last_value - first_value) / len(adapters90)
-    last_value = list(adapters70.values())[-1]
-    first_value = list(adapters70.values())[0]
-    slope70 = (last_value - first_value) / len(adapters70)
-    last_value = list(adapters50.values())[-1]
-    first_value = list(adapters50.values())[0]
-    slope50 = (last_value - first_value) / len(adapters50)
-    plt.text(25, 100, f"slope 90%: {slope90:.2f}\nslope 70%: {slope70:.2f}\nslope 50%: {slope50:.2f}", fontsize=10,
+    adapters1 = {1: 25, 2: 25, 3: 747, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, 16: 1000, 17: 1000, 18: 1000, 19: 1000, 20: 1000, 21: 1000, 22: 1000, 23: 1000, 24: 1000, 25: 1000, 26: 1000, 27: 1000, 28: 1000, 29: 1000, 30: 1000}
+    adapters2 = {1: 25, 2: 25, 3: 684, 4: 684, 5: 684, 6: 684, 7: 684, 8: 684, 9: 684, 10: 684, 11: 684, 12: 684, 13: 684, 14: 684, 15: 684, 16: 684, 17: 684, 18: 684, 19: 684, 20: 684, 21: 684, 22: 684, 23: 684, 24: 684, 25: 684, 26: 684, 27: 684, 28: 684, 29: 684, 30: 684}
+    adapters3 = {1: 25, 2: 25, 3: 675, 4: 675, 5: 675, 6: 675, 7: 675, 8: 675, 9: 675, 10: 675, 11: 675, 12: 675, 13: 675, 14: 675, 15: 675, 16: 675, 17: 675, 18: 675, 19: 675, 20: 675, 21: 675, 22: 675, 23: 675, 24: 675, 25: 675, 26: 675, 27: 675, 28: 675, 29: 675, 30: 675}
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(list(adapters1.keys()), list(adapters1.values()), marker='o', label="Baseline")
+    ax.plot(list(adapters2.keys()), list(adapters2.values()), marker='o', label="Confirmation Bias")
+    ax.plot(list(adapters3.keys()), list(adapters3.values()), marker='.', label="Availability Bias")
+    last_value = list(adapters1.values())[-1]
+    first_value = list(adapters1.values())[0]
+    slope1 = 90 - (last_value - first_value) / len(adapters1)
+    last_value = list(adapters2.values())[-1]
+    first_value = list(adapters2.values())[0]
+    slope2 = 90 - (last_value - first_value) / len(adapters2)
+    last_value = list(adapters3.values())[-1]
+    first_value = list(adapters3.values())[0]
+    slope3 = 90 - (last_value - first_value) / len(adapters3)
+    plt.text(8, 50, f"slope 5%: {slope1:.2f}\nslope 20%: {slope2:.2f}\nslope 40%: {slope3:.2f}", fontsize=10,
              bbox=dict(facecolor='none', alpha=0.2))
 
-    plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'm--', linewidth=1, label='Base Line')
+    # plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'm--', linewidth=1, label='Base Line')
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
-    plt.title('Gender bias simulations: pro same gender (90/70/50)')
-    plt.legend(loc='lower right')
+    plt.title('Simple contagion with Initialization with Sharing Index with 5% and with Cognitive Biases')
+    plt.legend(loc='center right')
     plt.grid(True)
+
+    inset_ax = inset_axes(ax, width="30%", height="30%", loc="lower right")  # Adjust size and location
+    inset_ax.plot(list(adapters1.keys()), list(adapters1.values()))
+    inset_ax.plot(list(adapters2.keys()), list(adapters2.values()))
+    inset_ax.plot(list(adapters3.keys()), list(adapters3.values()))
+    inset_ax.set_xlim(2, 5)
+    inset_ax.set_ylim(600, 1050)
+    inset_ax.set_title("Close-up", fontsize=10)
+    inset_ax.grid(True)
+
     plt.savefig(
-        f"./work/results/gender_bias_adapters_by_time_plot.png",
+        f"./work/case-scenarios/SIMPLE_CONTAGION/adapters-with-SI-with-cognitive-bias.png",
         dpi=1000)
 
 
@@ -142,3 +153,5 @@ def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, in
     return title, text
 
 
+
+plot_multiple_adapters_by_time()
