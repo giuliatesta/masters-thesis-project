@@ -1,7 +1,9 @@
 import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
+from plotly.graph_objs import Line
 
 from conf import RESULTS_DIR
 import utils
@@ -46,44 +48,51 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
 
 # plots multiple simulations on the same plot
 # simulations indicates the evolution of the number of adapters in the networks
-def plot_multiple_adapters_by_time():
-    adapters1 = {1: 25, 2: 25, 3: 747, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, 16: 1000, 17: 1000, 18: 1000, 19: 1000, 20: 1000, 21: 1000, 22: 1000, 23: 1000, 24: 1000, 25: 1000, 26: 1000, 27: 1000, 28: 1000, 29: 1000, 30: 1000}
-    adapters2 = {1: 25, 2: 25, 3: 684, 4: 684, 5: 684, 6: 684, 7: 684, 8: 684, 9: 684, 10: 684, 11: 684, 12: 684, 13: 684, 14: 684, 15: 684, 16: 684, 17: 684, 18: 684, 19: 684, 20: 684, 21: 684, 22: 684, 23: 684, 24: 684, 25: 684, 26: 684, 27: 684, 28: 684, 29: 684, 30: 684}
-    adapters3 = {1: 25, 2: 25, 3: 675, 4: 675, 5: 675, 6: 675, 7: 675, 8: 675, 9: 675, 10: 675, 11: 675, 12: 675, 13: 675, 14: 675, 15: 675, 16: 675, 17: 675, 18: 675, 19: 675, 20: 675, 21: 675, 22: 675, 23: 675, 24: 675, 25: 675, 26: 675, 27: 675, 28: 675, 29: 675, 30: 675}
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(list(adapters1.keys()), list(adapters1.values()), marker='o', label="Baseline")
-    ax.plot(list(adapters2.keys()), list(adapters2.values()), marker='o', label="Confirmation Bias")
-    ax.plot(list(adapters3.keys()), list(adapters3.values()), marker='.', label="Availability Bias")
-    last_value = list(adapters1.values())[-1]
-    first_value = list(adapters1.values())[0]
-    slope1 = 90 - (last_value - first_value) / len(adapters1)
-    last_value = list(adapters2.values())[-1]
-    first_value = list(adapters2.values())[0]
-    slope2 = 90 - (last_value - first_value) / len(adapters2)
-    last_value = list(adapters3.values())[-1]
-    first_value = list(adapters3.values())[0]
-    slope3 = 90 - (last_value - first_value) / len(adapters3)
-    plt.text(8, 50, f"slope 5%: {slope1:.2f}\nslope 20%: {slope2:.2f}\nslope 40%: {slope3:.2f}", fontsize=10,
-             bbox=dict(facecolor='none', alpha=0.2))
+def plot_multiple_adapters_by_time(confidence=0.95):
+    plots = {
+    "Baseline":{1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, 16: 1000, 17: 1000, 18: 1000, 19: 1000, 20: 1000, 21: 1000, 22: 1000, 23: 1000, 24: 1000, 25: 1000, 26: 1000, 27: 1000, 28: 1000, 29: 1000, 30: 1000},
+    "Against opposite gender": {1: 284, 2: 284, 3: 889, 4: 995, 5: 995, 6: 995, 7: 995, 8: 995, 9: 995, 10: 995, 11: 995, 12: 995, 13: 995, 14: 995, 15: 995, 16: 995, 17: 995, 18: 995, 19: 995, 20: 995, 21: 995, 22: 995, 23: 995, 24: 995, 25: 995, 26: 995, 27: 995, 28: 995, 29: 995, 30: 995},
+    "Against women": {1: 284, 2: 284, 3: 968, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999, 16: 999, 17: 999, 18: 999, 19: 999, 20: 999, 21: 999, 22: 999, 23: 999, 24: 999, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999},
+    "Against young": {1: 284, 2: 284, 3: 968, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, 16: 1000, 17: 1000, 18: 1000, 19: 1000, 20: 1000, 21: 1000, 22: 1000, 23: 1000, 24: 1000, 25: 1000, 26: 1000, 27: 1000, 28: 1000, 29: 1000, 30: 1000},
+    "Against old":  {1: 284, 2: 284, 3: 974, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, 16: 1000, 17: 1000, 18: 1000, 19: 1000, 20: 1000, 21: 1000, 22: 1000, 23: 1000, 24: 1000, 25: 1000, 26: 1000, 27: 1000, 28: 1000, 29: 1000, 30: 1000},
+    "Against low-educated": {1: 284, 2: 284, 3: 967, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999, 16: 999, 17: 999, 18: 999, 19: 999, 20: 999, 21: 999, 22: 999, 23: 999, 24: 999, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999}
 
-    # plt.plot(list(BASELINE.keys()), list(BASELINE.values()), 'm--', linewidth=1, label='Base Line')
+    }
+    text = ""
+    fig, ax = plt.subplots(figsize=(10, 6))
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
-    plt.title('Simple contagion with Initialization with Sharing Index with 5% and with Cognitive Biases')
-    plt.legend(loc='center right')
+    plt.title('Simple contagion with Initialization with Attribute with Social Biases')
     plt.grid(True)
+    colors = ['blue', 'red', 'green', 'orange', 'purple', 'pink']
+    i=0
+    inset_ax = inset_axes(ax, width="40%", height="40%", loc="center right")  # Adjust size and location
+    for label, plot in plots.items():
+        x = list(plot.keys())
+        y = np.array(list(plot.values()))
+        ax.plot(x,y, color=colors[i], label=label)
+        i += 1
+        ci = confidence * np.std(y) / np.sqrt(len(y))
+        ax.fill_between(x, (y - ci), (y + ci), alpha=.1)
+        last_value = y[-1]
+        first_value = y[0]
+        slope = 90 - (last_value - first_value) / len(plot)
+        text += f"slope for {label}: {slope:.2f}"
+        inset_ax.plot(x, y)
+    plt.text(8, 200, text, fontsize=10,bbox=dict(facecolor='none', alpha=0.2))
 
-    inset_ax = inset_axes(ax, width="30%", height="30%", loc="lower right")  # Adjust size and location
-    inset_ax.plot(list(adapters1.keys()), list(adapters1.values()))
-    inset_ax.plot(list(adapters2.keys()), list(adapters2.values()))
-    inset_ax.plot(list(adapters3.keys()), list(adapters3.values()))
-    inset_ax.set_xlim(2, 5)
-    inset_ax.set_ylim(600, 1050)
+    legend_elements = [Line2D([0], [0], color=colors[i], label=list(plots.keys())[i]) for i in range(0, 6)]
+
+    # Add legend to the plot
+    fig.legend(handles=legend_elements, loc="lower center")
+    print("here")
+    inset_ax.set_xlim(2.5, 4)
+    inset_ax.set_ylim(800, 1050)
     inset_ax.set_title("Close-up", fontsize=10)
     inset_ax.grid(True)
 
     plt.savefig(
-        f"./work/case-scenarios/SIMPLE_CONTAGION/adapters-with-SI-with-cognitive-bias.png",
+        f"./work/case-scenarios/SIMPLE_CONTAGION/would-subscribe-attribute-with-social-bias.png",
         dpi=1000)
 
 
@@ -151,7 +160,6 @@ def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, in
     if rule == "majority":
         text += "• OP: 0.0, OL: 1 (w_ij = 1 / # adapters if adapter; otherwise 0)\n"
     return title, text
-
 
 
 plot_multiple_adapters_by_time()

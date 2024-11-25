@@ -6,6 +6,8 @@ from main_LPA import run_simulations
 from conf import RESULTS_DIR
 from after_simluation_plots import states_changing_heat_map
 import utils
+
+
 def can_predict_would_subscribe_attribute_nodes():
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
     create_input_files(data, [
@@ -32,7 +34,7 @@ def draw_network_animation():
         "Age",
         "Would_subscribe_car_sharing_if_available_new"],
                        similarity_threshold=0.6,
-                       initialisation="random-adapters",
+                       initialisation="would-subscribe-attribute",
                        perc_of_adapters=5
                        )
     run_simulations(0, "no-bias", RESULTS_DIR)
@@ -58,5 +60,3 @@ def draw_heat_map():
         plt.tight_layout()
         plt.savefig(f"{prefix}/heat_map.png")
 
-
-draw_heat_map()
