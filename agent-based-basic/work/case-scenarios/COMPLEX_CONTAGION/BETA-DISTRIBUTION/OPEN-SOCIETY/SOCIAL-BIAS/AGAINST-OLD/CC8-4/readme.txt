@@ -1,0 +1,15 @@
+BETA-DISTRIBUTION
+
+VL_UPDATE_METHOD: "beta-dist"
+OP: scaled similarity weights
+OL: beta(alpha = 2, beta = 5)
+(society with rigid agents)INITIALISATION: "adapters-with-SI"
+INITIAL_ADAPTERS_PERC: 5%
+APPLY_COGNITIVE_BIAS: "no-bias"
+APPLY_SOCIAL_BIAS: "against-old"
+SIMILARITY THRESHOLD = 0.6
+RUNS = 5
+ITERATION_NUM = 30
+N. EDGES: 42761
+N. NODES: 1000
+{1: 25, 2: 25, 3: 655, 4: 655, 5: 655, 6: 655, 7: 655, 8: 655, 9: 655, 10: 655, 11: 655, 12: 655, 13: 655, 14: 655, 15: 655, 16: 655, 17: 655, 18: 655, 19: 655, 20: 655, 21: 655, 22: 655, 23: 655, 24: 655, 25: 655, 26: 655, 27: 655, 28: 655, 29: 655, 30: 655}

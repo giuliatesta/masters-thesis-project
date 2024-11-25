@@ -67,50 +67,11 @@ def run_simulations(run_index, bias, results_dir):
 
     # run simulation
     simulation = NetworkSimulation(LPNet, LPA, ITERATION_NUM, results_dir)
-    simulation.run_simulation(run_index, cognitive_bias=bias)
+    simulation.run_simulation(run_index, social_bias=bias)
 
 
 def beta_distribution(alpha, beta):
     return beta_function.rvs(alpha, beta)
-
-
-def run_one_simulation():
-    for run in range(0, RUNS):
-        print(f"---- Run {run} ----")
-        data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
-        create_input_files(data, [
-            "sha_ind_norm",
-            "Gender",
-            "Education",
-            "Income_level",
-            "Age",
-            "Would_subscribe_car_sharing_if_available_new"],
-                           similarity_threshold=SIMILARITY_THRESHOLD,
-                           initialisation=INITIALISATION,
-                           perc_of_adapters=INITIAL_ADAPTERS_PERC
-                           )
-        run_simulations(run, bias, new_results_dir)
-
-    states = state_averaging(new_results_dir)
-    title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id,
-                                                        sim_threshold=SIMILARITY_THRESHOLD,
-                                                        vl_update=VL_UPDATE_METHOD,
-                                                        initialisation=INITIALISATION,
-                                                        adapters_perc=INITIAL_ADAPTERS_PERC,
-                                                        cognitive_bias=APPLY_COGNITIVE_BIAS,
-                                                        alpha=ALPHA,
-                                                        beta=BETA, )
-    draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text=additional_text)
-    draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text='')
-    utils.write_simulation_readme_file(new_results_dir,
-                                       vl_update=VL_UPDATE_METHOD,
-                                       initialisation=init_type,
-                                       adapters_perc=perc,
-                                       similarity_threshold=SIMILARITY_THRESHOLD,
-                                       cognitive_bias=APPLY_COGNITIVE_BIAS,
-                                       social_bias=bias,
-                                       states=states,
-                                       alpha=ALPHA, beta=BETA)
 
 
 vector_labels_update_choices = {
@@ -135,18 +96,18 @@ initialisation_choices = {
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
   #  0: "no-bias",
-    1: "confirmation-bias",  # if the majority of neighbours is non adopters
+   # 1: "confirmation-bias",  # if the majority of neighbours is non adopters
     2: "availability-bias",  # if the majority of neighbours is adopter
     3: "confirmation-availability-bias"  # in any case
 }
 
 all_social_biases = {
-    4: "no-bias",
-    5: "against-opposite-gender",
-    6: "against-women",
-    7: "against-young",
-    8: "against-old",
-    9: "against-low-educated"
+     4: "no-bias",
+    # 5: "against-opposite-gender",
+    # 6: "against-women",
+    # 7: "against-young",
+    # 8: "against-old",
+    # 9: "against-low-educated"
 }
 
 percentages = [5, 20, 40]
@@ -154,13 +115,14 @@ RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
 ALPHA = 2
 BETA = 5
-VL_UPDATE_METHOD = vector_labels_update_choices[5]
-INITIALISATION = initialisation_choices[0]
+VL_UPDATE_METHOD = vector_labels_update_choices[1]
+INITIALISATION = initialisation_choices[2]
 INITIAL_ADAPTERS_PERC = 5
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[1]
 APPLY_SOCIAL_BIAS = all_social_biases[4]
 if __name__ == '__main__':
     for bias in all_cognitive_biases.values():
+        APPLY_SOCIAL_BIAS = bias
         additional_dir = bias.upper()
         counter = 1
         for init_type in initialisation_choices.values():
@@ -172,7 +134,43 @@ if __name__ == '__main__':
                 new_results_dir = RESULTS_DIR.replace(sim_id, additional_dir + "/" + sim_id + f"-{counter}")
                 print(new_results_dir)
                 utils.create_if_not_exist(new_results_dir)
-                run_one_simulation()
+                for run in range(0, RUNS):
+                    print(f"---- Run {run} ----")
+                    data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
+                    create_input_files(data, [
+                        "sha_ind_norm",
+                        "Gender",
+                        "Education",
+                        "Income_level",
+                        "Age",
+                        "Would_subscribe_car_sharing_if_available_new"],
+                                       similarity_threshold=SIMILARITY_THRESHOLD,
+                                       initialisation=INITIALISATION,
+                                       perc_of_adapters=INITIAL_ADAPTERS_PERC
+                                       )
+                    run_simulations(run, bias, new_results_dir)
+
+                states = state_averaging(new_results_dir)
+                title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id,
+                                                                    sim_threshold=SIMILARITY_THRESHOLD,
+                                                                    vl_update=VL_UPDATE_METHOD,
+                                                                    initialisation=INITIALISATION,
+                                                                    adapters_perc=INITIAL_ADAPTERS_PERC,
+                                                                    bias=f"CB: {APPLY_COGNITIVE_BIAS}, "
+                                                                         f"SB:{APPLY_SOCIAL_BIAS}",
+                                                                    alpha=ALPHA,
+                                                                    beta=BETA)
+                draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text=additional_text)
+                draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text='')
+                utils.write_simulation_readme_file(new_results_dir,
+                                                   vl_update=VL_UPDATE_METHOD,
+                                                   initialisation=init_type,
+                                                   adapters_perc=perc,
+                                                   similarity_threshold=SIMILARITY_THRESHOLD,
+                                                   cognitive_bias=APPLY_COGNITIVE_BIAS,
+                                                   social_bias=bias,
+                                                   states=states,
+                                                   alpha=ALPHA, beta=BETA)
                 if init_type == initialisation_choices[2]:
                     break
                 counter += 1
