@@ -52,7 +52,7 @@ labels = [
     ["Baseline", "Against Opposite Gender", "Against Women", "Against Young", "Against Old", " Against Low-Educated"]
 ]
 titles = [
-    'Complex contagion with Random Initialization',
+    'Complex contagion with Random Initialization ',
     'Complex contagion with Initialization with SI',
     'Complex contagion with Initialization with attribute'
 ]
@@ -67,38 +67,34 @@ file_names = [
     "would-subscribe-attribute-with-cognitive-bias.png",#6
     "would-subscribe-attribute-with-social-bias.png",#7
 ]
-# almost uniformly distributed
-simulation = (" and Beta-Distribution for OP\n in a Society with rigid agents (α=2, β=5)"
-             "\nwith Cognitive Biases"
-              )
 # plots multiple simulations on the same plot
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plots = {
-    labels[2][0]: {1: 284, 2: 284, 3: 897, 4: 897, 5: 897, 6: 897, 7: 897, 8: 897, 9: 897, 10: 897, 11: 897, 12: 897, 13: 897, 14: 897, 15: 897, 16: 897, 17: 897, 18: 897, 19: 897, 20: 897, 21: 897, 22: 897, 23: 897, 24: 897, 25: 897, 26: 897, 27: 897, 28: 897, 29: 897, 30: 897},
-    labels[2][1]: {1: 284, 2: 284, 3: 900, 4: 900, 5: 900, 6: 900, 7: 900, 8: 900, 9: 900, 10: 900, 11: 900, 12: 900, 13: 900, 14: 900, 15: 900, 16: 900, 17: 900, 18: 900, 19: 900, 20: 900, 21: 900, 22: 900, 23: 900, 24: 900, 25: 900, 26: 900, 27: 900, 28: 900, 29: 900, 30: 900},
-    labels[2][2]: {1: 284, 2: 284, 3: 906, 4: 906, 5: 906, 6: 906, 7: 906, 8: 906, 9: 906, 10: 906, 11: 906, 12: 906, 13: 906, 14: 906, 15: 906, 16: 906, 17: 906, 18: 906, 19: 906, 20: 906, 21: 906, 22: 906, 23: 906, 24: 906, 25: 906, 26: 906, 27: 906, 28: 906, 29: 906, 30: 906},
-    #labels[3][3]: {1: 284, 2: 284, 3: 893, 4: 893, 5: 893, 6: 893, 7: 893, 8: 893, 9: 893, 10: 893, 11: 893, 12: 893, 13: 893, 14: 893, 15: 893, 16: 893, 17: 893, 18: 893, 19: 893, 20: 893, 21: 893, 22: 893, 23: 893, 24: 893, 25: 893, 26: 893, 27: 893, 28: 893, 29: 893, 30: 893},
-    #labels[3][4]: {1: 284, 2: 284, 3: 898, 4: 898, 5: 898, 6: 898, 7: 898, 8: 898, 9: 898, 10: 898, 11: 898, 12: 898, 13: 898, 14: 898, 15: 898, 16: 898, 17: 898, 18: 898, 19: 898, 20: 898, 21: 898, 22: 898, 23: 898, 24: 898, 25: 898, 26: 898, 27: 898, 28: 898, 29: 898, 30: 898},
-    #labels[3][5]: {1: 284, 2: 284, 3: 897, 4: 897, 5: 897, 6: 897, 7: 897, 8: 897, 9: 897, 10: 897, 11: 897, 12: 897, 13: 897, 14: 897, 15: 897, 16: 897, 17: 897, 18: 897, 19: 897, 20: 897, 21: 897, 22: 897, 23: 897, 24: 897, 25: 897, 26: 897, 27: 897, 28: 897, 29: 897, 30: 897}
+    labels[0][0]: {1: 50, 2: 50, 3: 810, 4: 810, 5: 810, 6: 810, 7: 810, 8: 810, 9: 810, 10: 810, 11: 810, 12: 810, 13: 810, 14: 810, 15: 810, 16: 810, 17: 810, 18: 810, 19: 810, 20: 810, 21: 810, 22: 810, 23: 810, 24: 810, 25: 810, 26: 810, 27: 810, 28: 810, 29: 810, 30: 810},
+    labels[0][1]: {1: 200, 2: 200, 3: 906, 4: 913, 5: 913, 6: 913, 7: 913, 8: 913, 9: 913, 10: 913, 11: 913, 12: 913, 13: 913, 14: 913, 15: 913, 16: 913, 17: 913, 18: 913, 19: 913, 20: 913, 21: 913, 22: 913, 23: 913, 24: 913, 25: 913, 26: 913, 27: 913, 28: 913, 29: 913, 30: 913},
+    labels[0][2]: {1: 400, 2: 400, 3: 928, 4: 954, 5: 954, 6: 954, 7: 954, 8: 954, 9: 954, 10: 954, 11: 954, 12: 954, 13: 954, 14: 954, 15: 954, 16: 954, 17: 954, 18: 954, 19: 954, 20: 954, 21: 954, 22: 954, 23: 954, 24: 954, 25: 954, 26: 954, 27: 954, 28: 954, 29: 954, 30: 954}
+    #labels[3][3]: {1: 284, 2: 284, 3: 363, 4: 364, 5: 364, 6: 364, 7: 364, 8: 364, 9: 364, 10: 364, 11: 364, 12: 364, 13: 364, 14: 364, 15: 364, 16: 364, 17: 364, 18: 364, 19: 364, 20: 364, 21: 364, 22: 364, 23: 364, 24: 364, 25: 364, 26: 364, 27: 364, 28: 364, 29: 364, 30: 364},
+    #labels[3][4]: {1: 284, 2: 284, 3: 357, 4: 357, 5: 357, 6: 357, 7: 357, 8: 357, 9: 357, 10: 357, 11: 357, 12: 357, 13: 357, 14: 357, 15: 357, 16: 357, 17: 357, 18: 357, 19: 357, 20: 357, 21: 357, 22: 357, 23: 357, 24: 357, 25: 357, 26: 357, 27: 357, 28: 357, 29: 357, 30: 357},
+    #labels[3][5]: {1: 284, 2: 284, 3: 355, 4: 359, 5: 359, 6: 359, 7: 359, 8: 359, 9: 359, 10: 359, 11: 359, 12: 359, 13: 359, 14: 359, 15: 359, 16: 359, 17: 359, 18: 359, 19: 359, 20: 359, 21: 359, 22: 359, 23: 359, 24: 359, 25: 359, 26: 359, 27: 359, 28: 359, 29: 359, 30: 359}
     }
     slopes=[]
     fig, ax = plt.subplots(figsize=(10, 6))
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
 
-    plt.title(titles[2] + simulation)
+    plt.title(titles[0])
     plt.grid(True)
     colors = ['purple', 'pink', 'blue', 'red', 'green', 'orange']
     i=0
     if close_up:
-        inset_ax = inset_axes(ax, width="40%", height="40%", loc="lower right")  # Adjust size and location
+        inset_ax = inset_axes(ax, width="40%", height="40%", loc="center right")  # Adjust size and location
     for label, plot in plots.items():
         x = list(plot.keys())
         y = np.array(list(plot.values()))
         ax.plot(x,y, color=colors[i], label=label)
         ci = confidence * np.std(y) / np.sqrt(len(y))
-        ax.fill_between(x, (y - ci), (y + ci), alpha=.1)
+        ax.fill_between(x, (y - ci), (y + ci), color=colors[i], alpha=.1)
         last_value = y[-1]
         first_value = y[0]
         slopes.append(90 - (last_value - first_value) / len(plot))
@@ -112,15 +108,14 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.subplots_adjust(bottom=0.25)
     print("here")
     if close_up:
-        inset_ax.set_xlim(2.5, 4)
-        inset_ax.set_ylim(870, 940)
+        inset_ax.set_xlim(2.5, 4.5)
+        inset_ax.set_ylim(750, 1000)
         inset_ax.set_title("Close-up", fontsize=10)
         inset_ax.grid(True)
 
     plt.savefig(
         f"./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/"
-        +file_names[6],
-        dpi=1000)
+        +file_names[0])
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
