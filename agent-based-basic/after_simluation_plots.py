@@ -75,7 +75,7 @@ file_names = [
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plots = {
     labels[5][0]: {1: 284, 2: 284, 3: 897, 4: 897, 5: 897, 6: 897, 7: 897, 8: 897, 9: 897, 10: 897, 11: 897, 12: 897, 13: 897, 14: 897, 15: 897,},
-    labels[5][1]: {1: 284, 2: 284, 3: 900, 4: 900, 5: 900, 6: 900, 7: 900, 8: 900, 9: 900, 10: 900, 11: 900, 12: 900, 13: 900, 14: 900, 15: 900,},
+    labels[5][1]: {1: 284, 2: 284, 3: 893, 4: 893, 5: 893, 6: 893, 7: 893, 8: 893, 9: 893, 10: 893, 11: 893, 12: 893, 13: 893, 14: 893, 15: 893,},
     # labels[4][2]: {1: 200, 2: 200, 3: 895, 4: 895, 5: 895, 6: 895, 7: 895, 8: 895, 9: 895, 10: 895, 11: 895, 12: 895, 13: 895, 14: 895, 15: 895,},
     # labels[4][3]: {1: 25, 2: 25, 3: 660, 4: 660, 5: 660, 6: 660, 7: 660, 8: 660, 9: 660, 10: 660, 11: 660, 12: 660, 13: 660, 14: 660, 15: 660,},
     # labels[4][4]: {1: 100, 2: 100, 3: 850, 4: 850, 5: 850, 6: 850, 7: 850, 8: 850, 9: 850, 10: 850, 11: 850, 12: 850, 13: 850, 14: 850, 15: 850,},
@@ -89,7 +89,7 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.ylabel('Adapters')
 
     plt.title("Complex Contagion with Beta Distribution (Society with more easily influenced agents)\n"
-              "with Confirmation Bias for WSI Initialisation")
+              "with Against Females Social Bias for WSI Initialisation")
     plt.grid(True)
     #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
     colors = [ 'forestgreen', 'darkgreen',]
@@ -123,7 +123,7 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
 
     plt.savefig(
         f"./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/"
-        +"CC_open_society_WSI_confirmation_bias.png")
+        +"CC_open_society_WSI_against_females_bias.png")
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
