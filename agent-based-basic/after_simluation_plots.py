@@ -49,6 +49,9 @@ labels = [
     ["5% Initial Random Adapters", "20% Initial Random Adapters", "40% Initial Random Adapters"],
     ["5% Initial Adapters with SI", "20% Initial Adapters with SI", "40% Initial Adapters with SI"],
     ["5% RI", "20% RI", "40% RI", "5% SII", "20% SII", "40% SII", "IWS"],
+    ["5% RI", "20% RI", "40% RI", "5% RI with bias", "20% RI with bias", "40% RI with bias"],
+    ["5% SII", "20% SII", "40% SII", "5% SII with bias", "20% SII with bias", "40% SII with bias"],
+    ["5% WSI", "20% WSI", "40% WSI", "5% WSI with bias", "20% WSI with bias", "40% WSI with bias"],
     ["Baseline", "Confirmation Bias", "Availability Bias"],
     ["Baseline", "Against Opposite Gender", "Against Women", "Against Young", "Against Old", " Against Low-Educated"]
 ]
@@ -72,13 +75,13 @@ file_names = [
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plots = {
-    labels[2][0]: {1: 50, 2: 50, 3: 825, 4: 825, 5: 825, 6: 825, 7: 825, 8: 825, 9: 825, 10: 825, 11: 825, 12: 825, 13: 825, 14: 825, 15: 825,},
-    labels[2][1]: {1: 200, 2: 200, 3: 904, 4: 910, 5: 910, 6: 910, 7: 910, 8: 910, 9: 910, 10: 910, 11: 910, 12: 910, 13: 910, 14: 910, 15: 910},
-    labels[2][2]: {1: 400, 2: 400, 3: 999, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-    labels[2][3]: {1: 25, 2: 25, 3: 747, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-    labels[2][4]: {1: 100, 2: 100, 3: 937, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-    labels[2][5]: {1: 200, 2: 200, 3: 977, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-    labels[2][6]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,}
+    labels[4][0]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+    labels[4][1]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
+  #  labels[4][2]: {1: 200, 2: 200, 3: 977, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
+  #  labels[4][3]: {1: 25, 2: 25, 3: 684, 4: 684, 5: 684, 6: 684, 7: 684, 8: 684, 9: 684, 10: 684, 11: 684, 12: 684, 13: 684, 14: 684, 15: 684,},
+   # labels[4][4]: {1: 100, 2: 100, 3: 861, 4: 861, 5: 861, 6: 861, 7: 861, 8: 861, 9: 861, 10: 861, 11: 861, 12: 861, 13: 861, 14: 861, 15: 861,},
+  #  labels[4][5]: {1: 200, 2: 200, 3: 891, 4: 891, 5: 891, 6: 891, 7: 891, 8: 891, 9: 891, 10: 891, 11: 891, 12: 891, 13: 891, 14: 891, 15: 891,}
+    #labels[2][6]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,}
     }
     slopes=[]
     legend_elements=[]
@@ -86,26 +89,28 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
 
-    plt.title("Simple Contagion without Bias")
+    plt.title("Simple Contagion with Availability Bias for WSI Initialisation")
     plt.grid(True)
-    colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'royalblue', 'forestgreen']
-    linestyle = ['solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', "dashdot"]
+    #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen']
+    colors = ['forestgreen', 'darkgreen', 'deepskyblue', 'steelblue', 'blue','deepskyblue', 'steelblue', 'blue',]
+    linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
+    markers = ["o", "*", "P", "o", "*", "P"]
     #thickness=[1, 1.5, 1.75, 1, 1,5, 1.75, 1]
     i=0
     if close_up:
-        inset_ax = inset_axes(ax, width="40%", height="40%", loc="center right")  # Adjust size and location
+        inset_ax = inset_axes(ax, width="40%", height="40%", loc="lower right")  # Adjust size and location
     for label, plot in plots.items():
         x = list(plot.keys())
         y = np.array(list(plot.values()))
-        ax.plot(x,y, color=colors[i], label=label, linestyle=linestyle[i])
+        ax.plot(x,y, color=colors[i], label=label, linestyle=linestyle[i], marker=markers[i])
         ci = confidence * np.std(y) / np.sqrt(len(y))
         ax.fill_between(x, (y - ci), (y + ci), color=colors[i], alpha=.1)
         last_value = y[-1]
         first_value = y[0]
         slopes.append(90 - (last_value - first_value) / len(plot))
         if close_up:
-            inset_ax.plot(x, y, color=colors[i], linestyle=linestyle[i])
-        legend_elements.append(Line2D([0], [0], color=colors[i], label=f"{list(plots.keys())[i]}", linestyle=linestyle[i]))
+            inset_ax.plot(x, y, color=colors[i], linestyle=linestyle[i], marker=markers[i])
+        legend_elements.append(Line2D([0], [0], color=colors[i], label=f"{list(plots.keys())[i]}", linestyle=linestyle[i], marker=markers[i]))
         i += 1
     # Add legend to the plot
     fig.legend(handles=legend_elements, loc="lower center", ncol=3)
@@ -119,7 +124,7 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
 
     plt.savefig(
         f"./work/case-scenarios/SIMPLE_CONTAGION/"
-        +"simple_contagion_no_bias.png")
+        +"simple_contagion_WSI_availability_bias.png")
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
