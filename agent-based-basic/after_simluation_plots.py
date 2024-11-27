@@ -51,7 +51,7 @@ labels = [
     ["5% RI", "20% RI", "40% RI", "5% SII", "20% SII", "40% SII", "IWS"],
     ["5% RI", "20% RI", "40% RI", "5% RI with bias", "20% RI with bias", "40% RI with bias"],
     ["5% SII", "20% SII", "40% SII", "5% SII with bias", "20% SII with bias", "40% SII with bias"],
-    ["5% WSI", "20% WSI", "40% WSI", "5% WSI with bias", "20% WSI with bias", "40% WSI with bias"],
+    ["WSI", "WSI with bias"],
     ["Baseline", "Confirmation Bias", "Availability Bias"],
     ["Baseline", "Against Opposite Gender", "Against Women", "Against Young", "Against Old", " Against Low-Educated"]
 ]
@@ -75,8 +75,8 @@ file_names = [
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plots = {
-    labels[4][0]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-    labels[4][1]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
+    labels[5][0]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+    labels[5][1]: {1: 284, 2: 284, 3: 967, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999},
   #  labels[4][2]: {1: 200, 2: 200, 3: 977, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
   #  labels[4][3]: {1: 25, 2: 25, 3: 684, 4: 684, 5: 684, 6: 684, 7: 684, 8: 684, 9: 684, 10: 684, 11: 684, 12: 684, 13: 684, 14: 684, 15: 684,},
    # labels[4][4]: {1: 100, 2: 100, 3: 861, 4: 861, 5: 861, 6: 861, 7: 861, 8: 861, 9: 861, 10: 861, 11: 861, 12: 861, 13: 861, 14: 861, 15: 861,},
@@ -89,9 +89,9 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
 
-    plt.title("Simple Contagion with Availability Bias for WSI Initialisation")
+    plt.title("Simple Contagion with Against Lowe-Educated Social Bias for WSI Initialisation")
     plt.grid(True)
-    #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen']
+    #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
     colors = ['forestgreen', 'darkgreen', 'deepskyblue', 'steelblue', 'blue','deepskyblue', 'steelblue', 'blue',]
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
     markers = ["o", "*", "P", "o", "*", "P"]
@@ -118,13 +118,13 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     print("here")
     if close_up:
         inset_ax.set_xlim(2.5, 4.5)
-        inset_ax.set_ylim(700, 1050)
+        inset_ax.set_ylim(850, 1050)
         inset_ax.set_title("Close-up", fontsize=10)
         inset_ax.grid(True)
 
     plt.savefig(
         f"./work/case-scenarios/SIMPLE_CONTAGION/"
-        +"simple_contagion_WSI_availability_bias.png")
+        +"simple_contagion_WSI_against_low_edu_bias.png")
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
