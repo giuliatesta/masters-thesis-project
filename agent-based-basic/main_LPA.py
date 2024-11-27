@@ -102,7 +102,7 @@ all_cognitive_biases = {
 }
 
 all_social_biases = {
-    # 4: "no-bias",
+     4: "no-bias",
      5: "against-opposite-gender",
      6: "against-women",
      7: "against-young",
@@ -119,10 +119,10 @@ VL_UPDATE_METHOD = vector_labels_update_choices[1]
 INITIALISATION = initialisation_choices[2]
 INITIAL_ADAPTERS_PERC = 5
 APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
-APPLY_SOCIAL_BIAS = all_social_biases[5]
+APPLY_SOCIAL_BIAS = all_social_biases[4]
 if __name__ == '__main__':
-    for bias in all_social_biases.values():
-        APPLY_SOCIAL_BIAS = bias
+    for bias in all_cognitive_biases.values():
+        APPLY_COGNITIVE_BIAS = bias
         additional_dir = bias.upper()
         counter = 1
         for init_type in initialisation_choices.values():
