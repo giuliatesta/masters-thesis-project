@@ -74,12 +74,12 @@ file_names = [
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plots = {
-    labels[3][0]: {1: 50, 2: 50, 3: 810, 4: 810, 5: 810, 6: 810, 7: 810, 8: 810, 9: 810, 10: 810, 11: 810, 12: 810, 13: 810, 14: 810, 15: 810,},
-    labels[3][1]: {1: 200, 2: 200, 3: 906, 4: 913, 5: 913, 6: 913, 7: 913, 8: 913, 9: 913, 10: 913, 11: 913, 12: 913, 13: 913, 14: 913, 15: 913, },
-    labels[3][2]: {1: 400, 2: 400, 3: 928, 4: 954, 5: 954, 6: 954, 7: 954, 8: 954, 9: 954, 10: 954, 11: 954, 12: 954, 13: 954, 14: 954, 15: 954,},
-    labels[3][3]: {1: 50, 2: 50, 3: 799, 4: 799, 5: 799, 6: 799, 7: 799, 8: 799, 9: 799, 10: 799, 11: 799, 12: 799, 13: 799, 14: 799, 15: 799,},
-    labels[3][4]: {1: 200, 2: 200, 3: 901, 4: 919, 5: 919, 6: 919, 7: 919, 8: 919, 9: 919, 10: 919, 11: 919, 12: 919, 13: 919, 14: 919, 15: 919,},
-    labels[3][5]: {1: 400, 2: 400, 3: 933, 4: 966, 5: 966, 6: 966, 7: 966, 8: 966, 9: 966, 10: 966, 11: 966, 12: 966, 13: 966, 14: 966, 15: 966,},
+    labels[3][0]: {1: 25, 2: 25, 3: 694, 4: 694, 5: 694, 6: 694, 7: 694, 8: 694, 9: 694, 10: 694, 11: 694, 12: 694, 13: 694, 14: 694, 15: 694,},
+    labels[3][1]: {1: 100, 2: 100, 3: 849, 4: 849, 5: 849, 6: 849, 7: 849, 8: 849, 9: 849, 10: 849, 11: 849, 12: 849, 13: 849, 14: 849, 15: 849,},
+    labels[3][2]: {1: 200, 2: 200, 3: 895, 4: 895, 5: 895, 6: 895, 7: 895, 8: 895, 9: 895, 10: 895, 11: 895, 12: 895, 13: 895, 14: 895, 15: 895,},
+    labels[3][3]: {1: 25, 2: 25, 3: 607, 4: 607, 5: 607, 6: 607, 7: 607, 8: 607, 9: 607, 10: 607, 11: 607, 12: 607, 13: 607, 14: 607, 15: 607,},
+    labels[3][4]: {1: 100, 2: 100, 3: 835, 4: 835, 5: 835, 6: 835, 7: 835, 8: 835, 9: 835, 10: 835, 11: 835, 12: 835, 13: 835, 14: 835, 15: 835,},
+    labels[3][5]:{1: 200, 2: 200, 3: 878, 4: 878, 5: 878, 6: 878, 7: 878, 8: 878, 9: 878, 10: 878, 11: 878, 12: 878, 13: 878, 14: 878, 15: 878,},
     #labels[3][6]: {1: 284, 2: 284, 3: 897, 4: 897, 5: 897, 6: 897, 7: 897, 8: 897, 9: 897, 10: 897, 11: 897, 12: 897, 13: 897, 14: 897, 15: 897,}
     }
     slopes=[]
@@ -89,10 +89,10 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.ylabel('Adapters')
 
     plt.title("Complex Contagion with Beta Distribution (Society with more easily influenced agents)\n"
-              "with Against Low-Educated Social Bias for RI Initialisation")
+              "with Against Young Social Bias for SII Initialisation")
     plt.grid(True)
     #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
-    colors = ['deeppink', 'orchid', 'mediumvioletred','deeppink', 'orchid', 'mediumvioletred',]
+    colors = ['deepskyblue', 'steelblue', 'blue','deepskyblue', 'steelblue', 'blue',]
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
     markers = ["o", "*", "P", "o", "*", "P"]    #["","","","","","","",""]
     i=0
@@ -117,13 +117,13 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     print("here")
     if close_up:
         inset_ax.set_xlim(2.5, 4.5)
-        inset_ax.set_ylim(750, 1000)
+        inset_ax.set_ylim(600, 920)
         inset_ax.set_title("Close-up", fontsize=10)
         inset_ax.grid(True)
 
     plt.savefig(
         f"./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/"
-        +"CC_open_society_RI_against_low_edu_bias.png")
+        +"CC_open_society_SII_against_young_bias.png")
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
