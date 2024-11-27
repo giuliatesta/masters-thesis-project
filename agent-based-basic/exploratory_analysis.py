@@ -5,14 +5,14 @@ import pandas as pd
 
 
 def countplot(attribute):
-    plt.figure(figsize=(10, 6))
+   # plt.figure(figsize=(10, 6))
     ax = sns.countplot(x=attribute, data=df, order=df[attribute].value_counts().index, hue=attribute, legend="brief", palette='plasma')
     ax.set_xticklabels([])
     for container in ax.containers:
         ax.bar_label(container)
     plt.legend(loc='upper right', ncol=2)
     plt.title(f'{attribute.replace("_", " ")} Distribution')
-    plt.savefig(f"./countplot/{attribute.lower()}_distribution.png")
+   # plt.savefig(f"./exploratory_analysis/countplot/{attribute.lower()}_distribution.png")
 
 
 def kdeplot(attribute):
@@ -38,6 +38,8 @@ def crosstab(attribute_1, attribute_2):
 from preprocessing import load_dataset_csv
 df = load_dataset_csv("/Users/giuliatesta/PycharmProjects/masters-thesis-project/dataset/df_DNA_sharingEU.csv",
                       index=False)
+df = df.head(1000)
+
 df.rename(columns={"Age_c": "Age", "Location_of_resudence": "Location_of_residence", "Would_subsribe_car_sharing_if_available": "Would_subscribe_car_sharing_if_available"}, inplace=True)
 print(df.columns)
 
@@ -55,8 +57,8 @@ df["Profession"] = df["Profession"].replace("business owner/entrepreneur", "busi
 df["Profession"] = df["Profession"].replace("registered freelance professional", "registered freelance")
 df["Profession"] = df["Profession"].replace("storekeeper/tradesman/craftsman", "storekeeper")
 # DESCRIPTION for CATEGORICAL and NUMERICAL values
-# description = df.describe()
-# description.to_csv("description_numerical.csv")
+#description = df.describe(include='object')
+#description.to_csv("description_categorical.csv")
 
 # COUNT PLOTS
 # plt.figure(figsize=(16, 12))
@@ -98,21 +100,22 @@ df["Profession"] = df["Profession"].replace("storekeeper/tradesman/craftsman", "
 # kdeplot("Concern_environmental_impacts_DNA")
 # plt.subplot(4, 2, 7)
 # kdeplot("Country_DNA")
-plt.figure()#.subplot(4, 2, 8)
-kdeplot("sha_ind")
+# plt.subplot(4, 2, 8)
+# kdeplot("sha_ind_norm")
 # plt.tight_layout()
-plt.savefig(f"./kdeplot/sha_ind_distribution.png")
+# plt.savefig(f"./exploratory_analysis/kdeplot/kdeplots_DNA.png")
 
-# BOX PLOTS
-# plt.figure()
-# numerical_columns = ["Education_DNA", "Income_level_DNA", "Profession_DNA", "Age_DNA", "Considering_electric_or_hybrid_vehicle_next_purchase_DNA", "Concern_environmental_impacts_DNA", "Country_DNA"]
-# sns.boxplot(data=df[numerical_columns], legend=True, palette='plasma')
-# plt.subplots_adjust(bottom=0.25)
-# plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.35))
-# plt.xticks([])
-# plt.grid()
-# plt.title(f'Box Plot of sharing DNA')
-# plt.savefig(f"./exploratory_analysis/boxplot/sharing_dna_distribution.png")
+#BOX PLOTS
+plt.figure()
+numerical_columns = ["Education_DNA", "Income_level_DNA", "Profession_DNA", "Age_DNA",
+                     "Considering_electric_or_hybrid_vehicle_next_purchase_DNA", "Concern_environmental_impacts_DNA", "Country_DNA"]
+sns.boxplot(data=df[numerical_columns], legend=True, palette='plasma')
+plt.subplots_adjust(bottom=0.35)
+plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.65))
+plt.xticks([])
+plt.grid()
+plt.title(f'Box Plot of sharing DNA')
+plt.savefig(f"./exploratory_analysis/boxplot/sharing_dna_distribution.png")
 
 
 # Stacked bar plot of Education vs Willingness to subscribe to car sharing
