@@ -74,13 +74,13 @@ file_names = [
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plots = {
-    labels[5][0]: {1: 284, 2: 284, 3: 897, 4: 897, 5: 897, 6: 897, 7: 897, 8: 897, 9: 897, 10: 897, 11: 897, 12: 897, 13: 897, 14: 897, 15: 897, },
-    labels[5][1]: {1: 284, 2: 284, 3: 893, 4: 893, 5: 893, 6: 893, 7: 893, 8: 893, 9: 893, 10: 893, 11: 893, 12: 893, 13: 893, 14: 893, 15: 893,},
-    # labels[4][2]: {1: 200, 2: 200, 3: 895, 4: 895, 5: 895, 6: 895, 7: 895, 8: 895, 9: 895, 10: 895, 11: 895, 12: 895, 13: 895, 14: 895, 15: 895,},
-    # labels[4][3]: {1: 25, 2: 25, 3: 665, 4: 665, 5: 665, 6: 665, 7: 665, 8: 665, 9: 665, 10: 665, 11: 665, 12: 665, 13: 665, 14: 665, 15: 665,},
-    # labels[4][4]: {1: 100, 2: 100, 3: 839, 4: 840, 5: 840, 6: 840, 7: 840, 8: 840, 9: 840, 10: 840, 11: 840, 12: 840, 13: 840, 14: 840, 15: 840,},
-    # labels[4][5]: {1: 200, 2: 200, 3: 885, 4: 886, 5: 886, 6: 886, 7: 886, 8: 886, 9: 886, 10: 886, 11: 886, 12: 886, 13: 886, 14: 886, 15: 886,},
-    #labels[3][6]: {1: 284, 2: 284, 3: 897, 4: 897, 5: 897, 6: 897, 7: 897, 8: 897, 9: 897, 10: 897, 11: 897, 12: 897, 13: 897, 14: 897, 15: 897,}
+    labels[5][0]: {1: 284, 2: 284, 3: 364, 4: 364, 5: 364, 6: 364, 7: 364, 8: 364, 9: 364, 10: 364, 11: 364, 12: 364, 13: 364, 14: 364, 15: 364,},
+    labels[5][1]: {1: 284, 2: 284, 3: 358, 4: 358, 5: 358, 6: 358, 7: 358, 8: 358, 9: 358, 10: 358, 11: 358, 12: 358, 13: 358, 14: 358, 15: 358, },
+    # labels[4][2]: {1: 200, 2: 200, 3: 288, 4: 290, 5: 290, 6: 290, 7: 290, 8: 290, 9: 290, 10: 290, 11: 290, 12: 290, 13: 290, 14: 290, 15: 290,},
+    # labels[4][3]: {1: 25, 2: 25, 3: 108, 4: 108, 5: 108, 6: 108, 7: 108, 8: 108, 9: 108, 10: 108, 11: 108, 12: 108, 13: 108, 14: 108, 15: 108,},
+    # labels[4][4]: {1: 100, 2: 100, 3: 190, 4: 191, 5: 191, 6: 191, 7: 191, 8: 191, 9: 191, 10: 191, 11: 191, 12: 191, 13: 191, 14: 191, 15: 191,},
+    # labels[4][5]: {1: 200, 2: 200, 3: 284, 4: 289, 5: 289, 6: 289, 7: 289, 8: 289, 9: 289, 10: 289, 11: 289, 12: 289, 13: 289, 14: 289, 15: 289,},
+    #labels[2][6]: {1: 284, 2: 284, 3: 364, 4: 364, 5: 364, 6: 364, 7: 364, 8: 364, 9: 364, 10: 364, 11: 364, 12: 364, 13: 364, 14: 364, 15: 364,}
     }
     slopes=[]
     legend_elements=[]
@@ -88,16 +88,17 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
 
-    plt.title("Complex Contagion with Beta Distribution (Society with more easily influenced agents)\n"
-              "with Against Young Social Bias for WSI Initialisation")
+    plt.title("Complex Contagion with Beta Distribution (Society with rigid agents)"
+              "with Availability Bias for WSI Initialisation")
     plt.grid(True)
     #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
-    colors = ['forestgreen', 'darkgreen',]
+    colors = ['forestgreen', 'darkgreen','deepskyblue', 'steelblue', 'blue', 'deepskyblue', 'steelblue', 'blue', ]
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
-    markers = ["o", "*", "P", "o", "*", "P"]    #["","","","","","","",""]
+    markers = ["o", "*", "P", "o", "*", "P"]
+    #markers=["","","","","","","",""]
     i=0
     if close_up:
-        inset_ax = inset_axes(ax, width="40%", height="40%", loc="lower right")  # Adjust size and location
+        inset_ax = inset_axes(ax, width="40%", height="40%", loc="center right")  # Adjust size and location
     for label, plot in plots.items():
         x = list(plot.keys())
         y = np.array(list(plot.values()))
@@ -116,14 +117,14 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.subplots_adjust(bottom=0.2)
     print("here")
     if close_up:
-        inset_ax.set_xlim(2.5, 4.5)
-        inset_ax.set_ylim(600, 920)
+        inset_ax.set_xlim(2.5, 4)
+        inset_ax.set_ylim(350, 370)
         inset_ax.set_title("Close-up", fontsize=10)
         inset_ax.grid(True)
 
     plt.savefig(
-        f"./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/"
-        +"CC_open_society_WSI_against_young_bias.png")
+        f"./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/RIGID-SOCIETY/"
+        +"CC_rigid_society_WSI_availability_bias.png")
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
