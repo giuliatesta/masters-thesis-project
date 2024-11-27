@@ -95,9 +95,9 @@ initialisation_choices = {
 # biases is introduced by using SI as perc for becoming adopter
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
-    0: "no-bias",
-    1: "confirmation-bias",  # if the majority of neighbours is non adopters
-    2: "availability-bias",  # if the majority of neighbours is adopter
+   # 0: "no-bias",
+   # 1: "confirmation-bias",  # if the majority of neighbours is non adopters
+  #  2: "availability-bias",  # if the majority of neighbours is adopter
     3: "confirmation-availability-bias"  # in any case
 }
 
@@ -113,7 +113,7 @@ all_social_biases = {
 percentages = [5, 20, 40]
 RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
-ALPHA = 5
+ALPHA = 2
 BETA = 2
 VL_UPDATE_METHOD = vector_labels_update_choices[1]
 INITIALISATION = initialisation_choices[2]

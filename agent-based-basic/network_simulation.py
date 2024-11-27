@@ -112,10 +112,10 @@ def determine_state(node, graph, cognitive_bias):
         # and adapter label is bigger than non adapter label
         if adapter_label > non_adapter_label:
             if cognitive_bias == "confirmation-bias":
-                if not are_adapters_majority:
+                if not are_adapters_majority:       # before majority
                     try_become_adopter(index)
             if cognitive_bias == "availability-bias":
-                if are_adapters_majority:
+                if are_adapters_majority:       # after majority
                     try_become_adopter(index)
             if cognitive_bias == "confirmation-availability-bias":
                 try_become_adopter(index)
