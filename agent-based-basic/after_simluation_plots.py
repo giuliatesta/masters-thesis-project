@@ -46,14 +46,13 @@ def draw_adapter_by_time_plot(adapters, results_file_path, title, additional_tex
                 dpi=1000)
 
 labels = [
-    ["5% Initial Random Adapters", "20% Initial Random Adapters", "40% Initial Random Adapters"],
-    ["5% Initial Adapters with SI", "20% Initial Adapters with SI", "40% Initial Adapters with SI"],
-    ["5% RI", "20% RI", "40% RI", "5% SII", "20% SII", "40% SII", "IWS"],
-    ["5% RI", "20% RI", "40% RI", "5% RI with bias", "20% RI with bias", "40% RI with bias"],
-    ["5% SII", "20% SII", "40% SII", "5% SII with bias", "20% SII with bias", "40% SII with bias"],
-    ["WSI", "WSI with bias"],
-    ["Baseline", "Confirmation Bias", "Availability Bias"],
-    ["Baseline", "Against Opposite Gender", "Against Women", "Against Young", "Against Old", " Against Low-Educated"]
+    ["5% Initial Random Adapters", "20% Initial Random Adapters", "40% Initial Random Adapters"], #0
+    ["5% Initial Adapters with SI", "20% Initial Adapters with SI", "40% Initial Adapters with SI"],#1
+    ["5% RI", "20% RI", "40% RI", "5% SII", "20% SII", "40% SII", "IWS"],#2
+    ["5% RI", "20% RI", "40% RI", "5% RI with bias", "20% RI with bias", "40% RI with bias"],#3
+    ["5% SII", "20% SII", "40% SII", "5% SII with bias", "20% SII with bias", "40% SII with bias"], #4
+    ["WSI", "WSI with bias"],#5
+    ["Baseline", "Against Opposite Gender", "Against Women", "Against Young", "Against Old", " Against Low-Educated"]#6
 ]
 titles = [
     'Complex contagion with Random Initialization ',
@@ -75,13 +74,13 @@ file_names = [
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plots = {
-    labels[4][0]: {1: 25, 2: 25, 3: 747, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-    labels[4][1]: {1: 100, 2: 100, 3: 937, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-    labels[4][2]: {1: 200, 2: 200, 3: 977, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-    labels[4][3]: {1: 25, 2: 25, 3: 759, 4: 998, 5: 998, 6: 998, 7: 998, 8: 998, 9: 998, 10: 998, 11: 998, 12: 998, 13: 998, 14: 998, 15: 998},
-    labels[4][4]: {1: 100, 2: 100, 3: 925, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999,},
-    labels[4][5]: {1: 200, 2: 200, 3: 968, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999,}
-    #labels[2][6]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,}
+    labels[3][0]: {1: 50, 2: 50, 3: 810, 4: 810, 5: 810, 6: 810, 7: 810, 8: 810, 9: 810, 10: 810, 11: 810, 12: 810, 13: 810, 14: 810, 15: 810,},
+    labels[3][1]: {1: 200, 2: 200, 3: 906, 4: 913, 5: 913, 6: 913, 7: 913, 8: 913, 9: 913, 10: 913, 11: 913, 12: 913, 13: 913, 14: 913, 15: 913,},
+    labels[3][2]: {1: 400, 2: 400, 3: 928, 4: 954, 5: 954, 6: 954, 7: 954, 8: 954, 9: 954, 10: 954, 11: 954, 12: 954, 13: 954, 14: 954, 15: 954,},
+    labels[3][3]: {1: 50, 2: 50, 3: 821, 4: 821, 5: 821, 6: 821, 7: 821, 8: 821, 9: 821, 10: 821, 11: 821, 12: 821, 13: 821, 14: 821, 15: 821,},
+    labels[3][4]: {1: 200, 2: 200, 3: 903, 4: 908, 5: 908, 6: 908, 7: 908, 8: 908, 9: 908, 10: 908, 11: 908, 12: 908, 13: 908, 14: 908, 15: 908,},
+    labels[3][5]: {1: 400, 2: 400, 3: 935, 4: 960, 5: 960, 6: 960, 7: 960, 8: 960, 9: 960, 10: 960, 11: 960, 12: 960, 13: 960, 14: 960, 15: 960,},
+    #labels[3][6]: {1: 284, 2: 284, 3: 897, 4: 897, 5: 897, 6: 897, 7: 897, 8: 897, 9: 897, 10: 897, 11: 897, 12: 897, 13: 897, 14: 897, 15: 897,}
     }
     slopes=[]
     legend_elements=[]
@@ -89,13 +88,13 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
 
-    plt.title("Simple Contagion with Against Low-Educated Social Bias for SII Initialisation")
+    plt.title("Complex Contagion with Beta Distribution (Society with more easily influenced agents)\n"
+              "with Confirmation Bias for RI Initialisation")
     plt.grid(True)
     #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
-    colors = ['deepskyblue', 'steelblue', 'blue', 'deepskyblue', 'steelblue', 'blue',]
+    colors = ['deeppink', 'orchid', 'mediumvioletred', 'deeppink', 'orchid', 'mediumvioletred']
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
-    markers = ["o", "*", "P", "o", "*", "P"]
-    #thickness=[1, 1.5, 1.75, 1, 1,5, 1.75, 1]
+    markers = ["o", "*", "P", "o", "*", "P"]    #["","","","","","","",""]
     i=0
     if close_up:
         inset_ax = inset_axes(ax, width="40%", height="40%", loc="lower right")  # Adjust size and location
@@ -123,8 +122,8 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
         inset_ax.grid(True)
 
     plt.savefig(
-        f"./work/case-scenarios/SIMPLE_CONTAGION/"
-        +"simple_contagion_SII_against_low_edu_bias.png")
+        f"./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/"
+        +"CC_open_society_RI_confirmation_bias.png")
 
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
