@@ -80,10 +80,11 @@ class LPAgent:
                 neighbours_weights.append(weight)
                 neighbours_acc.append(float(self.LPNet.nodes[i][adapter_label]))
             # need to reweight to satisfy the balance between plasticity and perseverance
-            reweighed = np.array(neighbours_weights) * OL / adapter_count
-            neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
-            nc = [format_double(i) for i in neighbours_acc]
-            nw = [format_double(i) for i in reweighed]
+            if adapter_count != 0:
+                reweighed = np.array(neighbours_weights) * OL / adapter_count
+                neighbours_avg = sum([neighbours_acc[i] * reweighed[i] for i in range(len(neighbours))])
+            else:
+                neighbours_avg = 0
             #print(f"node {self.id}) OP: {OP: .2f}, OL: {OL: .2f}, self avg: {self_avg}, neigh avg: {neighbours_avg}, "
             #     f"current state: {self.LPNet.nodes()[self.id]['state']}\ncurrent VLS: {self.VL}, adapters: {adapter_count}")
             # print(f"nc: {nc}\nnw:{nw}")

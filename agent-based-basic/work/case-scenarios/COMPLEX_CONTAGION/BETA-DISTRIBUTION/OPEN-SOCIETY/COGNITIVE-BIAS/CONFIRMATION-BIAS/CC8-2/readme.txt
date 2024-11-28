@@ -6,10 +6,10 @@ OL: beta(alpha = 2, beta = 5)
 (society with rigid agents)INITIALISATION: "random-adapters"
 INITIAL_ADAPTERS_PERC: 20%
 APPLY_COGNITIVE_BIAS: "confirmation-bias"
-APPLY_SOCIAL_BIAS: "confirmation-bias"
+APPLY_SOCIAL_BIAS: "no-bias"
 SIMILARITY THRESHOLD = 0.6
 RUNS = 5
 ITERATION_NUM = 30
 N. EDGES: 42761
 N. NODES: 1000
-{1: 200, 2: 200, 3: 903, 4: 908, 5: 908, 6: 908, 7: 908, 8: 908, 9: 908, 10: 908, 11: 908, 12: 908, 13: 908, 14: 908, 15: 908, 16: 908, 17: 908, 18: 908, 19: 908, 20: 908, 21: 908, 22: 908, 23: 908, 24: 908, 25: 908, 26: 908, 27: 908, 28: 908, 29: 908, 30: 908}
+{1: 200, 2: 200, 3: 590, 4: 606, 5: 606, 6: 606, 7: 606, 8: 606, 9: 606, 10: 606, 11: 606, 12: 606, 13: 606, 14: 606, 15: 606}

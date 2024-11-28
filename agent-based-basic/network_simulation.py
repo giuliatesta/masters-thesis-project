@@ -118,18 +118,20 @@ def determine_state(node, graph, cognitive_bias):
             if cognitive_bias == "confirmation-bias":
                 return try_become_adopter(index, current_state)
             if cognitive_bias == "availability-bias":
-                print(f"{node_id}: can apply AB")
+                print(f"{node_id}: can apply AB ({are_adapters_majority})")
                 if are_adapters_majority:
                     return +1
-                else:
-                    return current_state
             if cognitive_bias == "confirmation-availability-bias":
-               # print(f"{node_id}: can apply CB-AB")
-                return try_become_adopter(index, current_state)
+                if are_adapters_majority:
+                    print("HERE")
+                    return +1
+                else:
+                    return try_become_adopter(index, current_state)
             elif cognitive_bias == "no-bias":
                 #print(f"{node_id}: else")
                 return +1
             else:
+                print(f"{node_id}: else")
                # print(f"{node_id}: else ")
                 return current_state
    # print(f"{node_id}: Keep its state")

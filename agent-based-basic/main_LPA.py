@@ -96,9 +96,9 @@ initialisation_choices = {
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
 #   0: "no-bias",
-   1: "confirmation-bias",  # if the majority of neighbours is non adopters
-   2: "availability-bias",  # if the majority of neighbours is adopter
-  #  3: "confirmation-availability-bias"  # in any case
+  # 1: "confirmation-bias",  # if the majority of neighbours is non adopters
+   #2: "availability-bias",  # if the majority of neighbours is adopter
+   3: "confirmation-availability-bias"  # in any case
 }
 
 all_social_biases = {
@@ -113,12 +113,12 @@ all_social_biases = {
 percentages = [5, 20, 40]
 RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
-ALPHA = 2
-BETA = 5
-VL_UPDATE_METHOD = vector_labels_update_choices[5]
+ALPHA = 5
+BETA = 2
+VL_UPDATE_METHOD = vector_labels_update_choices[4]
 INITIALISATION = initialisation_choices[0]
 INITIAL_ADAPTERS_PERC = 5
-APPLY_COGNITIVE_BIAS = all_cognitive_biases[1]
+APPLY_COGNITIVE_BIAS = all_cognitive_biases[3]
 APPLY_SOCIAL_BIAS = all_social_biases[4]
 if __name__ == '__main__':
     for bias in all_cognitive_biases.values():
@@ -151,7 +151,7 @@ if __name__ == '__main__':
                     run_simulations(run, cognitive_bias=APPLY_COGNITIVE_BIAS,
                                     social_bias=APPLY_SOCIAL_BIAS, results_dir=new_results_dir)
 
-                states = state_averaging(new_results_dir)
+                states = state_averaging(new_results_dir, run_count=RUNS)
                 title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id,
                                                                     sim_threshold=SIMILARITY_THRESHOLD,
                                                                     vl_update=VL_UPDATE_METHOD,
@@ -161,8 +161,8 @@ if __name__ == '__main__':
                                                                          f"SB:{APPLY_SOCIAL_BIAS}",
                                                                     alpha=ALPHA,
                                                                     beta=BETA)
-                draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text=additional_text)
-                draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text='')
+                #draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text=additional_text)
+                #draw_adapter_by_time_plot(states, new_results_dir, title=title, additional_text='')
                 utils.write_simulation_readme_file(new_results_dir,
                                                    vl_update=VL_UPDATE_METHOD,
                                                    initialisation=init_type,

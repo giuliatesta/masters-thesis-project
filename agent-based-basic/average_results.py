@@ -19,7 +19,7 @@ def count_adapters(states):
 
 # averages the final state results given the multiple RUNS over the same simulation
 # multiple runs are necessary to reduce the impact of the random_adapters_without_SI selection of initial adapters
-def state_averaging(state_files_path):
+def state_averaging(state_files_path, run_count):
     state_files_content = []
     for filename in sorted(os.listdir(state_files_path)):
         if filename.endswith("STATES.pickled"):
@@ -28,7 +28,7 @@ def state_averaging(state_files_path):
 
     adapters = [count_adapters(states) for states in state_files_content]
     averages = {i: 0 for i in adapters[0].keys()}
-    run_count = len(adapters)
+    print(run_count)
     for a in adapters:
         for run, count in a.items():
             averages[run] += count

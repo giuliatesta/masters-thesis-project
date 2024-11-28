@@ -5,11 +5,11 @@ OP: scaled similarity weights
 OL: beta(alpha = 2, beta = 5)
 (society with rigid agents)INITIALISATION: "would-subscribe-attribute"
 INITIAL_ADAPTERS_PERC: 5%
-APPLY_COGNITIVE_BIAS: "confirmation-bias"
-APPLY_SOCIAL_BIAS: "availability-bias"
+APPLY_COGNITIVE_BIAS: "availability-bias"
+APPLY_SOCIAL_BIAS: "no-bias"
 SIMILARITY THRESHOLD = 0.6
 RUNS = 5
 ITERATION_NUM = 30
 N. EDGES: 42761
 N. NODES: 1000
-{1: 284, 2: 284, 3: 906, 4: 906, 5: 906, 6: 906, 7: 906, 8: 906, 9: 906, 10: 906, 11: 906, 12: 906, 13: 906, 14: 906, 15: 906, 16: 906, 17: 906, 18: 906, 19: 906, 20: 906, 21: 906, 22: 906, 23: 906, 24: 906, 25: 906, 26: 906, 27: 906, 28: 906, 29: 906, 30: 906}
+{1: 284, 2: 284, 3: 284, 4: 284, 5: 284, 6: 284, 7: 284, 8: 284, 9: 284, 10: 284, 11: 284, 12: 284, 13: 284, 14: 284, 15: 284}
