@@ -2,8 +2,8 @@ BETA-DISTRIBUTION
 
 VL_UPDATE_METHOD: "beta-dist"
 OP: scaled similarity weights
-OL: beta(alpha = 2, beta = 5)
-(society with rigid agents)INITIALISATION: "random-adapters"
+OL: beta(alpha = 5, beta = 2)
+(society with open-to-change agents)INITIALISATION: "random-adapters"
 INITIAL_ADAPTERS_PERC: 5%
 APPLY_COGNITIVE_BIAS: "no-bias"
 APPLY_SOCIAL_BIAS: "no-bias"
@@ -12,4 +12,4 @@ RUNS = 5
 ITERATION_NUM = 30
 N. EDGES: 42761
 N. NODES: 1000
-{1: 50, 2: 50, 3: 810, 4: 810, 5: 810, 6: 810, 7: 810, 8: 810, 9: 810, 10: 810, 11: 810, 12: 810, 13: 810, 14: 810, 15: 810, 16: 810, 17: 810, 18: 810, 19: 810, 20: 810, 21: 810, 22: 810, 23: 810, 24: 810, 25: 810, 26: 810, 27: 810, 28: 810, 29: 810, 30: 810}
+{1: 50, 2: 50, 3: 144, 4: 590, 5: 590, 6: 682, 7: 780, 8: 780, 9: 807, 10: 839, 11: 839, 12: 848, 13: 859, 14: 859, 15: 864}
