@@ -103,24 +103,36 @@ def determine_state(node, graph, cognitive_bias):
     adapter_label = vl[1]
     is_currently_non_adapter = (current_state == -1)
 
-    def try_become_adopter(sharing_index):
+    def try_become_adopter(sharing_index, current_state):
         if sharing_index > np.random.rand():
+            print(f"{node_id}: Success! It's a Girl")
             return +1
+        else: return current_state
 
     # if non adapter
     if is_currently_non_adapter:
-        # and adapter label is bigger than non adapter label
+        print("currently non adopter")
+        # and adaptcaner label is bigger than non adapter label
         if adapter_label > non_adapter_label:
+            print("could try to become adopter")
             if cognitive_bias == "confirmation-bias":
-                if not are_adapters_majority:       # before majority
-                    try_become_adopter(index)
+                return try_become_adopter(index, current_state)
             if cognitive_bias == "availability-bias":
-                if are_adapters_majority:       # after majority
-                    try_become_adopter(index)
+                print(f"{node_id}: can apply AB")
+                if are_adapters_majority:
+                    return +1
+                else:
+                    return current_state
             if cognitive_bias == "confirmation-availability-bias":
-                try_become_adopter(index)
-            else:
+               # print(f"{node_id}: can apply CB-AB")
+                return try_become_adopter(index, current_state)
+            elif cognitive_bias == "no-bias":
+                #print(f"{node_id}: else")
                 return +1
+            else:
+               # print(f"{node_id}: else ")
+                return current_state
+   # print(f"{node_id}: Keep its state")
     # if they are equal ([0.5, 0.5]) -> then it stays the same
     return current_state
 
