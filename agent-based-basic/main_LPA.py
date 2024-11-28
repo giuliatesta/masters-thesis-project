@@ -102,18 +102,18 @@ all_cognitive_biases = {
 }
 
 all_social_biases = {
-  #   4: "no-bias",
+    # 4: "no-bias",
      5: "against-opposite-gender",
      6: "against-women",
      7: "against-young",
-     8: "against-old",
+    8: "against-old",
      9: "against-low-educated"
 }
 
 percentages = [5, 20, 40]
 RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
-ALPHA = 2
+ALPHA = 5
 BETA = 2
 VL_UPDATE_METHOD = vector_labels_update_choices[1]
 INITIALISATION = initialisation_choices[0]
