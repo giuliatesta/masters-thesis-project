@@ -5,7 +5,7 @@ import sys
 
 # Simulation parameters
 # Max simulation time(number of iteration of the algorithm)
-ITERATION_NUM = 30
+ITERATION_NUM = 15
 # The number of simulations
 TRIALS = 1
 
