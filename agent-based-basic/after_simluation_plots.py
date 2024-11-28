@@ -60,26 +60,16 @@ titles = [
     'Complex contagion with Initialization with attribute'
 ]
 
-file_names = [
-    "random-adapters-comparison.png",   #0
-    "random-adapters-with-cognitive-bias.png",#1
-    "random-adapters-with-social-bias.png",#2
-    "adapters-with-SI-comparison.png",#3
-    "adapters-with-SI-with-cognitive-bias.png",#4
-    "adapters-with-SI-with-social-bias.png",#5
-    "would-subscribe-attribute-with-cognitive-bias.png",#6
-    "would-subscribe-attribute-with-social-bias.png",#7
-]
 # plots multiple simulations on the same plot
 # simulations indicates the evolution of the number of adapters in the networks
-def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
+def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
     plots = {
-    labels[3][0]: {1: 50, 2: 50, 3: 919, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, },
-    labels[3][1]: {1: 200, 2: 200, 3: 991, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-    labels[3][2]: {1: 400, 2: 400, 3: 999, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, },
-    labels[3][3]: {1: 50, 2: 50, 3: 925, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-    labels[3][4]: {1: 200, 2: 200, 3: 993, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-    labels[3][5]: {1: 400, 2: 400, 3: 998, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000}
+    labels[5][0]: {1: 284, 2: 284, 3: 976, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
+    labels[5][1]: {1: 284, 2: 284, 3: 649, 4: 824, 5: 824, 6: 899, 7: 945, 8: 945, 9: 969, 10: 980, 11: 980, 12: 987, 13: 991, 14: 991, 15: 994},
+    # labels[4][2]: {1: 200, 2: 200, 3: 977, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
+    # labels[4][3]: {1: 25, 2: 25, 3: 763, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+    # labels[4][4]: {1: 100, 2: 100, 3: 941, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+    # labels[4][5]: {1: 200, 2: 200, 3: 974, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000}
     #labels[2][6]: {1: 284, 2: 284, 3: 355, 4: 355, 5: 355, 6: 355, 7: 355, 8: 355, 9: 355, 10: 355, 11: 355, 12: 355, 13: 355, 14: 355, 15: 355,}
     }
     slopes=[]
@@ -89,12 +79,12 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     plt.ylabel('Adapters')
 
     plt.title("Simple Contagion " #with Beta Distribution (Society with almost uniformly distributed agents)\n"
-              "with Availability Biases for RI Initialisation"
+              "with Confirmation Biases for WSI Initialisation"
               )
     plt.grid(True)
 
     #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
-    colors = ['deeppink', 'orchid', 'mediumvioletred','deeppink', 'orchid', 'mediumvioletred',]
+    colors = ['forestgreen', 'darkgreen', 'deepskyblue', 'steelblue', 'blue', 'deepskyblue', 'steelblue', 'blue', ]
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
     markers = ["o", "*", "P", "o", "*", "P"]
     #markers=["","","","","","","",""]
@@ -120,13 +110,13 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=True):
     print("here")
     if close_up:
         inset_ax.set_xlim(2.5, 4.5)
-        inset_ax.set_ylim(850, 1050)
+        inset_ax.set_ylim(950, 1020)
         inset_ax.set_title("Close-up", fontsize=10)
         inset_ax.grid(True)
 
     plt.savefig(
         f"./work/case-scenarios/SIMPLE_CONTAGION/"#COMPLEX_CONTAGION/BETA-DISTRIBUTION/QUASI-NORMAL-DISTRIBUTION/"
-        +"simple_contagion_RI_availability_bias.png")
+        +"simple_contagion_WSI_confirmation_bias.png")
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 def states_changing_heat_map(states, vector_labels, step):
