@@ -64,13 +64,13 @@ titles = [
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
     plots = {
-    labels[3][0]: {1: 50, 2: 50, 3: 144, 4: 590, 5: 590, 6: 682, 7: 780, 8: 780, 9: 807, 10: 839, 11: 839, 12: 848, 13: 859, 14: 859, 15: 864},
-    labels[3][1]: {1: 200, 2: 200, 3: 292, 4: 703, 5: 703, 6: 800, 7: 886, 8: 886, 9: 909, 10: 939, 11: 939, 12: 946, 13: 959, 14: 959, 15: 965},
-    labels[3][2]: {1: 400, 2: 400, 3: 465, 4: 776, 5: 776, 6: 843, 7: 913, 8: 913, 9: 931, 10: 954, 11: 954, 12: 962, 13: 974, 14: 974, 15: 977},
-    labels[3][3]: {1: 50, 2: 50, 3: 476, 4: 709, 5: 709, 6: 808, 7: 857, 8: 857, 9: 884, 10: 898, 11: 898, 12: 909, 13: 921, 14: 921, 15: 933},
-    labels[3][4]: {1: 200, 2: 200, 3: 590, 4: 791, 5: 791, 6: 893, 7: 938, 8: 938, 9: 960, 10: 971, 11: 971, 12: 979, 13: 984, 14: 984, 15: 988},
-    labels[3][5]: {1: 400, 2: 400, 3: 690, 4: 845, 5: 845, 6: 917, 7: 954, 8: 954, 9: 973, 10: 983, 11: 983, 12: 989, 13: 993, 14: 993, 15: 994},
-    #labels[2][6]: {1: 284, 2: 284, 3: 357, 4: 714, 5: 714, 6: 798, 7: 874, 8: 874, 9: 899, 10: 927, 11: 927, 12: 933, 13: 943, 14: 943, 15: 947}
+    labels[3][0]: {1: 50, 2: 50, 3: 922, 4: 922, 5: 922, 6: 922, 7: 922, 8: 922, 9: 922, 10: 922, 11: 922, 12: 922, 13: 980, 14: 980, 15: 999},
+    labels[3][1]: {1: 200, 2: 200, 3: 992, 4: 992, 5: 992, 6: 992, 7: 992, 8: 992, 9: 992, 10: 992, 11: 992, 12: 992, 13: 996, 14: 996, 15: 1000},
+    labels[3][2]: {1: 400, 2: 400, 3: 998, 4: 998, 5: 998, 6: 998, 7: 998, 8: 998, 9: 998, 10: 998, 11: 998, 12: 999, 13: 1000, 14: 1000, 15: 1000},
+    labels[3][3]: {1: 50, 2: 50, 3: 527, 4: 724, 5: 724, 6: 806, 7: 841, 8: 841, 9: 868, 10: 881, 11: 881, 12: 887, 13: 927, 14: 927, 15: 963},
+    labels[3][4]: {1: 200, 2: 200, 3: 643, 4: 822, 5: 822, 6: 904, 7: 942, 8: 942, 9: 960, 10: 971, 11: 971, 12: 978, 13: 985, 14: 985, 15: 991},
+    labels[3][5]: {1: 400, 2: 400, 3: 728, 4: 869, 5: 869, 6: 929, 7: 960, 8: 960, 9: 976, 10: 985, 11: 985, 12: 989, 13: 991, 14: 991, 15: 993},
+    #labels[2][6]: {1: 284, 2: 284, 3: 976, 4: 976, 5: 976, 6: 976, 7: 976, 8: 976, 9: 976, 10: 976, 11: 976, 12: 976, 13: 992, 14: 992, 15: 998}
     }
 
     slopes = []
@@ -81,10 +81,10 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
 
 # Beta Distribution (α = 2, β = 5)
     # with Extreme influence from neighbours (OP = 0.02, OL = 0.98)
-    plt.title("Complex Contagion "
-          #    "with Extreme Influence by Neighbours (OP = 0.02, OL = 0.98)\n"
-              "with Beta Distribution (α = 2, β = 5)\n"
-              "with Confirmation Bias for RI Initialisation"
+    plt.title("Complex Contagion " 
+              # with Majority without bias
+             "with Extreme Influence by Neighbours (OP = 0.02, OL = 0.98)\n"
+              "with Availability and Confirmation Biases for RI Initialisation"
               )
     # Availability and
     plt.grid(True)
@@ -123,9 +123,9 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
         inset_ax.grid(True)
 
     plt.savefig(
-      #  f"./work/case-scenarios/COMPLEX_CONTAGION/EXTREME-INFLUENCED/"
-    "./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/"
-        +"CC_open_society_RI_confirmation_bias.png")
+       f"./work/case-scenarios/COMPLEX_CONTAGION/EXTREME-INFLUENCED/"
+   # "./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/"
+        +"CC_extr_infl_RI_both_bias.png")
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 def states_changing_heat_map(states, vector_labels, step):

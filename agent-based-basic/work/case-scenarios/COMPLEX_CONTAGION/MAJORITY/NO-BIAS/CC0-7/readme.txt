@@ -1,18 +1,15 @@
-SIMPLE CONTAGION
+MAJORITY
 
-VL_UPDATE METHOD: (6) "majority" (if majority of neighbours is adapter, it becomes adapter)
-INITIALISATION = (1) "adapters-with-SI" (percentage of adapters with sharing index bigger than average)
-INITIAL_ADAPTERS_PERC = 40 %
-APPLY_COGNITIVE_BIAS = (0) "no-bias" (if adapter_label > non_adapter_label, it becomes adapter)
-SIMILARITY THRESHOLD = 0.60 (UPPER LIMIT for one connected component)
+VL_UPDATE_METHOD: "beta-dist"
+OP: scaled similarity weights
+OL: beta(alpha = 2, beta = 5)
+(society with rigid agents)INITIALISATION: "would-subscribe-attribute"
+INITIAL_ADAPTERS_PERC: 5%
+APPLY_COGNITIVE_BIAS: "no-bias"
+APPLY_SOCIAL_BIAS: "no-bias"
+SIMILARITY THRESHOLD = 0.6
 RUNS = 5
 ITERATION_NUM = 30
 N. EDGES: 42761
 N. NODES: 1000
-
-NO GENDER, AGE, EDUCATION biases
-
-INITIAL ADAPTER/NON ADAPTER RATIO: 25/1000
-{1: 200, 2: 200, 3: 204, 4: 205, 5: 205, 6: 205, 7: 205, 8: 205, 9: 205, 10: 205, 11: 205, 12: 205, 13: 205, 14: 205, 15: 205, 16: 205, 17: 205, 18: 205, 19: 205, 20: 205, 21: 205, 22: 205, 23: 205, 24: 205, 25: 205, 26: 205, 27: 205, 28: 205, 29: 205, 30: 205}
-
-
+{1: 284, 2: 284, 3: 897, 4: 972, 5: 972, 6: 974, 7: 975, 8: 975, 9: 975, 10: 975, 11: 975, 12: 976, 13: 978, 14: 978, 15: 980}
