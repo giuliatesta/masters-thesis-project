@@ -95,10 +95,10 @@ initialisation_choices = {
 # biases is introduced by using SI as perc for becoming adopter
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
-   #0: "no-bias",
-   #1: "confirmation-bias",  # if the majority of neighbours is non adopters
+  # 0: "no-bias",
+   1: "confirmation-bias",  # if the majority of neighbours is non adopters
    #2: "availability-bias",  # if the majority of neighbours is adopter
-   3: "confirmation-availability-bias"  # in any case
+  # 3: "confirmation-availability-bias"  # in any case
 }
 
 all_social_biases = {
@@ -106,19 +106,19 @@ all_social_biases = {
      5: "against-opposite-gender",
      6: "against-women",
      7: "against-young",
-    8: "against-old",
+     8: "against-old",
      9: "against-low-educated"
 }
 
 percentages = [5, 20, 40]
 RUNS = 5  # 30
 SIMILARITY_THRESHOLD = 0.60
-ALPHA = 5
-BETA = 2
-VL_UPDATE_METHOD = vector_labels_update_choices[4]
+ALPHA = 2
+BETA = 5
+VL_UPDATE_METHOD = vector_labels_update_choices[1]
 INITIALISATION = initialisation_choices[0]
 INITIAL_ADAPTERS_PERC = 5
-APPLY_COGNITIVE_BIAS = all_cognitive_biases[3]
+APPLY_COGNITIVE_BIAS = all_cognitive_biases[1]
 APPLY_SOCIAL_BIAS = all_social_biases[4]
 if __name__ == '__main__':
     for bias in all_cognitive_biases.values():
