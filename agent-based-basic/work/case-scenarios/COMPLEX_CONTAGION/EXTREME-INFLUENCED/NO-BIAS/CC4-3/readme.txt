@@ -1,14 +1,15 @@
 EXTREME-INFLUENCED
 
-VL_UPDATE_METHOD: "extreme-influenced"
-INITIALISATION: "random-adapters"
+VL_UPDATE_METHOD: "beta-dist"
+OP: scaled similarity weights
+OL: beta(alpha = 2, beta = 2)
+(quasi-normal distribution for beta)INITIALISATION: "random-adapters"
 INITIAL_ADAPTERS_PERC: 40%
 APPLY_COGNITIVE_BIAS: "no-bias"
+APPLY_SOCIAL_BIAS: "no-bias"
 SIMILARITY THRESHOLD = 0.6
 RUNS = 5
 ITERATION_NUM = 30
 N. EDGES: 42761
 N. NODES: 1000
-
-NO GENDER, AGE, EDUCATION biases
-{1: 400, 2: 400, 3: 999, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999, 16: 999, 17: 999, 18: 999, 19: 999, 20: 999, 21: 999, 22: 999, 23: 999, 24: 999, 25: 999, 26: 999, 27: 999, 28: 999, 29: 999, 30: 999}
+{1: 400, 2: 400, 3: 701, 4: 845, 5: 845, 6: 845, 7: 845, 8: 845, 9: 845, 10: 845, 11: 845, 12: 845, 13: 845, 14: 845, 15: 845, 16: 845, 17: 845, 18: 845, 19: 845, 20: 845, 21: 845, 22: 845, 23: 845, 24: 845, 25: 845, 26: 845, 27: 845, 28: 845, 29: 845, 30: 845}
