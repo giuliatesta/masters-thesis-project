@@ -81,39 +81,60 @@ titles = [
 
 # plots multiple simulations on the same plot
 # simulations indicates the evolution of the number of adapters in the networks
-def plot_multiple_adapters_by_time(plots, file_path, title="", confidence=0.95, close_up=False, colors_index="NO-BIAS", use_markers=True,):
+def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
+    plots = {
+        labels[2][0]: {1: 50, 2: 50, 3: 50, 4: 50, 5: 50, 6: 50, 7: 50, 8: 50, 9: 50, 10: 50, 11: 50, 12: 50, 13: 50,
+                       14: 50, 15: 50},
+        labels[2][1]: {1: 200, 2: 200, 3: 200, 4: 200, 5: 200, 6: 200, 7: 200, 8: 200, 9: 200, 10: 200, 11: 200,
+                       12: 200, 13: 200, 14: 200, 15: 200},
+        labels[2][2]: {1: 400, 2: 400, 3: 400, 4: 400, 5: 400, 6: 400, 7: 400, 8: 400, 9: 400, 10: 400, 11: 400,
+                       12: 400, 13: 400, 14: 400, 15: 400},
+        labels[2][3]: {1: 25, 2: 25, 3: 25, 4: 25, 5: 25, 6: 25, 7: 25, 8: 25, 9: 25, 10: 25, 11: 25, 12: 25, 13: 25,
+                       14: 25, 15: 25},
+        labels[2][4]: {1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100,
+                       12: 100, 13: 100, 14: 100, 15: 100},
+        labels[2][5]: {1: 200, 2: 200, 3: 200, 4: 200, 5: 200, 6: 200, 7: 200, 8: 200, 9: 200, 10: 200, 11: 200,
+                       12: 200, 13: 200, 14: 200, 15: 200},
+        labels[2][6]: {1: 284, 2: 284, 3: 284, 4: 284, 5: 284, 6: 284, 7: 284, 8: 284, 9: 284, 10: 284, 11: 284,
+                       12: 284, 13: 284, 14: 284, 15: 284},
+    }
+
     slopes = []
     legend_elements = []
     fig, ax = plt.subplots(figsize=(10, 6))
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
 
-    plt.title(title)
+# Beta Distribution (α = 2, β = 5)
+    # with Extreme influence from neighbours (OP = 0.02, OL = 0.98)
+    plt.title("Complex Contagion with Extreme Confidence (OP=0.98, OL=0.02) without Bias"
+             #"with Extreme Influence by Neighbours (OP = 0.02, OL = 0.98)\n"
+           #   "with Confirmation Bias for RI Initialisation"
+              )
+    # Availability and
     plt.grid(True)
 
-    colors = {
-        "NO-BIAS": ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen', ], #NO-BIAS
-        "RI": ['deeppink', 'orchid', 'mediumvioletred', 'deeppink', 'orchid', 'mediumvioletred', ], #RI
-        "SII": ['deepskyblue', 'steelblue', 'blue','deepskyblue', 'steelblue', 'blue',],#SII
-        "WSI": ['forestgreen', 'darkgreen', 'olivedrab', 'lime','seagreen','lawngreen']
-    }
-    used_colors = colors[colors_index]
+    colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
+    #colors = ['deeppink', 'orchid', 'mediumvioletred','deeppink', 'orchid', 'mediumvioletred',]
+    #colors = ['deepskyblue', 'steelblue', 'blue', 'deepskyblue', 'steelblue', 'blue',]
+    #colors = ['forestgreen', 'darkgreen', 'olivedrab', 'lime','seagreen','lawngreen']
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
-    markers = ["o", "*", "P", "o", "*", "P"] if use_markers else ["","","","","","","",""]
+    #markers = ["o", "*", "P", "o", "*", "P"]
+    markers=["","","","","","","",""]
     i=0
     if close_up:
         inset_ax = inset_axes(ax, width="40%", height="40%", loc="lower right")  # Adjust size and location
     for label, plot in plots.items():
         x = list(plot.keys())
         y = np.array(list(plot.values()))
-        ax.plot(x,y, color=used_colors[i], label=label, linestyle=linestyle[i], marker=markers[i])
+        ax.plot(x,y, color=colors[i], label=label, linestyle=linestyle[i], marker=markers[i])
         ci = confidence * np.std(y) / np.sqrt(len(y))
-        ax.fill_between(x, (y - ci), (y + ci), color=used_colors[i], alpha=.1)
+        ax.fill_between(x, (y - ci), (y + ci), color=colors[i], alpha=.1)
         last_value = y[-1]
         first_value = y[0]
         slopes.append(90 - (last_value - first_value) / len(plot))
         if close_up:
-            inset_ax.plot(x, y, color=used_colors[i], linestyle=linestyle[i], marker=markers[i])
+            inset_ax.plot(x, y, color=colors[i], linestyle=linestyle[i], marker=markers[i])
         legend_elements.append(Line2D([0], [0], color=colors[i], label=f"{list(plots.keys())[i]}", linestyle=linestyle[i], marker=markers[i]))
         i += 1
     # Add legend to the plot
@@ -126,7 +147,10 @@ def plot_multiple_adapters_by_time(plots, file_path, title="", confidence=0.95, 
         inset_ax.set_title("Close-up", fontsize=10)
         inset_ax.grid(True)
 
-    plt.savefig(file_path)
+    plt.savefig(
+       #f"./work/case-scenarios/COMPLEX_CONTAGION/EXTREME-INFLUENCED/"
+    "./work/case-scenarios/COMPLEX_CONTAGION/EXTREME-INFLUENCED/"
+        +"CC_extr_conf_no_bias.png")
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
@@ -134,47 +158,62 @@ def states_changing_heat_map(prefix):
     vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")
     states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates__RUN_0_STATES.pickled")
 
-    plt.figure(figsize=(16, 12))
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(16, 12))  # Define the figure size
     i = 1
+
     for time_step in range(0, 6, 1):
-        plt.subplot(4, 2, i)
+        ax = plt.subplot(3, 2, i)  # Create a 3x2 grid for subplots
         i += 1
-        print(f"Time step: {time_step}, subplot: {i}")
+
+        # Placeholder data for demonstration purposes
         vector_data = vector_labels[time_step][1]
         states_data = np.array(states[time_step][1])
 
         adapters_count = np.sum(states_data == 1)
         non_adapters_count = len(states_data) - adapters_count
 
-        print(f"Adapters: {adapters_count}")
-        print(f"Non Adapters: {non_adapters_count}")
-
         VL0 = np.array([vl[0] for vl in vector_data])
         VL1 = np.array([vl[1] for vl in vector_data])
 
-        # Calculate the number of rows and columns for a square-like grid
+        # Calculate grid dimensions
         n_nodes = len(VL0)
         n_rows = int(np.sqrt(n_nodes))
         n_cols = int(np.ceil(n_nodes / n_rows))
 
-        # Reshape the data into a 2D grid, padding with NaN if necessary
+        # Create a grid and pad with NaN if necessary
         grid = np.full((n_rows * n_cols), np.nan)
         grid[:n_nodes] = VL0
         grid = grid.reshape(n_rows, n_cols)
 
-        # Create the plot
-        # plt.figure()
-        im = plt.imshow(grid, cmap="RdPu", interpolation='nearest', vmin=0, vmax=1)
-        plt.colorbar(im)
-        # plt.title(title)
-        plt.title(f'Step {time_step}) Adapters: {adapters_count}, Non-adapters: {non_adapters_count}')
-        plt.xlabel('VL0')
-        plt.ylabel('VL1')
+        # Plot the heatmap
+        im = ax.imshow(grid, cmap="RdPu", interpolation="nearest", vmin=0, vmax=1)
 
-        plt.suptitle("Heat maps for the first 6 steps of the simulations\n", x=0.57, fontsize=16)
-    plt.tight_layout()
-    plt.show()
+        # Add a colorbar
+        cbar = plt.colorbar(im, ax=ax)
+        cbar.ax.invert_yaxis()  # Invert the color bar
+        cbar.ax.set_yticklabels(cbar.ax.get_yticklabels()[::-1])   # Invert the color bar's direction
+        cbar.set_label("Value")  # Label for the color bar
+
+        # Add title and labels
+        ax.set_title(f"Step {time_step}) Adapters: {adapters_count}, Non-adapters: {non_adapters_count}")
+        ax.set_xlabel("VL0")
+        ax.set_ylabel("VL1")
+        # Invert y-axis and set ticks
+        ax.set_yticks(range(0, 31, 5))
+        ax.set_yticklabels(range(1, 32, 5))
+        ax.invert_yaxis()  # Flip the y-axis direction
+
+    # Global adjustments
+    plt.suptitle("Heat maps for the first 6 steps of the simulations", fontsize=24, x=0.57)  # Adjust the title position
+    plt.subplots_adjust(wspace=0.4, hspace=0.5)  # Adjust the space between subplots
+    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Ensure everything fits well
+
+    # Save and show the plot
     plt.savefig(f"{prefix}/heat_map.png")
+    plt.show()
 
 
 def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, initialisation, adapters_perc,
@@ -208,40 +247,4 @@ def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, in
     return title, text
 
 
-simulations = {
-    "RI-5": {
-        "baseline":{1: 50, 2: 50, 3: 919, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-        "CB": {1: 50, 2: 50, 3: 536, 4: 775, 5: 775, 6: 885, 7: 938, 8: 938, 9: 963, 10: 978, 11: 978, 12: 987, 13: 991, 14: 991, 15: 994},
-        "CBAB": {1: 50, 2: 50, 3: 912, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        "LOW-EDU":{1: 50, 2: 50, 3: 900, 4: 998, 5: 998, 6: 998, 7: 998, 8: 998, 9: 998, 10: 998, 11: 998, 12: 998, 13: 998, 14: 998, 15: 998},
-        "OLD" : {1: 50, 2: 50, 3: 896, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        "OPPOSITE":{1: 50, 2: 50, 3: 682, 4: 992, 5: 992, 6: 993, 7: 993, 8: 993, 9: 993, 10: 993, 11: 993, 12: 993, 13: 993, 14: 993, 15: 993},
-        "FEMALES": {1: 50, 2: 50, 3: 886, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999},
-        "YOUNG": {1: 50, 2: 50, 3: 903, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-    },
-    "RI-20": {
-        "baseline": {1: 200, 2: 200, 3: 991, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000,},
-        "CB": {1: 200, 2: 200, 3: 638, 4: 811, 5: 811, 6: 900, 7: 948, 8: 948, 9: 971, 10: 981, 11: 981, 12: 987, 13: 993, 14: 993, 15: 995},
-        "CBAB": {1: 200, 2: 200, 3: 992, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        "LOW-EDU": {1: 200, 2: 200, 3: 988, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999},
-        "OLD":{1: 200, 2: 200, 3: 989, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        "OPPOSITE":{1: 200, 2: 200, 3: 938, 4: 994, 5: 994, 6: 994, 7: 994, 8: 994, 9: 994, 10: 994, 11: 994, 12: 994, 13: 994, 14: 994, 15: 994},
-        "FEMALES":{1: 200, 2: 200, 3: 986, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        "YOUNG":{1: 200, 2: 200, 3: 988, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000}
-    },
-    "RI-40": {
-        "baseline": {1: 400, 2: 400, 3: 999, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000, },
-        "CB": {1: 400, 2: 400, 3: 732, 4: 869, 5: 869, 6: 928, 7: 961, 8: 961, 9: 977, 10: 986, 11: 986, 12: 991, 13: 995, 14: 995, 15: 996},
-        "CBAB":{1: 400, 2: 400, 3: 998, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        "LOW-EDU": {1: 400, 2: 400, 3: 998, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999},
-        "OLD": {1: 400, 2: 400, 3: 998, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        "OPPOSITE": {1: 400, 2: 400, 3: 980, 4: 996, 5: 996, 6: 996, 7: 996, 8: 996, 9: 996, 10: 996, 11: 996, 12: 996, 13: 996, 14: 996, 15: 996},
-        "FEMALES": {1: 400, 2: 400, 3: 997, 4: 999, 5: 999, 6: 999, 7: 999, 8: 999, 9: 999, 10: 999, 11: 999, 12: 999, 13: 999, 14: 999, 15: 999},
-        "YOUNG":{1: 400, 2: 400, 3: 998, 4: 1000, 5: 1000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000}
-    }
-}
-
-# plot_multiple_adapters_by_time()
-# for vals in simulations.values():
-#     df = compute_plot_data(vals)
-#     print(df)
+plot_multiple_adapters_by_time()
