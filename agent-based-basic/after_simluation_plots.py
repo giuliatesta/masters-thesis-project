@@ -9,9 +9,9 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # results coming from case scenarios A*
 BASELINE = {}
 
-def compute_plot_data(data):
+def compute_plot_data(data, index):
     # we need the slope, the stationaty value, the confidence Interval
-    df = pd.DataFrame(columns=["Sim", "Slope", "Std-Err", "Max-Val", "Stationary-Val", "Confidence-Int"])
+    df = pd.DataFrame(columns=["Index", "Sim", "Slope", "Std-Err", "Max-Val", "Stationary-Val", "Confidence-Int"])
     i = 0
     for label, points in data.items():
         x = list(points.keys())
@@ -19,6 +19,7 @@ def compute_plot_data(data):
         res = st.linregress(x, y)
         ci1, ci2 = st.t.interval(0.95, len(y) - 1, loc=np.mean(y), scale=st.sem(y))
         df.loc[i] = {
+            "Index": index,
             "Sim": label,
             "Slope": f"{90 - res.slope: .2f}",
             "Std-Err": f"{res.stderr: .2f}",
@@ -80,53 +81,39 @@ titles = [
 
 # plots multiple simulations on the same plot
 # simulations indicates the evolution of the number of adapters in the networks
-def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
-    plots = {
-    labels[3][0]: {1: 50, 2: 50, 3: 825, 4: 911, 5: 911, 6: 913, 7: 913, 8: 913, 9: 914, 10: 916, 11: 916, 12: 920, 13: 936, 14: 936, 15: 949},
-    labels[3][1]: {1: 200, 2: 200, 3: 904, 4: 989, 5: 989, 6: 991, 7: 991, 8: 991, 9: 992, 10: 992, 11: 992, 12: 992, 13: 992, 14: 992, 15: 993},
-    labels[3][2]: {1: 400, 2: 400, 3: 930, 4: 997, 5: 997, 6: 998, 7: 998, 8: 998, 9: 998, 10: 998, 11: 998, 12: 998, 13: 998, 14: 998, 15: 999},
-    labels[3][3]: {1: 25, 2: 25, 3: 387, 4: 652, 5: 652, 6: 682, 7: 708, 8: 708, 9: 713, 10: 719, 11: 719, 12: 722, 13: 753, 14: 753, 15: 766},
-    labels[3][4]: {1: 100, 2: 100, 3: 513, 4: 843, 5: 843, 6: 878, 7: 909, 8: 909, 9: 918, 10: 927, 11: 927, 12: 930, 13: 935, 14: 935, 15: 940},
-    labels[3][5]: {1: 200, 2: 200, 3: 589, 4: 876, 5: 876, 6: 912, 7: 943, 8: 943, 9: 952, 10: 961, 11: 961, 12: 964, 13: 967, 14: 967, 15: 969},
-    #labels[2][6]: {1: 284, 2: 284, 3: 621, 4: 891, 5: 891, 6: 924, 7: 948, 8: 948, 9: 955, 10: 961, 11: 961, 12: 965, 13: 968, 14: 968, 15: 970}
-    }
-
+def plot_multiple_adapters_by_time(plots, file_path, title="", confidence=0.95, close_up=False, colors_index="NO-BIAS", use_markers=True,):
     slopes = []
     legend_elements = []
     fig, ax = plt.subplots(figsize=(10, 6))
     plt.xlabel('Time steps')
     plt.ylabel('Adapters')
 
-# Beta Distribution (α = 2, β = 5)
-    # with Extreme influence from neighbours (OP = 0.02, OL = 0.98)
-    plt.title("Complex Contagion with Majority"
-             #"with Extreme Influence by Neighbours (OP = 0.02, OL = 0.98)\n"
-              "with Confirmation Bias for RI Initialisation"
-              )
-    # Availability and
+    plt.title(title)
     plt.grid(True)
 
-    #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
-    colors = ['deeppink', 'orchid', 'mediumvioletred','deeppink', 'orchid', 'mediumvioletred',]
-    #colors = ['deepskyblue', 'steelblue', 'blue', 'deepskyblue', 'steelblue', 'blue',]
-    #colors = ['forestgreen', 'darkgreen', 'olivedrab', 'lime','seagreen','lawngreen']
+    colors = {
+        "NO-BIAS": ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen', ], #NO-BIAS
+        "RI": ['deeppink', 'orchid', 'mediumvioletred', 'deeppink', 'orchid', 'mediumvioletred', ], #RI
+        "SII": ['deepskyblue', 'steelblue', 'blue','deepskyblue', 'steelblue', 'blue',],#SII
+        "WSI": ['forestgreen', 'darkgreen', 'olivedrab', 'lime','seagreen','lawngreen']
+    }
+    used_colors = colors[colors_index]
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
-    markers = ["o", "*", "P", "o", "*", "P"]
-    #markers=["","","","","","","",""]
+    markers = ["o", "*", "P", "o", "*", "P"] if use_markers else ["","","","","","","",""]
     i=0
     if close_up:
         inset_ax = inset_axes(ax, width="40%", height="40%", loc="lower right")  # Adjust size and location
     for label, plot in plots.items():
         x = list(plot.keys())
         y = np.array(list(plot.values()))
-        ax.plot(x,y, color=colors[i], label=label, linestyle=linestyle[i], marker=markers[i])
+        ax.plot(x,y, color=used_colors[i], label=label, linestyle=linestyle[i], marker=markers[i])
         ci = confidence * np.std(y) / np.sqrt(len(y))
-        ax.fill_between(x, (y - ci), (y + ci), color=colors[i], alpha=.1)
+        ax.fill_between(x, (y - ci), (y + ci), color=used_colors[i], alpha=.1)
         last_value = y[-1]
         first_value = y[0]
         slopes.append(90 - (last_value - first_value) / len(plot))
         if close_up:
-            inset_ax.plot(x, y, color=colors[i], linestyle=linestyle[i], marker=markers[i])
+            inset_ax.plot(x, y, color=used_colors[i], linestyle=linestyle[i], marker=markers[i])
         legend_elements.append(Line2D([0], [0], color=colors[i], label=f"{list(plots.keys())[i]}", linestyle=linestyle[i], marker=markers[i]))
         i += 1
     # Add legend to the plot
@@ -139,10 +126,7 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
         inset_ax.set_title("Close-up", fontsize=10)
         inset_ax.grid(True)
 
-    plt.savefig(
-       #f"./work/case-scenarios/COMPLEX_CONTAGION/EXTREME-INFLUENCED/"
-    "./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/RIGID-SOCIETY/"
-        +"CC_majority_RI_confirmation_bias.png")
+    plt.savefig(file_path)
 
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 # plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
