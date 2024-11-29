@@ -11,6 +11,7 @@ from conf import RESULTS_DIR
 from after_simluation_plots import states_changing_heat_map, compute_plot_data
 import utils
 
+from average_results import state_averaging
 
 def can_predict_would_subscribe_attribute_nodes():
     data = load_dataset_csv("../dataset/df_DNA_sharingEU.csv", index=False)
@@ -58,24 +59,21 @@ def massive_plot_data_computation(folder):
             bias_subfolder_name = bias_subfolder.split("/")[-1].upper()
             sim_subfolders = [f.path for f in os.scandir(bias_subfolder) if f.is_dir()]
             for sim in sorted(list(sim_subfolders)):
-                with open(sim + "/readme.txt", "r") as readme:
-                    lines = readme.readlines()
-                    sim_results = lines[-1] if lines[-1] != "" else lines[-2]
-                    sim_id = sim.split("-")[-1]
-                    input_key = input_keys[int(sim_id)-1]
-                    if not input.get(input_key):
-                        input[input_key] = {}
-                    if not input[input_key].get(bias_subfolder_name):
-                        print(sim_results)
-                        input[input_key][bias_subfolder_name] = json.loads(sim_results)
-                    else:
-                        return KeyError
+                states = state_averaging(sim, run_count=5)
+                sim_id = sim.split("-")[-1]
+                input_key = input_keys[int(sim_id)-1]
+                if not input.get(input_key):
+                    input[input_key] = {}
+                if not input[input_key].get(bias_subfolder_name):
+                    input[input_key][bias_subfolder_name] = states
+                else:
+                    return KeyError
 
     print(input)
     df = pd.DataFrame()
 
     for vals in input.values():
-        df = pd.concat(df, compute_plot_data(vals), ignore_index=True)
-    df.to_csv(folder+"input.csv")
+        df = pd.concat([df, compute_plot_data(vals)], ignore_index=True)
+    df.to_csv(folder+"/input.csv")
 
 massive_plot_data_computation("./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY")
