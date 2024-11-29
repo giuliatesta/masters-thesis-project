@@ -1,0 +1,13 @@
+EXTREME-CONFIDENCE
+
+VL_UPDATE_METHOD: "extreme-confidence"
+INITIALISATION: "would-subscribe-attribute"
+INITIAL_ADAPTERS_PERC: 5%
+APPLY_COGNITIVE_BIAS: "confirmation-availability-bias"
+APPLY_SOCIAL_BIAS: "against-opposite-gender"
+SIMILARITY THRESHOLD = 0.6
+RUNS = 5
+ITERATION_NUM = 30
+N. EDGES: 42761
+N. NODES: 1000
+{1: 284, 2: 284, 3: 284, 4: 284, 5: 284, 6: 284, 7: 284, 8: 284, 9: 284, 10: 284, 11: 284, 12: 284, 13: 284, 14: 284, 15: 284}
