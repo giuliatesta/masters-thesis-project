@@ -153,5 +153,3 @@ def plot_step_function():
     # Show the plot
     #plt.show()
     plt.savefig("../plots/bias_application_step_function.png", dpi=1200)
-
-plot_step_function()

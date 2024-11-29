@@ -112,7 +112,7 @@ def determine_state(node, graph, cognitive_bias):
     # if non adapter
     if is_currently_non_adapter:
         print("currently non adopter")
-        # and adaptcaner label is bigger than non adapter label
+        # and adapter label is bigger than non adapter label
         if adapter_label > non_adapter_label:
             print("could try to become adopter")
             if cognitive_bias == "confirmation-bias":
