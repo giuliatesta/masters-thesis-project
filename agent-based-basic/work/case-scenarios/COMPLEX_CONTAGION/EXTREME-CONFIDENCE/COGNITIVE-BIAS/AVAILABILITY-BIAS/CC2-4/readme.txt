@@ -1,0 +1,13 @@
+EXTREME-CONFIDENCE
+
+VL_UPDATE_METHOD: "extreme-confidence"
+INITIALISATION: "adapters-with-SI"
+INITIAL_ADAPTERS_PERC: 5%
+APPLY_COGNITIVE_BIAS: "availability-bias"
+APPLY_SOCIAL_BIAS: "against-opposite-gender"
+SIMILARITY THRESHOLD = 0.6
+RUNS = 5
+ITERATION_NUM = 30
+N. EDGES: 42761
+N. NODES: 1000
+{1: 25, 2: 25, 3: 25, 4: 25, 5: 25, 6: 25, 7: 25, 8: 25, 9: 25, 10: 25, 11: 25, 12: 25, 13: 25, 14: 25, 15: 25}
