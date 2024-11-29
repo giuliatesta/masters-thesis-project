@@ -152,68 +152,74 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
     "./work/case-scenarios/COMPLEX_CONTAGION/EXTREME-INFLUENCED/"
         +"CC_extr_conf_no_bias.png")
 
-# plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
-# plots the heat map representing the vector labels.txt changing in a specific time step during a simulation
 def states_changing_heat_map(prefix):
     vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")
     states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates__RUN_0_STATES.pickled")
 
-    import numpy as np
-    import matplotlib.pyplot as plt
+    plt.figure(figsize=(16, 12))
+    subplot_index = 1
 
-    plt.figure(figsize=(16, 12))  # Define the figure size
-    i = 1
+    for time_step in range(0, 6):
+        ax = plt.subplot(4, 2, subplot_index)
+        subplot_index += 1
 
-    for time_step in range(0, 6, 1):
-        ax = plt.subplot(3, 2, i)  # Create a 3x2 grid for subplots
-        i += 1
-
-        # Placeholder data for demonstration purposes
         vector_data = vector_labels[time_step][1]
         states_data = np.array(states[time_step][1])
-
         adapters_count = np.sum(states_data == 1)
         non_adapters_count = len(states_data) - adapters_count
-
         VL0 = np.array([vl[0] for vl in vector_data])
         VL1 = np.array([vl[1] for vl in vector_data])
 
-        # Calculate grid dimensions
-        n_nodes = len(VL0)
-        n_rows = int(np.sqrt(n_nodes))
-        n_cols = int(np.ceil(n_nodes / n_rows))
+        n_bins = 10
+        VL0_bins = np.linspace(0, 1, n_bins + 1)
+        VL1_bins = np.linspace(0, 1, n_bins + 1)
+        proportion_grid = np.zeros((n_bins, n_bins))
 
-        # Create a grid and pad with NaN if necessary
-        grid = np.full((n_rows * n_cols), np.nan)
-        grid[:n_nodes] = VL0
-        grid = grid.reshape(n_rows, n_cols)
+        # Calculate proportions for each bin
 
+        for x in range(n_bins):
+            binx = VL0_bins[x]
+            for y in range(n_bins):
+                biny = VL1_bins[y]
+                adapters = 0
+                non_adapters = 0
+                for i in range(len(vector_data)):
+                    vl = vector_data[i]
+                    if (binx <= vl[0] < binx + 1) and (biny <= vl[1] < biny + 1):
+                        state = states_data[i]
+                        if state == 1:
+                            adapters += 1
+                        else:
+                            non_adapters += 1
+                proportion_grid[y, x] = float(adapters / non_adapters) if non_adapters > 0 else 0
+
+                ax.text(
+                    x, y, f"{proportion_grid[y, x]:.0f}",
+                    ha="center", va="center", color="black", fontsize=5
+                )
         # Plot the heatmap
-        im = ax.imshow(grid, cmap="RdPu", interpolation="nearest", vmin=0, vmax=1)
+        im = ax.imshow(
+            proportion_grid, cmap="RdPu", interpolation="nearest",
+            vmin=0, vmax=np.nanmax(proportion_grid), origin="lower"
+        )
 
-        # Add a colorbar
+        # Add a colorbar to the subplot
         cbar = plt.colorbar(im, ax=ax)
-        cbar.ax.invert_yaxis()  # Invert the color bar
-        cbar.ax.set_yticklabels(cbar.ax.get_yticklabels()[::-1])   # Invert the color bar's direction
-        cbar.set_label("Value")  # Label for the color bar
 
         # Add title and labels
-        ax.set_title(f"Step {time_step}) Adapters: {adapters_count}, Non-adapters: {non_adapters_count}")
+        ax.set_title(f"Step {time_step} | Adapters: {adapters_count}, Non-adapters: {non_adapters_count}")
         ax.set_xlabel("VL0")
         ax.set_ylabel("VL1")
-        # Invert y-axis and set ticks
-        ax.set_yticks(range(0, 31, 5))
-        ax.set_yticklabels(range(1, 32, 5))
-        ax.invert_yaxis()  # Flip the y-axis direction
 
-    # Global adjustments
-    plt.suptitle("Heat maps for the first 6 steps of the simulations", fontsize=24, x=0.57)  # Adjust the title position
-    plt.subplots_adjust(wspace=0.4, hspace=0.5)  # Adjust the space between subplots
-    plt.tight_layout(rect=[0, 0, 1, 0.95])  # Ensure everything fits well
+    # Global adjustments for the figure
+    plt.suptitle("Heat maps for the first 6 steps of the simulations", fontsize=20, x=0.5, y=0.98)
+    plt.subplots_adjust(wspace=0.4, hspace=0.5)  # Adjust spacing between subplots
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
 
-    # Save and show the plot
+    # Save and display the figure
     plt.savefig(f"{prefix}/heat_map.png")
     plt.show()
+
 
 
 def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, initialisation, adapters_perc,
@@ -247,4 +253,4 @@ def description_text_for_plots(rule, simulation_id, sim_threshold, vl_update, in
     return title, text
 
 
-plot_multiple_adapters_by_time()
+#plot_multiple_adapters_by_time()
