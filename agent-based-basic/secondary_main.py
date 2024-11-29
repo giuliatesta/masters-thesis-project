@@ -1,10 +1,14 @@
+import json
+import os
+
+import pandas as pd
 from matplotlib import pyplot as plt
 
 from create_input import create_input_files
 from preprocessing import load_dataset_csv
 from main_LPA import run_simulations
 from conf import RESULTS_DIR
-from after_simluation_plots import states_changing_heat_map
+from after_simluation_plots import states_changing_heat_map, compute_plot_data
 import utils
 
 
@@ -41,22 +45,37 @@ def draw_network_animation():
 
 
 def draw_heat_map():
-    prefix = "./work/case-scenarios/SIMPLE_CONTAGION/NO-BIAS/SC0-1"
-    vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")
-    states = utils.read_pickled_file(f"{prefix}/trial_0_LPStates__RUN_0_STATES.pickled")
+    prefix = "./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY/COGNITIVE-BIAS/CONFIRMATION-BIAS/CC8-2"
+    states_changing_heat_map(prefix,)
 
-    plt.figure(figsize=(16, 12))
-    i = 1
-    for time_step in range(0, 6, 1):
-        plt.subplot(4, 2, i)
-        i += 1
-        print(f"Time step: {time_step}, subplot: {i}")
-        states_changing_heat_map(
-            states=states,
-            vector_labels=vector_labels,
-            step=time_step)
+def massive_plot_data_computation(folder):
+    subfolders= [f.path for f in os.scandir(folder) if f.is_dir()]
+    input = {}
+    input_keys = ["RI-5%", "RI-20%", "RI-40%", "SII-5%", "SII-20%", "SII-40%", "WSI"]
 
-        plt.suptitle("Heat maps for the first 6 steps of the simulations\n", x=0.57, fontsize=16)
-        plt.tight_layout()
-        plt.savefig(f"{prefix}/heat_map.png")
+    for bias_subfolder in sorted(list(subfolders)):
+        if not bias_subfolder.endswith(".old"):
+            bias_subfolder_name = bias_subfolder.split("/")[-1].upper()
+            sim_subfolders = [f.path for f in os.scandir(bias_subfolder) if f.is_dir()]
+            for sim in sorted(list(sim_subfolders)):
+                with open(sim + "/readme.txt", "r") as readme:
+                    lines = readme.readlines()
+                    sim_results = lines[-1] if lines[-1] != "" else lines[-2]
+                    sim_id = sim.split("-")[-1]
+                    input_key = input_keys[int(sim_id)-1]
+                    if not input.get(input_key):
+                        input[input_key] = {}
+                    if not input[input_key].get(bias_subfolder_name):
+                        print(sim_results)
+                        input[input_key][bias_subfolder_name] = json.loads(sim_results)
+                    else:
+                        return KeyError
 
+    print(input)
+    df = pd.DataFrame()
+
+    for vals in input.values():
+        df = pd.concat(df, compute_plot_data(vals), ignore_index=True)
+    df.to_csv(folder+"input.csv")
+
+massive_plot_data_computation("./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY")
