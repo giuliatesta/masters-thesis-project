@@ -83,15 +83,14 @@ titles = [
 # simulations indicates the evolution of the number of adapters in the networks
 def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
     plots = {
-        labels[2][0]: {1: 50, 2: 50, 3: 51, 4: 51, 5: 51, 6: 51, 7: 51, 8: 51, 9: 51, 10: 51, 11: 51, 12: 51, 13: 51, 14: 51, 15: 51},
-        labels[2][1]: {1: 200, 2: 200, 3: 202, 4: 202, 5: 202, 6: 202, 7: 202, 8: 202, 9: 202, 10: 202, 11: 202, 12: 202, 13: 202, 14: 202, 15: 202},
-        labels[2][2]: {1: 400, 2: 400, 3: 443, 4: 530, 5: 530, 6: 647, 7: 983, 8: 983, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
-        labels[2][3]: {1: 25, 2: 25, 3: 25, 4: 25, 5: 25, 6: 25, 7: 25, 8: 25, 9: 25, 10: 25, 11: 25, 12: 25, 13: 25, 14: 25, 15: 25},
-        labels[2][4]: {1: 100, 2: 100, 3: 101, 4: 101, 5: 101, 6: 101, 7: 101, 8: 101, 9: 101, 10: 101, 11: 101, 12: 101, 13: 101, 14: 101, 15: 101},
-        labels[2][5]: {1: 200, 2: 200, 3: 204, 4: 204, 5: 204, 6: 204, 7: 204, 8: 204, 9: 204, 10: 204, 11: 204, 12: 204, 13: 204, 14: 204, 15: 204},
-        labels[2][6]: {1: 284, 2: 284, 3: 284, 4: 284, 5: 284, 6: 284, 7: 284, 8: 284, 9: 284, 10: 284, 11: 284, 12: 284, 13: 284, 14: 284, 15: 284},
+        labels[6][0]: {1: 400, 2: 400, 3: 443, 4: 530, 5: 530, 6: 647, 7: 983, 8: 983, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+        labels[6][1]: {1: 400, 2: 400, 3: 451, 4: 559, 5: 559, 6: 701, 7: 952, 8: 952, 9: 996, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+        labels[6][2]: {1: 400, 2: 400, 3: 457, 4: 687, 5: 687, 6: 914, 7: 997, 8: 997, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+        labels[6][3]: {1: 400, 2: 400, 3: 527, 4: 803, 5: 803, 6: 975, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+        labels[6][4]: {1: 400, 2: 400, 3: 447, 4: 604, 5: 604, 6: 720, 7: 902, 8: 902, 9: 948, 10: 951, 11: 951, 12: 951, 13: 951, 14: 951, 15: 951},
+        labels[6][5]: {1: 400, 2: 400, 3: 461, 4: 760, 5: 760, 6: 977, 7: 1000, 8: 1000, 9: 1000, 10: 1000, 11: 1000, 12: 1000, 13: 1000, 14: 1000, 15: 1000},
+        #labels[2][6]: {1: 284, 2: 284, 3: 284, 4: 284, 5: 284, 6: 284, 7: 284, 8: 284, 9: 284, 10: 284, 11: 284, 12: 284, 13: 284, 14: 284, 15: 284},
     }
-
     slopes = []
     legend_elements = []
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -100,20 +99,20 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
 
 # Beta Distribution (α = 2, β = 5)
     # with Extreme influence from neighbours (OP = 0.02, OL = 0.98)
-    plt.title("Complex Contagion with Majority without Bias"
+    plt.title("Complex Contagion with Majority with Social Biases for RI Initialisation with 40%"
              #"with Extreme Influence by Neighbours (OP = 0.02, OL = 0.98)\n"
            #   "with Confirmation Bias for RI Initialisation"
               )
     # Availability and
     plt.grid(True)
 
-    colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
-    #colors = ['deeppink', 'orchid', 'mediumvioletred','deeppink', 'orchid', 'mediumvioletred',]
+    #colors = ['deeppink', 'orchid', 'mediumvioletred', 'deepskyblue', 'steelblue', 'blue', 'forestgreen', 'darkgreen',]
+    colors = ['deeppink', 'orchid', 'mediumvioletred','deeppink', 'orchid', 'mediumvioletred',]
     #colors = ['deepskyblue', 'steelblue', 'blue', 'deepskyblue', 'steelblue', 'blue',]
     #colors = ['forestgreen', 'darkgreen', 'olivedrab', 'lime','seagreen','lawngreen']
     linestyle = ['solid', 'dashed', 'dashdot', (5, (10, 3)) , (0, (3, 1, 1, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)), "dashdot"]
-    #markers = ["o", "*", "P", "o", "*", "P"]
-    markers=["","","","","","","",""]
+    markers = ["o", "*", "P", "o", "*", "P"]
+    #markers=["","","","","","","",""]
     i=0
     if close_up:
         inset_ax = inset_axes(ax, width="40%", height="40%", loc="lower right")  # Adjust size and location
@@ -143,7 +142,7 @@ def plot_multiple_adapters_by_time(confidence=0.95, close_up=False):
     plt.savefig(
        #f"./work/case-scenarios/COMPLEX_CONTAGION/EXTREME-INFLUENCED/"
     "./work/case-scenarios/COMPLEX_CONTAGION/MAJORITY/"
-        +"CC_majority_no_bias.png")
+        +"CC_majority_social_bias.png")
 
 def states_changing_heat_map(prefix):
     vector_labels = utils.read_pickled_file(f"{prefix}/trial_0_LPStates_L0_L1__RUN_0.pickled")

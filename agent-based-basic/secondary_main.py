@@ -89,9 +89,12 @@ no_bias_labels = ["5% RI", "20% RI", "40% RI", "5% SII", "20% SII", "40% SII", "
 #                 title= sim_name + "without Bias"
 #                 plot_multiple_adapters_by_time(plots, folder, title, use_markers=False)
 #             else:
+<<<<<<< HEAD
+=======
 #                 plots={"RI":{}, "SII":{}}
 #                 no_bias_sims = _create_input({}, [f.path for f in os.scandir(folder+"/NO-BIAS") if f.is_dir()], bias_subfolder_name)
 #
+>>>>>>> origin/master
 
 
 def _create_input(input, subfolder, sim_name):
@@ -105,5 +108,9 @@ def _create_input(input, subfolder, sim_name):
             input[input_key][sim_name] = states
     return input
 
+<<<<<<< HEAD
+massive_plot_data_computation("./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY")
+=======
 #massive_plot_data_computation("./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY")
 draw_heat_map()
+>>>>>>> origin/master
