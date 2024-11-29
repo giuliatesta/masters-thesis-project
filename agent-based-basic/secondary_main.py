@@ -8,7 +8,7 @@ from create_input import create_input_files
 from preprocessing import load_dataset_csv
 from main_LPA import run_simulations
 from conf import RESULTS_DIR
-from after_simluation_plots import states_changing_heat_map, compute_plot_data
+from after_simluation_plots import states_changing_heat_map, compute_plot_data, plot_multiple_adapters_by_time
 import utils
 
 from average_results import state_averaging
@@ -72,8 +72,34 @@ def massive_plot_data_computation(folder):
     print(input)
     df = pd.DataFrame()
 
-    for vals in input.values():
-        df = pd.concat([df, compute_plot_data(vals)], ignore_index=True)
+    for key, vals in input.items():
+        df = pd.concat([df, compute_plot_data(vals, index=key)], ignore_index=True)
+    print(f"Saving in {folder}")
     df.to_csv(folder+"/input.csv")
+
+no_bias_labels = ["5% RI", "20% RI", "40% RI", "5% SII", "20% SII", "40% SII", "IWS"]
+# def massive_plots_creation(folder, sim_name):
+#     subfolders = [f.path for f in os.scandir(folder) if f.is_dir()]
+#     for bias_subfolder in sorted(list(subfolders)):
+#         if not bias_subfolder.endswith(".old"):
+#             bias_subfolder_name = bias_subfolder.split("/")[-1].upper()
+#             sim_subfolders = [f.path for f in os.scandir(bias_subfolder) if f.is_dir() ]
+#             if bias_subfolder_name == "NO-BIAS":
+#                 plots =_create_input({}, sim_subfolders, bias_subfolder_name)
+#                 title= sim_name + "without Bias"
+#                 plot_multiple_adapters_by_time(plots, folder, title, use_markers=False)
+#             else:
+
+
+def _create_input(input, subfolder, sim_name):
+    for sim in sorted(list(subfolder)):
+        states = state_averaging(sim, run_count=5)
+        sim_id = sim.split("-")[-1]
+        input_key = no_bias_labels[int(sim_id) - 1]
+        if not input.get(input_key):
+            input[input_key] = {}
+        if not input[input_key].get(sim_name):
+            input[input_key][sim_name] = states
+    return input
 
 massive_plot_data_computation("./work/case-scenarios/COMPLEX_CONTAGION/BETA-DISTRIBUTION/OPEN-SOCIETY")
