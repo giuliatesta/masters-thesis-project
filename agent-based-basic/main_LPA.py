@@ -95,19 +95,19 @@ initialisation_choices = {
 # biases is introduced by using SI as perc for becoming adopter
 # the different type of biases depends on the moment of application
 all_cognitive_biases = {
-   0: "no-bias",
-  # 1: "confirmation-bias",  # if the majority of neighbours is non adopters
+  #  0: "no-bias",
+    1: "confirmation-bias",  # if the majority of neighbours is non adopters
   # 2: "availability-bias",  # if the majority of neighbours is adopter
-  # 3: "confirmation-availability-bias"  # in any case
+    3: "confirmation-availability-bias"  # in any case
 }
 
 all_social_biases = {
-    # 4: "no-bias",
-     5: "against-opposite-gender",
-     6: "against-women",
-     7: "against-young",
-     8: "against-old",
-     9: "against-low-educated"
+    4: "no-bias",
+    #  5: "against-opposite-gender",
+    #  6: "against-women",
+    #  7: "against-young",
+    #  8: "against-old",
+    #  9: "against-low-educated"
 }
 
 percentages = [5, 20, 40]
@@ -118,11 +118,11 @@ BETA = 2
 VL_UPDATE_METHOD = vector_labels_update_choices[2]
 INITIALISATION = initialisation_choices[0]
 INITIAL_ADAPTERS_PERC = 5
-APPLY_COGNITIVE_BIAS = all_cognitive_biases[0]
-APPLY_SOCIAL_BIAS = all_social_biases[5]
+APPLY_COGNITIVE_BIAS = all_cognitive_biases[1]
+APPLY_SOCIAL_BIAS = all_social_biases[4]
 if __name__ == '__main__':
-    for bias in all_social_biases.values():
-        APPLY_SOCIAL_BIAS = bias
+    for bias in all_cognitive_biases.values():
+        APPLY_COGNITIVE_BIAS = bias
         additional_dir = bias.upper()
         counter = 1
         for init_type in initialisation_choices.values():
@@ -151,7 +151,7 @@ if __name__ == '__main__':
                     run_simulations(run, cognitive_bias=APPLY_COGNITIVE_BIAS,
                                     social_bias=APPLY_SOCIAL_BIAS, results_dir=new_results_dir)
 
-                states = state_averaging(new_results_dir, run_count=RUNS)
+                states =state_averaging(new_results_dir, run_count=RUNS)
                 title, additional_text = description_text_for_plots(VL_UPDATE_METHOD, sim_id,
                                                                     sim_threshold=SIMILARITY_THRESHOLD,
                                                                     vl_update=VL_UPDATE_METHOD,

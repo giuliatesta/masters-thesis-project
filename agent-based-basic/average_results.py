@@ -28,7 +28,6 @@ def state_averaging(state_files_path, run_count):
 
     adapters = [count_adapters(states) for states in state_files_content]
     averages = {i: 0 for i in adapters[0].keys()}
-    print(run_count)
     for a in adapters:
         for run, count in a.items():
             averages[run] += count
